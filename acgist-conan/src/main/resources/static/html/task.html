@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>ACGIST-CANAN-任务详情</title>
+	
+	<link href="../resources/css/style.css" rel="stylesheet" type="text/css" />
+	<script src="../resources/js/jquery-3.3.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+</head>
+<body>
+	<header>
+		<h1>ACGIST-CANAN-任务详情</h1>
+	</header>
+	<main>
+		<div class="task" id="task">
+		<form action="/task/submit" method="post">
+			<div class="item">
+				<p v-if="task.state==='ready'">任务状态：准备中（{{ task.processed }} / {{ task.totalPage }}）</p>
+				<p v-if="task.state==='running'">任务状态：运行中（{{ task.processed }} / {{ task.totalPage }}）</p>
+				<p v-if="task.state==='over'">任务状态：已完成（{{ task.processed }} / {{ task.totalPage }}）</p>
+				<p v-if="task.state==='cancel'">任务状态：已取消</p>
+			</div>
+			<div class="item">
+				<input name="name" type="text" placeholder="任务名称" v-bind:value="task.name" v-bind:readonly="task.name?true:false" />
+				<input name="keys" type="text" placeholder="关键词（多个关键词使用空格隔开）" v-bind:value="task.keys?task.keys.join(' '):''" />
+				<button type="submit">开始任务</button>
+			</div>
+			<div class="item">
+				<span>搜索引擎：</span>
+				<label><input name="sources" v-model="sources" type="checkbox" checked="checked" value="baidu" />百度</label>
+				<label><input name="sources" v-model="sources" type="checkbox" value="haosou" />360</label>
+				<span>匹配模式：</span>
+				<label><input name="match" v-model="match" type="radio" value="all" />全匹配</label>
+				<label><input name="match" v-model="match" type="radio" checked="checked" value="part" />部分匹配</label>
+				<span>筛选页数：</span>
+				<select name="page" v-model="page">
+					<option value="1" selected="selected">1页</option>
+					<option value="3">3页</option>
+					<option value="6">6页</option>
+					<option value="10">10页</option>
+				</select>
+			</div>
+			<div class="item">
+				<span>过滤条件：</span>
+				<label><input name="filters" v-model="filters" type="checkbox" value="nofilter" />不过滤</label>
+				<label><input name="filters" v-model="filters" type="checkbox" checked="checked" value="chinese" />保留中文</label>
+				<label><input name="filters" v-model="filters" type="checkbox" value="number" />保留数字</label>
+				<label><input name="filters" v-model="filters" type="checkbox" value="english" />保留英文</label>
+				<label><input name="filters" v-model="filters" type="checkbox" checked="checked" value="length" />去掉长度小于二的字符</label>
+			</div>
+			<div class="item task-follow">
+				<ul>
+					<li>
+						<span class="width-10">词语</span>
+						<span class="width-8">频率</span>
+					</li>
+					<li v-for="taskFollow in task.taskFollows">
+						<span class="width-10">{{ taskFollow.value }}</span>
+						<span class="width-8">{{ taskFollow.times }}</span>
+					</li>
+				</ul>
+			</div>
+		</form>
+		</div>
+	</main>
+	<footer>
+		<p>
+			<a href="../index.html">任务管理</a>
+			<a href="https://www.acgist.com">ACGIST</a>
+		</p>
+	</footer>
+	<script type="text/javascript">
+		var id;
+		var view = false;
+		var href = location.href;
+		if(href.lastIndexOf("?") >= 0) {
+			var querys = href.substring(href.lastIndexOf("?") + 1).split("&");
+			for(var index in querys) {
+				if(querys[index].startsWith("id=")) {
+					id = querys[index].substring(3);
+				}
+			}
+		}
+		function viewTask(data) {
+			var tasks = new Vue({
+				el : '#task',
+				data : {
+					task : data,
+					page : data.page,
+					match : data.match,
+					sources : data.sources,
+					filters : data.filters
+				}
+			});
+		}
+		var common = {
+				"page" : 1,
+				"match" : "part",
+				"sources" : ["baidu"],
+				"filters" : ["chinese", "length"]
+			};
+		if(id) {
+			$.get("/task/view", {"id" : id}, function(data) {
+				if(data) {
+					viewTask(data);
+				} else {
+					viewTask(common);
+				}
+			});
+		} else {
+			viewTask(common);
+		}
+	</script>
+</body>
+</html>
