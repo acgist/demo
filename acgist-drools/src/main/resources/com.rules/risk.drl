@@ -37,12 +37,13 @@ rule "midlife"
 end
 
 rule "old"
-lock-on-active true
 	salience 4
 	when
-		$p : Person(age > 60 && age < 80)
+//		$p : Person(age > 60 && age < 80)
+		$p : Person(age > 60)
 	then
 		$p.setDesc("老年");
-		update($p);
+		retract($p);
+//		update($p);
 		printMessage($p);
 end
