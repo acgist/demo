@@ -9,7 +9,7 @@ import org.apache.spark.mllib.recommendation.Rating;
 
 public class MovieTest {
 
-	public static void main(String[] args) {
+	public static final void main(String[] args) {
 //		SparkConf conf = new SparkConf().setMaster("spark://master:7077").setAppName("MovieTest");
 		SparkConf conf = new SparkConf().setMaster("local").setAppName("MovieTest");
 		JavaSparkContext sc = new JavaSparkContext(conf);
