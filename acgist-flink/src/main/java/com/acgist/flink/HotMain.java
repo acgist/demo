@@ -119,7 +119,6 @@ public class HotMain {
 			Collector<ItemViewCount> collector // 输出类型为ItemViewCount
 		) throws Exception {
 			Long itemId = key.getField(0);
-//			Long itemId = ((Tuple1<Long>) key).f0;
 			Long count = aggregateResult.iterator().next();
 			collector.collect(ItemViewCount.of(itemId, window.getEnd(), count));
 		}
@@ -199,7 +198,6 @@ public class HotMain {
 			result.append("时间：").append(new Timestamp(timestamp - 1)).append("\n");
 			for (int i = 0; i < topSize; i++) {
 				ItemViewCount currentItem = allItems.get(i);
-
 				// No1：商品ID=12224，浏览量=2413
 				result.append("No").append(i)
 					.append("：")
@@ -210,6 +208,7 @@ public class HotMain {
 			result.append("====================================\n\n");
 			out.collect(result.toString());
 		}
+		
 	}
 	
 }
