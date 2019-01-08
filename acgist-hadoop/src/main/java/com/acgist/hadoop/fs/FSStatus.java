@@ -1,7 +1,6 @@
 package com.acgist.hadoop.fs;
 
 import java.io.IOException;
-import java.net.URI;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
@@ -13,7 +12,9 @@ public class FSStatus {
 	public static void main(String[] args) throws IOException {
 		System.setProperty("HADOOP_USER_NAME", "root"); // 权限
 		Configuration conf = new Configuration();
-		FileSystem fs = FileSystem.get(URI.create("hdfs://192.168.1.222:9000"), conf);
+		conf.addResource(FSStatus.class.getResourceAsStream("/hadoop-cluster.xml"));
+		FileSystem fs = FileSystem.get(conf);
+//		FileSystem fs = FileSystem.get(URI.create("hdfs://192.168.1.222:9000"), conf);
 //		FileStatus[] files = fs.listStatus(new Path("/home/"));
 //		for (FileStatus fileStatus : files) {
 //			System.out.println(fileStatus);

@@ -17,6 +17,7 @@ public class FSMain {
 		System.setProperty("HADOOP_USER_NAME", "root"); // 权限
 		Configuration conf = new Configuration();
 		FileSystem fs = FileSystem.get(URI.create("hdfs://192.168.1.222:9000"), conf);
+//		ByteArrayInputStream input = new ByteArrayInputStream("你们好！".getBytes());
 		FSDataInputStream input = fs.open(new Path("/home/tianqi/2016"));
 //		IOUtils.copyBytes(input, System.out, 1024);
 		FSDataOutputStream output = fs.create(new Path("/home/tianqi/2020"), new Progressable() {
