@@ -9,7 +9,7 @@ import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.util.Collector;
 
 public class SocketWindowWordCount {
-	
+
 	public static void main(String[] args) throws Exception {
 		final int port;
 		try {
@@ -21,21 +21,25 @@ public class SocketWindowWordCount {
 		}
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 		DataStream<String> text = env.socketTextStream("localhost", port, "\n");
-		DataStream<WordWithCount> windowCounts = text.flatMap(new FlatMapFunction<String, WordWithCount>() {
-			private static final long serialVersionUID = 1L;
-			@Override
-			public void flatMap(String value, Collector<WordWithCount> out) {
-				for (String word : value.split("\\s")) {
-					out.collect(new WordWithCount(word, 1L));
+		DataStream<WordWithCount> windowCounts = text
+			.flatMap(new FlatMapFunction<String, WordWithCount>() {
+				private static final long serialVersionUID = 1L;
+				@Override
+				public void flatMap(String value, Collector<WordWithCount> out) {
+					for (String word : value.split("\\s")) {
+						out.collect(new WordWithCount(word, 1L));
+					}
 				}
-			}
-		}).keyBy("word").timeWindow(Time.seconds(5), Time.seconds(1)).reduce(new ReduceFunction<WordWithCount>() {
-			private static final long serialVersionUID = 1L;
-			@Override
-			public WordWithCount reduce(WordWithCount a, WordWithCount b) {
-				return new WordWithCount(a.word, a.count + b.count);
-			}
-		});
+			})
+			.keyBy("word")
+			.timeWindow(Time.seconds(5), Time.seconds(1))
+			.reduce(new ReduceFunction<WordWithCount>() {
+				private static final long serialVersionUID = 1L;
+				@Override
+				public WordWithCount reduce(WordWithCount a, WordWithCount b) {
+					return new WordWithCount(a.word, a.count + b.count);
+				}
+			});
 		windowCounts.print().setParallelism(1);
 		env.execute("Socket Window WordCount");
 	}
@@ -57,7 +61,7 @@ public class SocketWindowWordCount {
 		public String toString() {
 			return word + " : " + count;
 		}
-		
+
 	}
 
 }
