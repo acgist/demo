@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/qrcode.min.js"></script>
+<style type="text/css">
+* {
+	text-align:center;
+}
+#text{
+	width:20rem;
+}
+#qrcode {
+	margin:1rem auto;
+	width:200px;
+	height:200px;
+}
+</style>
+<title>微信</title>
+</head>
+<body>
+	<input id="text" type="text" value="http://192.168.1.100:8080/weixin" />
+	<div id="qrcode"></div>
+
+	<script type="text/javascript">
+		var qrcode = new QRCode(document.getElementById("qrcode"), {
+			width : 200,
+			height : 200
+		});
+		function makeCode() {
+			var elText = document.getElementById("text");
+			if (!elText.value) {
+				elText.focus();
+				return;
+			}
+			qrcode.makeCode(elText.value);
+		}
+		makeCode();
+		$("#text").on("blur", function() {
+			makeCode();
+		}).on("keydown", function(e) {
+			if (e.keyCode == 13) {
+				makeCode();
+			}
+		});
+	</script>
+</body>
+</html>
