@@ -27,12 +27,21 @@ log4j.appender.logstash.Host=192.168.1.240
 # 断线重连时间（毫秒）
 log4j.appender.logstash.Delay=10000
 # Logstash日志分隔符
-log4j.appender.logstash.Delimiter=\n\n
+log4j.appender.logstash.Delimiter=
 # 队列长度
 log4j.appender.logstash.BufferSize=102400
 # 日志格式
 log4j.appender.logstash.layout=org.apache.log4j.PatternLayout
 log4j.appender.logstash.layout.ConversionPattern=[lfq-pay] %d %p [%c] - %m%n
+ * </pre>
+ * 
+ * <p>多行日志：</p>
+ * <pre>
+codec => multiline {
+	pattern => "^\["
+	negate => true
+	what => "previous"
+}
  * </pre>
  * 
  * @author acgist
@@ -99,13 +108,15 @@ public class LogstashAppender extends AppenderSkeleton {
 					}
 				}
 			}
-			logBuilder.append(this.delimiter);
+			if(this.delimiter != null) {
+				logBuilder.append(this.delimiter);
+			}
 			final String log = logBuilder.toString();
+			boolean done = this.buffer.offer(log);
 			int times = 0;
-			boolean ok = this.buffer.offer(log);
-			while(!ok) {
+			while(!done) {
 				Thread.yield();
-				ok = this.buffer.offer(log);
+				done = this.buffer.offer(log);
 				if(++times > MAX_RETRY_TIMES) {
 					LogLog.error("超过最大重试失败次数，日志记录失败：" + log + "，重试次数：" + times);
 					break;
