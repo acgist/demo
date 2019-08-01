@@ -14,7 +14,28 @@ import org.apache.log4j.helpers.LogLog;
 import org.apache.log4j.spi.LoggingEvent;
 
 /**
- * Logstash日志输出
+ * <p>Logstash日志输出</p>
+ * <p>使用TCP协议传输，支持自定义日志分隔符。</p>
+ * <p>配置参考</p>
+ * <pre>
+# Appender
+log4j.appender.logstash=com.gdie.lfq.log.LogstashAppender
+# Logstash端口
+log4j.appender.logstash.Port=4567
+# Logstash地址
+log4j.appender.logstash.Host=192.168.1.240
+# 断线重连时间（毫秒）
+log4j.appender.logstash.Delay=10000
+# Logstash日志分隔符
+log4j.appender.logstash.Delimiter=\n\n
+# 队列长度
+log4j.appender.logstash.BufferSize=102400
+# 日志格式
+log4j.appender.logstash.layout=org.apache.log4j.PatternLayout
+log4j.appender.logstash.layout.ConversionPattern=[lfq-pay] %d %p [%c] - %m%n
+ * </pre>
+ * 
+ * @author acgist
  */
 public class LogstashAppender extends AppenderSkeleton {
 	
@@ -44,6 +65,10 @@ public class LogstashAppender extends AppenderSkeleton {
 	 * 重连时间
 	 */
 	private long delay;
+	/**
+	 * 日志分隔符
+	 */
+	private String delimiter;
 	
 	/**
 	 * 异步线程
@@ -64,24 +89,25 @@ public class LogstashAppender extends AppenderSkeleton {
 	@Override
 	protected void append(LoggingEvent event) {
 		if(event != null) {
-			int index = 0;
 			final StringBuffer logBuilder = new StringBuffer(this.layout.format(event));
 			if (this.layout.ignoresThrowable()) {
-				final String[] exs = event.getThrowableStrRep();
-				if (exs != null) {
-					final int length = exs.length;
-					for (int i = 0; i < length; i++) {
-						logBuilder.append(exs[i]).append(Layout.LINE_SEP);
+				final String[] ems = event.getThrowableStrRep();
+				if (ems != null) {
+					final int length = ems.length;
+					for (int index = 0; index < length; index++) {
+						logBuilder.append(ems[index]).append(Layout.LINE_SEP);
 					}
 				}
 			}
+			logBuilder.append(this.delimiter);
 			final String log = logBuilder.toString();
+			int times = 0;
 			boolean ok = this.buffer.offer(log);
 			while(!ok) {
 				Thread.yield();
 				ok = this.buffer.offer(log);
-				if(++index > MAX_RETRY_TIMES) {
-					LogLog.error("超过最大重试失败次数，日志记录失败：" + log + "，重试次数：" + index);
+				if(++times > MAX_RETRY_TIMES) {
+					LogLog.error("超过最大重试失败次数，日志记录失败：" + log + "，重试次数：" + times);
 					break;
 				}
 			}
@@ -210,6 +236,14 @@ public class LogstashAppender extends AppenderSkeleton {
 
 	public void setDelay(long delay) {
 		this.delay = delay;
+	}
+
+	public String getDelimiter() {
+		return delimiter;
+	}
+
+	public void setDelimiter(String delimiter) {
+		this.delimiter = delimiter;
 	}
 
 }
