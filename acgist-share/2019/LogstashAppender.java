@@ -9,6 +9,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.Layout;
 import org.apache.log4j.helpers.LogLog;
 import org.apache.log4j.spi.LoggingEvent;
 
@@ -16,6 +17,11 @@ import org.apache.log4j.spi.LoggingEvent;
  * Logstash日志输出
  */
 public class LogstashAppender extends AppenderSkeleton {
+	
+	/**
+	 * 最大重新添加次数
+	 */
+	private static final int MAX_RETRY_TIMES = 10;
 	
 	/**
 	 * 是否关闭
@@ -58,11 +64,27 @@ public class LogstashAppender extends AppenderSkeleton {
 	@Override
 	protected void append(LoggingEvent event) {
 		if(event != null) {
-			boolean ok;
-			String log = this.layout.format(event);
-			do {
+			int index = 0;
+			final StringBuffer logBuilder = new StringBuffer(this.layout.format(event));
+			if (this.layout.ignoresThrowable()) {
+				final String[] exs = event.getThrowableStrRep();
+				if (exs != null) {
+					final int length = exs.length;
+					for (int i = 0; i < length; i++) {
+						logBuilder.append(exs[i]).append(Layout.LINE_SEP);
+					}
+				}
+			}
+			final String log = logBuilder.toString();
+			boolean ok = this.buffer.offer(log);
+			while(!ok) {
+				Thread.yield();
 				ok = this.buffer.offer(log);
-			} while (!ok);
+				if(++index > MAX_RETRY_TIMES) {
+					LogLog.error("超过最大重试失败次数，日志记录失败：" + log + "，重试次数：" + index);
+					break;
+				}
+			}
 		}
 	}
 
