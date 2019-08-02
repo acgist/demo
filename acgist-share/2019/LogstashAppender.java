@@ -207,7 +207,7 @@ public class LogstashAppender extends AppenderSkeleton {
 	}
 	
 	/**
-	 * 创建线程
+	 * 创建线程：TODO：UDP丢包
 	 */
 	private void buildThread() {
 		this.thread = new Thread(new Runnable() {
