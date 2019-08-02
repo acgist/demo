@@ -214,7 +214,6 @@ public class LogstashAppender extends AppenderSkeleton {
 			@Override
 			public void run() {
 				String log = null;
-				long index = 0;
 				while(!close) {
 					try {
 						if(log == null) {
@@ -222,11 +221,6 @@ public class LogstashAppender extends AppenderSkeleton {
 						}
 						if(log != null) {
 							channel.write(ByteBuffer.wrap(log.getBytes()));
-							if(!tcp) {
-								if(index++ % 100 == 0) {
-									Thread.sleep(10);
-								}
-							}
 							log = null;
 						}
 					} catch (Exception e) {
