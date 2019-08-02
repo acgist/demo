@@ -8,10 +8,8 @@ import java.nio.channels.SocketChannel;
 import java.nio.channels.WritableByteChannel;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -36,7 +34,7 @@ log4j.appender.logstash.Port=4567
 log4j.appender.logstash.Host=192.168.1.240
 # 断线重连时间（毫秒）
 log4j.appender.logstash.Delay=10000
-# 格式化：json（默认）、plain（普通文本）
+# 格式化：json（默认）、plain（文本）
 log4j.appender.logstash.Format=json
 # 项目名称
 log4j.appender.logstash.Project=acgist
@@ -81,9 +79,9 @@ public class LogstashAppender extends AppenderSkeleton {
 	 */
 	private static final int MAX_RETRY_TIMES = 10;
 	/**
-	 * UDP最大包大小
+	 * UDP最大包长度
 	 */
-	private static final int MAX_UDP_PACKET_SIZE = 1472;
+	private static final int MAX_UDP_PACKET_SIZE = 1024;
 	
 	/**
 	 * 远程端口
@@ -165,8 +163,8 @@ public class LogstashAppender extends AppenderSkeleton {
 	@Override
 	public void activateOptions() {
 		this.buffer = new LinkedBlockingQueue<String>(this.bufferSize);
-		this.tcp = !PROTOCOL_UDP.equals(this.protocol);
-		this.json = !FORMAT_PLAIN.equals(this.format);
+		this.tcp = !PROTOCOL_UDP.equalsIgnoreCase(this.protocol);
+		this.json = !FORMAT_PLAIN.equalsIgnoreCase(this.format);
 		this.buildChannel();
 		this.buildThread();
 	}
@@ -223,11 +221,12 @@ public class LogstashAppender extends AppenderSkeleton {
 							log = buffer.take();
 						}
 						if(log != null) {
-//							send(log);
 							channel.write(ByteBuffer.wrap(log.getBytes()));
-//							if(index++ % 100 == 0) {
-//								Thread.sleep(10);
-//							}
+							if(!tcp) {
+								if(index++ % 100 == 0) {
+									Thread.sleep(10);
+								}
+							}
 							log = null;
 						}
 					} catch (Exception e) {
@@ -260,24 +259,25 @@ public class LogstashAppender extends AppenderSkeleton {
 	/**
 	 * 日志信息拆分
 	 */
-	private void messageBlock(LoggingEvent event, String message) {
-		final List<String> messages = new ArrayList<>();
+	private void messageBlock(LoggingEvent event, final String message) {
 		if(this.tcp) {
-			messages.add(message);
+			offerMessage(event, message);
 		} else {
-			int index = 0;
 			int length = message.length();
-			while(index < length) {
-				if(length < index + MAX_UDP_PACKET_SIZE) {
-					messages.add(message.substring(index, index + MAX_RETRY_TIMES));
-				} else {
-					messages.add(message.substring(index));
+			if(length <= MAX_UDP_PACKET_SIZE) {
+				offerMessage(event, message);
+			} else {
+				int index = 0;
+				long track = System.nanoTime();
+				while(index < length) {
+					if(length < index + MAX_UDP_PACKET_SIZE) {
+						offerMessage(event, message.substring(index), track);
+					} else {
+						offerMessage(event, message.substring(index, index + MAX_UDP_PACKET_SIZE), track);
+					}
+					index += MAX_UDP_PACKET_SIZE;
 				}
-				index += MAX_UDP_PACKET_SIZE;
 			}
-		}
-		for (String value : messages) {
-			offerMessage(event, value);
 		}
 	}
 	
@@ -302,11 +302,18 @@ public class LogstashAppender extends AppenderSkeleton {
 	 * 缓存日志
 	 */
 	private void offerMessage(LoggingEvent event, String message) {
+		offerMessage(event, message, 0L);
+	}
+	
+	/**
+	 * 缓存日志
+	 */
+	private void offerMessage(LoggingEvent event, String message, long track) {
 		String log;
 		if(this.json) {
-			log = buildJSONLog(event, message);
+			log = buildJSONLog(event, message, track);
 		} else {
-			log = message;
+			log = buildPlainLog(event, message, track);
 		}
 		int times = 0;
 		boolean done = this.buffer.offer(log);
@@ -323,16 +330,30 @@ public class LogstashAppender extends AppenderSkeleton {
 	/**
 	 * 创建JSON日志
 	 */
-	private String buildJSONLog(LoggingEvent event, String log) {
+	private String buildJSONLog(LoggingEvent event, String message, long track) {
 		final Map<String, String> map = new HashMap<>();
 		map.put("level", event.getLevel().toString()); // 级别
 		map.put("project", this.project); // 项目
 		map.put("clazz", event.getLoggerName()); // 类名
 		map.put("timestamp", FORMATER.get().format(new Date(event.getTimeStamp()))); // 时间
-		map.put("message", log); // 信息
+		map.put("message", message); // 信息
+		if(track > 0) {
+			map.put("track", String.valueOf(track)); // 跟踪
+		}
 		return obj2json(map) + Layout.LINE_SEP;
 	}
 
+	/**
+	 * 创建文本日志
+	 */
+	private String buildPlainLog(LoggingEvent event, String message, long track) {
+		if(track > 0) {
+			return message + " - " + track;
+		} else {
+			return message;
+		}
+	}
+	
 	/**
 	 * JSON序列化
 	 */
