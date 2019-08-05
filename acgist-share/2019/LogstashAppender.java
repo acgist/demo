@@ -96,7 +96,7 @@ public class LogstashAppender extends AppenderSkeleton {
 	 */
 	private long delay;
 	/**
-	 * 日志格式
+	 * 日志格式：json（默认）、plain
 	 */
 	private String format;
 	/**
@@ -104,7 +104,7 @@ public class LogstashAppender extends AppenderSkeleton {
 	 */
 	private String project;
 	/**
-	 * 传输协议
+	 * 传输协议：tcp（默认）、udp
 	 */
 	private String protocol;
 	/**
@@ -127,7 +127,7 @@ public class LogstashAppender extends AppenderSkeleton {
 	/**
 	 * Socket连接
 	 */
-	private WritableByteChannel channel;
+	private ByteChannel channel;
 	/**
 	 * 日志缓存
 	 */
@@ -184,12 +184,16 @@ public class LogstashAppender extends AppenderSkeleton {
 				this.channel = channel;
 			} else {
 				final DatagramChannel channel = DatagramChannel.open();
-				channel.configureBlocking(false); // 不阻塞
+				channel.configureBlocking(false);
 				channel.connect(new InetSocketAddress(this.host, this.port)); // 连接后使用：read、write
 				this.channel = channel;
 			}
 		} catch (Exception e) {
 			LogLog.error("Logstash-Socket远程服务器连接异常", e);
+			waitDelay();
+			LogLog.warn("Logstash-失败重连");
+			releaseChannel(); // 释放
+			buildChannel(); // 重连
 		}
 	}
 
@@ -197,7 +201,7 @@ public class LogstashAppender extends AppenderSkeleton {
 	 * 释放客户端连接
 	 */
 	private void releaseChannel() {
-		if(this.channel != null) {
+		if(this.channel != null && this.channel.isOpen()) {
 			try {
 				this.channel.close();
 			} catch (Exception e) {
@@ -226,11 +230,7 @@ public class LogstashAppender extends AppenderSkeleton {
 					} catch (Exception e) {
 						LogLog.error("Logstash-日志发送异常：" + log, e);
 						if(channel == null || !channel.isOpen()) {
-							try {
-								Thread.sleep(delay);
-							} catch (Exception ex) {
-								LogLog.error("Logstash-休眠异常", e);
-							}
+							waitDelay();
 							LogLog.warn("Logstash-失败重连");
 							releaseChannel(); // 释放
 							buildChannel(); // 重连
@@ -251,32 +251,18 @@ public class LogstashAppender extends AppenderSkeleton {
 	}
 	
 	/**
-	 * 日志信息拆分
+	 * 重连等待
 	 */
-	private void messageBlock(LoggingEvent event, final String message) {
-		if(this.tcp) {
-			offerMessage(event, message);
-		} else {
-			int length = message.length();
-			if(length <= MAX_UDP_PACKET_SIZE) {
-				offerMessage(event, message);
-			} else {
-				int index = 0;
-				long track = System.nanoTime();
-				while(index < length) {
-					if(length < index + MAX_UDP_PACKET_SIZE) {
-						offerMessage(event, message.substring(index), track);
-					} else {
-						offerMessage(event, message.substring(index, index + MAX_UDP_PACKET_SIZE), track);
-					}
-					index += MAX_UDP_PACKET_SIZE;
-				}
-			}
+	private void waitDelay() {
+		try {
+			Thread.sleep(this.delay);
+		} catch (Exception e) {
+			LogLog.error("Logstash-休眠异常", e);
 		}
 	}
 	
 	/**
-	 * 创建日志
+	 * 创建日志信息：日志内容、异常信息。
 	 */
 	private String buildMessage(LoggingEvent event) {
 		final StringBuilder logBuilder = new StringBuilder(this.layout.format(event));
@@ -290,6 +276,31 @@ public class LogstashAppender extends AppenderSkeleton {
 			}
 		}
 		return logBuilder.toString();
+	}
+	
+	/**
+	 * 日志信息拆分：tcp不拆分、udp日志拆分。
+	 */
+	private void messageBlock(LoggingEvent event, final String message) {
+		if(this.tcp) {
+			offerMessage(event, message);
+		} else {
+			final int length = message.length();
+			if(length <= MAX_UDP_PACKET_SIZE) {
+				offerMessage(event, message);
+			} else {
+				int index = 0;
+				final long track = System.nanoTime(); // 跟踪号
+				while(index < length) {
+					if(length < index + MAX_UDP_PACKET_SIZE) {
+						offerMessage(event, message.substring(index), track);
+					} else {
+						offerMessage(event, message.substring(index, index + MAX_UDP_PACKET_SIZE), track);
+					}
+					index += MAX_UDP_PACKET_SIZE;
+				}
+			}
+		}
 	}
 	
 	/**
@@ -315,7 +326,7 @@ public class LogstashAppender extends AppenderSkeleton {
 			Thread.yield();
 			done = this.buffer.offer(log);
 			if(++times > MAX_RETRY_TIMES) {
-				LogLog.error("超过最大重试失败次数，日志记录失败：" + log + "，重试次数：" + times);
+				LogLog.error("超过最大重试失败次数，日志记录失败（丢弃）：" + log + "，重试次数：" + times);
 				break;
 			}
 		}
