@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,9 @@ public class GatewaySession implements Serializable {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(GatewaySession.class);
 
+	@Autowired
+	private SignatureService signatureService;
+	
 	/**
 	 * <p>请求时间</p>
 	 */
@@ -228,7 +232,7 @@ public class GatewaySession implements Serializable {
 	 * @return 是否成功
 	 */
 	public boolean verifySignature() {
-		return SignatureService.verify(this.requestData);
+		return this.signatureService.verify(this.requestData);
 	}
 	
 	/**
@@ -306,14 +310,16 @@ public class GatewaySession implements Serializable {
 		this.convertRequestToResponse();
 		this.responseData.put(GatewayService.GATEWAY_QUERY_ID, this.queryId);
 		this.responseData.put(GatewayService.GATEWAY_RESPONSE_TIME, DateUtils.buildTime());
-		SignatureService.signature(this.responseData);
+		this.signatureService.signature(this.responseData);
 	}
 	
 	/**
 	 * <p>数据转换</p>
 	 */
 	private void convertRequestToResponse() {
-		this.requestData.forEach((key, value) -> this.responseData.computeIfAbsent(key, x -> value));
+		if(this.requestData != null) {
+			this.requestData.forEach((key, value) -> this.responseData.computeIfAbsent(key, x -> value));
+		}
 	}
 	
 }

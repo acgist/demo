@@ -17,9 +17,11 @@ import com.acgist.utils.JSONUtils;
 
 public class GatewayTest {
 
+	private static SignatureService service;
+	
 	@BeforeClass
 	public static void init() {
-		SignatureService service = new SignatureService(
+		service = new SignatureService(
 //			"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCWh2boYcHdT+Q6pABZbyG2bDOdAH1cPv7TpwoKZGLDWGtUsj1w4JA9vL6ZAJe0XVO1TdnzCMw922565E0/r+zOYFizr9Tb37JMjMGyyXgHm+WZ/Vm+BOXi86l8unEmqcJM8gKv8zvWV68HmSaFIu3s10nShJadcMZh7hVrqXPrpQIDAQAB",
 //			"MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAJaHZuhhwd1P5DqkAFlvIbZsM50AfVw+/tOnCgpkYsNYa1SyPXDgkD28vpkAl7RdU7VN2fMIzD3bbnrkTT+v7M5gWLOv1NvfskyMwbLJeAeb5Zn9Wb4E5eLzqXy6cSapwkzyAq/zO9ZXrweZJoUi7ezXSdKElp1wxmHuFWupc+ulAgMBAAECgYAOmw7CJ5Ie/jx/8B/UjbLwt2j+p+iCBd7F/KQ9w+XNXIv1iOHrTO7R/rljsSoHJzMTGX23VjgzHFKI/BP+xPwuF0KSwCdV3uVRpWNlo9vrVARk/LDMNKamfK9k1+TV8uY1mlO4aYIywwN45Zr/sCOf+cRRzn8x1OlbowJEU3VhFQJBAPGD6zHx13WBWn+Sq/8jG451Y3/vQ6Lw86hSc6UiGQwOIPlDwJVDtaIgftx1O9VdHnQcXZ+26ox2AnM1dLPP8usCQQCfjohfNPDrsXeZR4rdwPd9AQ+ETwa+b1p80l1KiuxLDEauaq+MkDYT3yJRXoEYSrZrDmUKMV5tLuWGJqTifVevAkEAqHIWvy3q1XTTtriIp5lH5fMv45HwPZwKhTKEn/8JMyRDkTbVAgZIj3xUntRRV/3reJY0ImoEatT/3nTBIYx+4wJBAI5xBWfRcH9JiJbrWpqLqaYMK1kX39JkwKiMeMKScU6yX+tXzO6008I7wnxX3PHdySqbyDIoTr80Ta3MlAiqk3sCQHgqEA26T24hz/k2QRJ4kz3/nhdM4/dyDUU9rOykH734DIPBK/Zi6hgvfQXwfNglN2iYUxlJb3hvAE1VEkjbt6s="
 			"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8N09VZ/ARi+dBbxQq84ynf162QF5P71B/0DY54Lo1XSQXzcbCa6nrySbsLsJJ8FmVtBUWmomxQs0Gf37QTjN8cMVp1ziTXMr4zOapV3WYlG4XSf9kxnIgOD1OyjcjPaglBucJNf90Gyswnqc+3RF4X7Andb21SPpO+bHlsF/+tQIDAQAB",
@@ -33,30 +35,31 @@ public class GatewayTest {
 		final Map<String, Object> request = new HashMap<>();
 		request.put("requestTime", DateUtils.buildTime());
 		request.put("orderId", "1234");
+//		request.put("gateway", "pay");
 //		request.put("orderId", "fail");
 //		request.put("orderId", "exception");
 		request.put("reserved", "保留数据");
-		SignatureService.signature(request);
+		service.signature(request);
 		final int count = 1;
 		final CountDownLatch down = new CountDownLatch(count);
 		final ExecutorService executors = Executors.newFixedThreadPool(100);
 		final long begin = System.currentTimeMillis();
 		for (int i = 0; i < count; i++) {
 			executors.submit(() -> {
-				final String json = HTTPUtils.post("http://localhost:8080/gateway/api/pay", JSONUtils.serialize(request));
+				final String json = HTTPUtils.post("http://localhost:8080/gateway/pay", JSONUtils.serialize(request));
 				this.response(json);
 				down.countDown();
 			});
 		}
 		down.await();
 		final long end = System.currentTimeMillis();
-		System.out.println(end - begin);
+		System.out.println("执行时间：" + (end - begin));
 		executors.shutdown();
 	}
 	
 	public void response(String json) {
 		final Map<String, Object> response = JSONUtils.toMap(json);
-		if(SignatureService.verify(response)) {
+		if(service.verify(response)) {
 			final String code = (String) response.get(GatewayService.GATEWAY_CODE);
 			if("0000".equals(code)) {
 				System.out.println("操作正常：" + json);

@@ -2,6 +2,9 @@ package com.acgist.gateway.service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,35 +12,39 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
- * 编号生成
+ * <p>编号生成</p>
  */
 @Service
 public class UniqueIdService {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(UniqueIdService.class);
 
-	@Value("${server.sn:1001}")
-	private String serverSN;
+	@Value("${server.sn:1000}")
+	private String serverSn;
 
 	private static final int MIN_INDEX = 10000;
 	private static final int MAX_INDEX = 99999;
-	private static int ID_INDEX = MIN_INDEX;
+	private static final AtomicInteger INDEX = new AtomicInteger(MIN_INDEX);
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(UniqueIdService.class);
-	
+	@PostConstruct
 	public void init() {
-		LOGGER.info("系统序号：{}", this.serverSN);
+		LOGGER.info("系统序号：{}", this.serverSn);
 	}
 	
 	/**
-	 * 系统唯一ID
+	 * <p>生成系统唯一ID</p>
+	 * 
+	 * @return 系统唯一ID
 	 */
-	public synchronized String id() {
+	public String id() {
 		final StringBuffer builder = new StringBuffer();
 		final SimpleDateFormat formater = new SimpleDateFormat("yyyyMMddHHmmss");
 		builder.append(formater.format(new Date()));
-		builder.append(ID_INDEX);
-		ID_INDEX++;
-		if(ID_INDEX > MAX_INDEX) {
-			ID_INDEX = MIN_INDEX;
+		synchronized (INDEX) {
+			builder.append(INDEX.getAndIncrement());
+			if(INDEX.get() >= MAX_INDEX) {
+				INDEX.set(MIN_INDEX);
+			}
 		}
 		return builder.toString();
 	}

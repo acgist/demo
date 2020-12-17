@@ -13,6 +13,8 @@ import com.acgist.gateway.request.GatewayRequest;
  */
 @Service
 public class GatewayService {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(GatewayService.class);
 
 	public static final String GATEWAY_CODE = "code";
 	public static final String GATEWAY_MESSAGE = "message";
@@ -20,8 +22,6 @@ public class GatewayService {
 	public static final String GATEWAY_SIGNATURE = "signature";
 	public static final String GATEWAY_NOTICE_URL = "noticeURL";
 	public static final String GATEWAY_RESPONSE_TIME = "responseTime";
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(GatewayService.class);
 	
 	/**
 	 * <p>保存请求</p>

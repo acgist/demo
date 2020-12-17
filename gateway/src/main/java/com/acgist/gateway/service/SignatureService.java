@@ -34,9 +34,8 @@ public class SignatureService {
 	private String publicKeyValue;
 	@Value("${system.private.key:}")
 	private String privateKeyValue;
-
-	private static PublicKey PUBLIC_KEY;
-	private static PrivateKey PRIVATE_KEY;
+	private PublicKey publicKey;
+	private PrivateKey privateKey;
 
 	public SignatureService() {
 	}
@@ -50,9 +49,9 @@ public class SignatureService {
 	public void init() {
 		LOGGER.info("初始化签名工具类");
 		LOGGER.info("初始化公钥");
-		PUBLIC_KEY = stringToPublicKey(this.publicKeyValue);
+		this.publicKey = this.stringToPublicKey(this.publicKeyValue);
 		LOGGER.info("初始化私钥");
-		PRIVATE_KEY = stringToPrivateKey(this.privateKeyValue);
+		this.privateKey = this.stringToPrivateKey(this.privateKeyValue);
 	}
 
 	/**
@@ -62,14 +61,14 @@ public class SignatureService {
 	 * 
 	 * @return 是否验证成功
 	 */
-	public static final boolean verify(Map<String, Object> data) {
+	public boolean verify(Map<String, Object> data) {
 		if (data == null) {
 			return false;
 		}
 		final String digest = dataToDigest(data);
 		final String signature = (String) data.get(GatewayService.GATEWAY_SIGNATURE);
 		try {
-			return verify(digest, signature, PUBLIC_KEY);
+			return verify(digest, signature, this.publicKey);
 		} catch (Exception e) {
 			LOGGER.error("验签异常", e);
 		}
@@ -81,9 +80,9 @@ public class SignatureService {
 	 * 
 	 * @param data 签名数据
 	 */
-	public static final void signature(final Map<String, Object> data) {
+	public void signature(final Map<String, Object> data) {
 		final String digest = dataToDigest(data);
-		final String signature = signature(digest, PRIVATE_KEY);
+		final String signature = signature(digest, this.privateKey);
 		data.put(GatewayService.GATEWAY_SIGNATURE, signature);
 	}
 
@@ -152,7 +151,7 @@ public class SignatureService {
 	 * @return 是否验证成功
 	 */
 	private static final boolean verify(String data, String signature, PublicKey publicKey) {
-		if (data == null) {
+		if (data == null || signature == null) {
 			return false;
 		}
 		return verify(data.getBytes(), Base64.getMimeDecoder().decode(signature), publicKey);
@@ -186,7 +185,7 @@ public class SignatureService {
 	 * 
 	 * @return 公钥
 	 */
-	private static final PublicKey stringToPublicKey(String key) {
+	private PublicKey stringToPublicKey(String key) {
 		final byte[] bytes = Base64.getMimeDecoder().decode(key);
 		final X509EncodedKeySpec keySpec = new X509EncodedKeySpec(bytes);
 		try {
@@ -205,7 +204,7 @@ public class SignatureService {
 	 * 
 	 * @return 私钥
 	 */
-	private static final PrivateKey stringToPrivateKey(String key) {
+	private PrivateKey stringToPrivateKey(String key) {
 		final byte[] bytes = Base64.getMimeDecoder().decode(key);
 		final PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(bytes);
 		try {

@@ -1,7 +1,5 @@
 package com.acgist.gateway.executor.pay;
 
-import java.util.Map;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -22,7 +20,7 @@ public class QueryExecutor extends GatewayExecutor<QueryRequest> {
 	
 	@Override
 	protected void execute() {
-		this.session.buildSuccess(Map.of("status", "success"));
+		this.session.buildSuccess().putResponse("status", "success");
 	}
 
 }

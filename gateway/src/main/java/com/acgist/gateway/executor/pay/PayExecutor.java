@@ -1,7 +1,5 @@
 package com.acgist.gateway.executor.pay;
 
-import java.util.Map;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -29,7 +27,7 @@ public class PayExecutor extends GatewayExecutor<PayRequest> {
 		} else if ("exception".equals(orderId)) {
 			throw new RuntimeException();
 		} else {
-			this.session.buildSuccess(Map.of("status", "success"));
+			this.session.buildSuccess().putResponse("status", "success");
 		}
 	}
 
