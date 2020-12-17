@@ -27,23 +27,14 @@ public class GatewayService {
 	public static final String GATEWAY_RESPONSE_TIME = "responseTime";
 	
 	/**
-	 * <p>保存请求</p>
+	 * <p>保存网关</p>
 	 * 
 	 * @param queryId 请求ID
 	 * @param request 请求
-	 */
-	public void save(String queryId, GatewayRequest request) {
-		LOGGER.info("保存网关记录：{}", request);
-	}
-	
-	/**
-	 * <p>保存响应</p>
-	 * 
-	 * @param queryId 请求ID
 	 * @param response 响应
 	 */
-	public void update(String queryId, Map<String, Object> response) {
-		LOGGER.info("更新网关记录：{}", response);
+	public void update(String queryId, GatewayRequest request, Map<String, Object> response) {
+		LOGGER.info("保存网关：{}", queryId);
 	}
 	
 }

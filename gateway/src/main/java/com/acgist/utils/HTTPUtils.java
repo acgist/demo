@@ -114,6 +114,9 @@ public final class HTTPUtils {
 //				.register("https", SSLConnectionSocketFactory.getSocketFactory()).build();
 			MANAGER = new PoolingHttpClientConnectionManager(registry);
 			REUSE_CLIENT = HttpClients.custom().setRedirectStrategy(DefaultRedirectStrategy.getInstance()).setConnectionManager(MANAGER).build();
+		} else {
+			MANAGER = null;
+			REUSE_CLIENT = null;
 		}
 	}
 	

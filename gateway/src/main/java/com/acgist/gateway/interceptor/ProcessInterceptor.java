@@ -48,7 +48,7 @@ public class ProcessInterceptor implements HandlerInterceptor {
 		final GatewaySession session = GatewaySession.getInstance(this.context);
 		final Gateway gateway = session.getGateway();
 		if(gateway != null && gateway.record()) {
-			this.gatewayService.update(session.getQueryId(), session.getResponseData());
+			this.gatewayService.update(session.getQueryId(), session.getRequest(), session.getResponseData());
 			this.noticeService.put(session);
 		}
 		session.completeProcess(request);

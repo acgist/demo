@@ -40,7 +40,7 @@ public class GatewayTest {
 //		request.put("orderId", "exception");
 		request.put("reserved", "保留数据");
 		service.signature(request);
-		final int count = 1;
+		final int count = 10000;
 		final CountDownLatch down = new CountDownLatch(count);
 		final ExecutorService executors = Executors.newFixedThreadPool(100);
 		final long begin = System.currentTimeMillis();
