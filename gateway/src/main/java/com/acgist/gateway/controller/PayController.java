@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.acgist.gateway.config.GatewayURL;
 import com.acgist.gateway.executor.pay.PayExecutor;
 import com.acgist.gateway.executor.pay.QueryExecutor;
-import com.acgist.utils.BeanUtils;
 
 @RestController
 public class PayController {
@@ -20,13 +19,13 @@ public class PayController {
 	private ApplicationContext context;
 
 	@RequestMapping(value = GatewayURL.PAY, method = RequestMethod.POST)
-	public Map<String, String> pay() {
-		return BeanUtils.getInstance(this.context, PayExecutor.class).response();
+	public Map<String, Object> pay() {
+		return PayExecutor.newInstance(this.context).response();
 	}
 
 	@RequestMapping(value = GatewayURL.PAY_QUERY, method = RequestMethod.POST)
-	public Map<String, String> query() {
-		return BeanUtils.getInstance(this.context, QueryExecutor.class).response();
+	public Map<String, Object> query() {
+		return QueryExecutor.newInstance(this.context).response();
 	}
 
 }

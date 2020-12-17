@@ -2,7 +2,7 @@ package com.acgist.gateway.config;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.acgist.gateway.ErrorCodeException;
+import com.acgist.gateway.GatewayCodeException;
 import com.acgist.gateway.request.GatewayRequest;
 import com.acgist.gateway.request.pay.DrawbackRequest;
 import com.acgist.gateway.request.pay.PayRequest;
@@ -63,7 +63,7 @@ public enum Gateway {
 				return gateway;
 			}
 		}
-		throw new ErrorCodeException(GatewayCode.CODE_1000);
+		throw new GatewayCodeException(GatewayCode.CODE_1000);
 	}
 	
 	public boolean record() {

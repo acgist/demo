@@ -11,10 +11,11 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import com.acgist.gateway.GatewaySession;
 import com.acgist.gateway.config.GatewayCode;
 import com.acgist.gateway.service.UniqueIdService;
-import com.acgist.utils.RedirectUtils;
 
 /**
- * 处理过程中拦截：使用session来记录数据，所以如果一个session处理两次请求，后面的请求数据会覆盖掉前一次的请求
+ * <p>拦截处理过程中请求</p>
+ * 
+ * @author acgist
  */
 @Component
 public class ProcessInterceptor implements HandlerInterceptor {
@@ -26,18 +27,18 @@ public class ProcessInterceptor implements HandlerInterceptor {
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		final GatewaySession session = GatewaySession.getInstance(context);
-		final String queryId = uniqueIdService.id();
+		final GatewaySession session = GatewaySession.getInstance(this.context);
+		final String queryId = this.uniqueIdService.id();
 		if(session.buildProcess(queryId)) {
 			return true;
 		}
-		RedirectUtils.error(GatewayCode.CODE_1001, request, response);
+		session.buildFail(GatewayCode.CODE_1001).response(response);
 		return false;
 	}
 
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-		final GatewaySession session = GatewaySession.getInstance(context);
+		final GatewaySession session = GatewaySession.getInstance(this.context);
 		session.completeProcess(request);
 	}
 

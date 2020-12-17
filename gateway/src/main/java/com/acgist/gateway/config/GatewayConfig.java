@@ -16,10 +16,10 @@ public class GatewayConfig {
 	
 	@PostConstruct
 	public void init() {
-		this.apiType();
+		this.gatewayType();
 	}
 
-	private void apiType() {
+	private void gatewayType() {
 		final Gateway[] apiTypes = Gateway.values();
 		for (Gateway apiType : apiTypes) {
 			LOGGER.info(

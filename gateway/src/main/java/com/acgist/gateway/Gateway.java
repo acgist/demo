@@ -1,14 +1,11 @@
 package com.acgist.gateway;
 
 import java.io.Serializable;
-import java.util.Map;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
-import com.acgist.gateway.service.SignatureService;
-import com.acgist.utils.APIUtils;
 import com.acgist.utils.JSONUtils;
-import com.acgist.utils.ValidatorUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -25,10 +22,12 @@ public abstract class Gateway implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * <p>签名</p>
+	 * <p>网关类型</p>
+	 * 
+	 * @see com.acgist.gateway.config.Gateway
 	 */
-	public static final String PROPERTY_SIGNATURE = "signature";
-
+	@NotBlank(message = "网关类型不能为空")
+	protected String gateway;
 	/**
 	 * <p>签名数据</p>
 	 */
@@ -38,7 +37,16 @@ public abstract class Gateway implements Serializable {
 	/**
 	 * <p>请求透传信息</p>
 	 */
+	@Size(max = 512, message = "透传信息长度不能超过512")
 	protected String reserved;
+
+	public String getGateway() {
+		return gateway;
+	}
+
+	public void setGateway(String gateway) {
+		this.gateway = gateway;
+	}
 
 	public String getSignature() {
 		return signature;
@@ -54,34 +62,6 @@ public abstract class Gateway implements Serializable {
 
 	public void setReserved(String reserved) {
 		this.reserved = reserved;
-	}
-
-	/**
-	 * <p>数据格式校验</p>
-	 * 
-	 * @return 错误信息
-	 */
-	public String validator() {
-		return ValidatorUtils.verify(this);
-	}
-
-	/**
-	 * <p>签名</p>
-	 * 
-	 * @return 签名结果
-	 */
-	public Map<String, String> signature() {
-		SignatureService.signature(this);
-		return this.toMap();
-	}
-
-	/**
-	 * <p>转为Map数据</p>
-	 * 
-	 * @return Map数据
-	 */
-	public Map<String, String> toMap() {
-		return APIUtils.beanToMap(this);
 	}
 
 	@Override

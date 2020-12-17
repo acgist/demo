@@ -1,29 +1,35 @@
 package com.acgist.gateway.executor.pay;
 
+import java.util.Map;
+
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.acgist.gateway.config.GatewayCode;
 import com.acgist.gateway.executor.GatewayExecutor;
 import com.acgist.gateway.request.pay.PayRequest;
-import com.acgist.gateway.response.pay.PayResponse;
 
 /**
- * 交易
+ * <p>交易</p>
  */
 @Component
 @Scope("prototype")
-public class PayExecutor extends GatewayExecutor<PayRequest, PayResponse> {
+public class PayExecutor extends GatewayExecutor<PayRequest> {
 
+	public static final PayExecutor newInstance(ApplicationContext context) {
+		return context.getBean(PayExecutor.class);
+	}
+	
 	@Override
 	public void execute() {
-		String orderId = request.getOrderId();
+		final String orderId = this.request.getOrderId();
 		if("fail".equals(orderId)) {
-			response.message(GatewayCode.CODE_9999, "交易失败");
+			this.session.buildFail(GatewayCode.CODE_9999);
 		} else if ("exception".equals(orderId)) {
 			throw new RuntimeException();
 		} else {
-			response.success();
+			this.session.buildSuccess(Map.of("status", "success"));
 		}
 	}
 

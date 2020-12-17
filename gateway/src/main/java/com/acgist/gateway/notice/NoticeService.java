@@ -12,11 +12,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import com.acgist.gateway.GatewaySession;
-import com.acgist.gateway.request.GatewayRequest;
-import com.acgist.gateway.response.GatewayResponse;
+import com.acgist.gateway.service.GatewayService;
 
 /**
- * 异步处理
+ * <p>异步通知消息</p>
  */
 @Service
 public class NoticeService {
@@ -29,47 +28,38 @@ public class NoticeService {
 	@PostConstruct
 	public void init() {
 		LOGGER.info("初始化异步消息处理线程");
-		context.getBean(NoticeThread.class).start();
+		this.context.getBean(NoticeThread.class).start();
 	}
 	
 	/**
-	 * 消息队列
+	 * <p>异步通知消息队列</p>
 	 */
 	private static final BlockingQueue<NoticeMessage> MESSAGE_QUEUE = new ArrayBlockingQueue<>(20000);
 	
 	/**
-	 * 添加信息
-	 * @param session 交互内容
+	 * <p>添加异步通知消息</p>
+	 * 
+	 * @param session session
 	 */
 	public void put(GatewaySession session) {
 		if(session == null) {
 			return;
 		}
-		this.put(session.getGatewayRequest(), session.getApiResponse());
-	}
-	
-	/**
-	 * 添加信息
-	 * @param apiRequest 请求内容
-	 * @param apiResponse 响应内容
-	 */
-	public void put(GatewayRequest apiRequest, GatewayResponse apiResponse) {
-		if(apiRequest == null || apiResponse == null) {
-			return;
-		}
-		if(!MESSAGE_QUEUE.offer(new NoticeMessage(apiRequest, apiResponse))) {
-			LOGGER.error("消息插入失败，QueryId:{}", apiResponse.getQueryId());
+		if(!MESSAGE_QUEUE.offer(new NoticeMessage(session.getQueryId(), (String) session.getRequest(GatewayService.GATEWAY_NOTICE_URL), session.getResponseData()))) {
+			LOGGER.error("添加异步通知消息失败：{}", session.getQueryId());
 		}
 	}
 	
 	/**
-	 * 获取消息
+	 * <p>获取异步通知消息</p>
+	 * 
+	 * @return 异步通知消息
 	 */
 	public NoticeMessage take() {
 		try {
 			return MESSAGE_QUEUE.take();
 		} catch (InterruptedException e) {
-			LOGGER.error("消息获取异常", e);
+			LOGGER.error("获取异步通知消息异常", e);
 		}
 		return null;
 	}

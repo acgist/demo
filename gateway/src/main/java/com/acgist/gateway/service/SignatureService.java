@@ -19,10 +19,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.acgist.gateway.Gateway;
-
 /**
- * 签名工具，公钥私钥生成：http://web.chacuo.net/netrsakeypair
+ * <p>签名工具</p>
+ * <p>公钥私钥生成：http://web.chacuo.net/netrsakeypair</p>
  */
 @Service
 public class SignatureService {
@@ -36,8 +35,8 @@ public class SignatureService {
 	@Value("${system.private.key:}")
 	private String privateKeyValue;
 
-	private static PublicKey publicKey;
-	private static PrivateKey privateKey;
+	private static PublicKey PUBLIC_KEY;
+	private static PrivateKey PRIVATE_KEY;
 
 	public SignatureService() {
 	}
@@ -51,32 +50,26 @@ public class SignatureService {
 	public void init() {
 		LOGGER.info("初始化签名工具类");
 		LOGGER.info("初始化公钥");
-		publicKey = stringToPublicKey(publicKeyValue);
+		PUBLIC_KEY = stringToPublicKey(this.publicKeyValue);
 		LOGGER.info("初始化私钥");
-		privateKey = stringToPrivateKey(privateKeyValue);
+		PRIVATE_KEY = stringToPrivateKey(this.privateKeyValue);
 	}
 
 	/**
-	 * 验签
+	 * <p>验签</p>
+	 * 
+	 * @param data 验签数据
+	 * 
+	 * @return 是否验证成功
 	 */
-	public static final boolean verify(Gateway api) {
-		if (api == null) {
-			return false;
-		}
-		return verify(api.toMap());
-	}
-
-	/**
-	 * 验签
-	 */
-	public static final boolean verify(Map<String, String> data) {
+	public static final boolean verify(Map<String, Object> data) {
 		if (data == null) {
 			return false;
 		}
 		final String digest = dataToDigest(data);
-		final String sign = data.get(Gateway.PROPERTY_SIGNATURE);
+		final String signature = (String) data.get(GatewayService.GATEWAY_SIGNATURE);
 		try {
-			return verify(digest, sign, publicKey);
+			return verify(digest, signature, PUBLIC_KEY);
 		} catch (Exception e) {
 			LOGGER.error("验签异常", e);
 		}
@@ -84,61 +77,62 @@ public class SignatureService {
 	}
 
 	/**
-	 * 签名
-	 */
-	public static final void signature(Gateway api) {
-		if (api == null) {
-			return;
-		}
-		final String digest = dataToDigest(api.toMap());
-		final String sign = sign(digest, privateKey);
-		api.setSign(sign);
-	}
-
-	/**
-	 * 获取签名字符串：按照key排序拼接为字符串
-	 */
-	private static final String dataToDigest(final Map<String, String> data) {
-		final StringBuffer buffer = new StringBuffer();
-		final TreeMap<String, String> treeMap = new TreeMap<String, String>();
-		data.entrySet().stream()
-		.filter(entry -> !Gateway.PROPERTY_SIGNATURE.equals(entry.getKey()))
-		.forEach(entry -> {
-			treeMap.put(entry.getKey(), entry.getValue());
-		});
-		treeMap.entrySet().forEach(entry -> {
-			buffer.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
-		});
-		if (buffer.length() == 0) {
-			return buffer.toString();
-		}
-		return buffer.substring(0, buffer.length() - 1);
-	}
-
-	/**
-	 * 签名
+	 * <p>签名</p>
 	 * 
-	 * @param data       签名字符串
-	 * @param privateKey 私钥
-	 * @return 签名后字符串
+	 * @param data 签名数据
 	 */
-	private static final String sign(String data, PrivateKey privateKey) {
+	public static final void signature(final Map<String, Object> data) {
+		final String digest = dataToDigest(data);
+		final String signature = signature(digest, PRIVATE_KEY);
+		data.put(GatewayService.GATEWAY_SIGNATURE, signature);
+	}
+
+	/**
+	 * <p>获取散列值</p>
+	 * 
+	 * @param data 数据
+	 * 
+	 * @return 散列值
+	 */
+	public static final String dataToDigest(final Map<String, Object> data) {
+		final StringBuilder builder = new StringBuilder();
+		final TreeMap<String, String> sortData = new TreeMap<>();
+		data.entrySet().stream()
+			.filter(entry -> !GatewayService.GATEWAY_SIGNATURE.equals(entry.getKey()))
+			.forEach(entry -> sortData.put(entry.getKey(), String.valueOf(entry.getValue())));
+		sortData.entrySet().forEach(entry -> builder.append(entry.getKey()).append("=").append(entry.getValue()).append("&"));
+		if (builder.length() != 0) {
+			builder.setLength(builder.length() - 1);
+		}
+		return builder.toString();
+	}
+
+	/**
+	 * <p>签名</p>
+	 * 
+	 * @param data 待签名数据
+	 * @param privateKey 私钥
+	 * 
+	 * @return 签名
+	 */
+	private static final String signature(String data, PrivateKey privateKey) {
 		if (data == null) {
 			return null;
 		}
-		return Base64.getEncoder().encodeToString(sign(data.getBytes(), privateKey));
+		return Base64.getMimeEncoder().encodeToString(signature(data.getBytes(), privateKey));
 	}
 
 	/**
-	 * 签名
+	 * <p>签名</p>
 	 * 
-	 * @param data       签名字数据
+	 * @param data 待签名数据
 	 * @param privateKey 私钥
-	 * @return 签名后数据
+	 * 
+	 * @return 签名
 	 */
-	private static final byte[] sign(byte[] data, PrivateKey privateKey) {
+	private static final byte[] signature(byte[] data, PrivateKey privateKey) {
 		try {
-			Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
+			final Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
 			signature.initSign(privateKey);
 			signature.update(data);
 			return signature.sign();
@@ -149,34 +143,36 @@ public class SignatureService {
 	}
 
 	/**
-	 * 验签
+	 * <p>验签</p>
 	 * 
-	 * @param data      需要验证数据
-	 * @param sign      签名后数据
+	 * @param data 待验证数据
+	 * @param signature 签名数据
 	 * @param publicKey 公钥
-	 * @return true：通过验证；false：验证失败
+	 * 
+	 * @return 是否验证成功
 	 */
-	private static final boolean verify(String data, String sign, PublicKey publicKey) {
+	private static final boolean verify(String data, String signature, PublicKey publicKey) {
 		if (data == null) {
 			return false;
 		}
-		return verify(data.getBytes(), Base64.getDecoder().decode(sign), publicKey);
+		return verify(data.getBytes(), Base64.getMimeDecoder().decode(signature), publicKey);
 	}
 
 	/**
-	 * 验签
+	 * <p>验签</p>
 	 * 
-	 * @param data      需要验证数据
-	 * @param sign      签名后数据
+	 * @param data 待验签数据
+	 * @param signature 签名数据
 	 * @param publicKey 公钥
-	 * @return true：通过验证；false：验证失败
+	 * 
+	 * @return 是否验证成功
 	 */
-	private static final boolean verify(byte[] data, byte[] sign, PublicKey publicKey) {
+	private static final boolean verify(byte[] data, byte[] signatureBytes, PublicKey publicKey) {
 		try {
-			Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
+			final Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
 			signature.initVerify(publicKey);
 			signature.update(data);
-			return signature.verify(sign);
+			return signature.verify(signatureBytes);
 		} catch (Exception e) {
 			LOGGER.error("验签异常", e);
 		}
@@ -184,39 +180,39 @@ public class SignatureService {
 	}
 
 	/**
-	 * 字符串转公钥
+	 * <p>字符串转公钥</p>
 	 * 
 	 * @param key 字符串
+	 * 
 	 * @return 公钥
 	 */
 	private static final PublicKey stringToPublicKey(String key) {
-		byte[] bytes = Base64.getDecoder().decode(key);
-		X509EncodedKeySpec keySpec = new X509EncodedKeySpec(bytes);
+		final byte[] bytes = Base64.getMimeDecoder().decode(key);
+		final X509EncodedKeySpec keySpec = new X509EncodedKeySpec(bytes);
 		try {
-			KeyFactory keyFactory = KeyFactory.getInstance(RSA_ALGORITHM);
-			PublicKey publicKey = keyFactory.generatePublic(keySpec);
-			return publicKey;
+			final KeyFactory keyFactory = KeyFactory.getInstance(RSA_ALGORITHM);
+			return keyFactory.generatePublic(keySpec);
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-			LOGGER.error("字符串转公钥异常，字符串内容：{}", key, e);
+			LOGGER.error("字符串转公钥异常：{}", key, e);
 		}
 		return null;
 	}
 
 	/**
-	 * 字符串转私钥
+	 * <p>字符串转私钥</p>
 	 * 
 	 * @param key 字符串
+	 * 
 	 * @return 私钥
 	 */
 	private static final PrivateKey stringToPrivateKey(String key) {
-		byte[] bytes = Base64.getDecoder().decode(key);
-		PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(bytes);
+		final byte[] bytes = Base64.getMimeDecoder().decode(key);
+		final PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(bytes);
 		try {
-			KeyFactory keyFactory = KeyFactory.getInstance(RSA_ALGORITHM);
-			PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
-			return privateKey;
+			final KeyFactory keyFactory = KeyFactory.getInstance(RSA_ALGORITHM);
+			return keyFactory.generatePrivate(keySpec);
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-			LOGGER.error("字符串转私钥异常，字符串内容：{}", key, e);
+			LOGGER.error("字符串转私钥异常：{}", key, e);
 		}
 		return null;
 	}

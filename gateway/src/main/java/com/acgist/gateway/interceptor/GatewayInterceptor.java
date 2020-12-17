@@ -14,35 +14,35 @@ import com.acgist.gateway.notice.NoticeService;
 import com.acgist.gateway.service.GatewayService;
 
 /**
- * 报文保存
+ * <p>报文保存</p>
  */
 @Component
 public class GatewayInterceptor implements HandlerInterceptor {
 
 	@Autowired
-	private NoticeService asynService;
-	@Autowired
 	private ApplicationContext context;
+	@Autowired
+	private NoticeService noticeService;
 	@Autowired
 	private GatewayService gatewayService;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		final GatewaySession session = GatewaySession.getInstance(context);
-		final Gateway apiType = session.getApiType();
-		if(apiType.record()) {
-			gatewayService.save(session.getGatewayRequest());
+		final GatewaySession session = GatewaySession.getInstance(this.context);
+		final Gateway gateway = session.getGateway();
+		if(gateway.record()) {
+			this.gatewayService.save(session.getQueryId(), session.getRequest());
 		}
 		return true;
 	}
 	
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-		final GatewaySession session = GatewaySession.getInstance(context);
-		final Gateway apiType = session.getApiType();
-		if(apiType.record()) {
-			gatewayService.update(session.getApiResponse());
-			asynService.put(session);
+		final GatewaySession session = GatewaySession.getInstance(this.context);
+		final Gateway gateway = session.getGateway();
+		if(gateway.record()) {
+			this.gatewayService.update(session.getQueryId(), session.getResponseData());
+			this.noticeService.put(session);
 		}
 	}
 

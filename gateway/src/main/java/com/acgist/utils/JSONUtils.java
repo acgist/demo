@@ -21,9 +21,6 @@ public final class JSONUtils {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(JSONUtils.class);
 	
-	/**
-	 * <p>工具禁止创建实例</p>
-	 */
 	private JSONUtils() {
 	}
 	
@@ -31,11 +28,6 @@ public final class JSONUtils {
 	
 	static {
 		final ObjectMapper mapper = new ObjectMapper();
-//		mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-//		final PolymorphicTypeValidator validator = BasicPolymorphicTypeValidator.builder()
-//			.allowIfBaseType(Object.class)
-//			.build();
-//		mapper.activateDefaultTyping(PolymorphicTypeValidator.Validity.DENIED);
 		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL); // 不序列化null值，使用注解：@JsonInclude(Include.NON_NULL)
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // 未知属性不反序列化，使用注解：@JsonIgnoreProperties(ignoreUnknown = true)
 		MAPPER = mapper;
@@ -95,9 +87,6 @@ public final class JSONUtils {
 		}
 		try {
 			return MAPPER.readValue(json, new TypeReference<Map<K, V>>() {});
-//			传入参数：Class<T> clazz
-//			final JavaType type = MAPPER.getTypeFactory().constructParametricType(Map.class, String.class, Object.class);
-//			return MAPPER.readValue(json, type);
 		} catch (IOException e) {
 			LOGGER.error("JSON字符串转Map对象异常：{}", json, e);
 		}
@@ -119,9 +108,6 @@ public final class JSONUtils {
 		}
 		try {
 			return MAPPER.readValue(json, new TypeReference<List<T>>() {});
-//			传入参数：Class<T> clazz
-//			final JavaType type = MAPPER.getTypeFactory().constructParametricType(List.class, clazz);
-//			return MAPPER.readValue(json, type);
 		} catch (IOException e) {
 			LOGGER.error("JSON字符串转List对象异常：{}", json, e);
 		}
