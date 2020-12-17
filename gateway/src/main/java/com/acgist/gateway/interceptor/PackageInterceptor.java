@@ -47,6 +47,10 @@ public class PackageInterceptor implements HandlerInterceptor {
 			return false;
 		}
 		final GatewayRequest gatewayRequest = JSONUtils.unserialize(json, gateway.reqeustClass());
+		if(gatewayRequest == null) {
+			session.buildFail(GatewayCode.CODE_1002).response(response);
+			return false;
+		}
 		session.setGateway(gateway);
 		session.setRequest(gatewayRequest);
 		session.setRequestData(requestData);

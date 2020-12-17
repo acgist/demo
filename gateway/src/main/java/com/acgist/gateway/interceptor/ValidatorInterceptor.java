@@ -26,7 +26,7 @@ public class ValidatorInterceptor implements HandlerInterceptor {
 		final GatewaySession session = GatewaySession.getInstance(this.context);
 		final String message = session.validator();
 		if(StringUtils.isNotEmpty(message)) {
-			session.buildFail(GatewayCode.CODE_1002).response(response);
+			session.buildFail(GatewayCode.CODE_1002, message).response(response);
 			return false;
 		}
 		return true;

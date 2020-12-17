@@ -2,6 +2,7 @@ package com.acgist.gateway.request.pay;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import com.acgist.gateway.request.GatewayRequest;
 
@@ -15,6 +16,7 @@ public class PayRequest extends GatewayRequest {
 	/**
 	 * <p>交易金额</p>
 	 */
+	@NotNull(message = "交易金额不能为空")
 	@Min(value = 1, message = "交易金额错误")
 	private Long amount;
 	/**

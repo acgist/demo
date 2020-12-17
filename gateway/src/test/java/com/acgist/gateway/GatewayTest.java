@@ -33,14 +33,15 @@ public class GatewayTest {
 	@Test
 	public void pay() throws InterruptedException {
 		final Map<String, Object> request = new HashMap<>();
-		request.put("requestTime", DateUtils.buildTime());
+//		request.put("requestTime", DateUtils.buildTime());
 		request.put("orderId", "1234");
+		request.put("amount", "100");
 		request.put("gateway", "/pay");
 //		request.put("orderId", "fail");
 //		request.put("orderId", "exception");
 		request.put("reserved", "保留数据");
 		service.signature(request);
-		final int count = 10000;
+		final int count = 1;
 		final CountDownLatch down = new CountDownLatch(count);
 		final ExecutorService executors = Executors.newFixedThreadPool(100);
 		final long begin = System.currentTimeMillis();
