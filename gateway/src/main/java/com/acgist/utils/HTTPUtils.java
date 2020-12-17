@@ -16,7 +16,7 @@ import java.util.Map;
 
 import javax.net.ssl.SSLContext;
 
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;

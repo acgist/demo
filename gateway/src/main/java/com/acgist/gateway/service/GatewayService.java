@@ -16,6 +16,9 @@ public class GatewayService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(GatewayService.class);
 
+	public static final String URL_GATEWAY = "/gateway";
+	
+	public static final String GATEWAY = "gateway";
 	public static final String GATEWAY_CODE = "code";
 	public static final String GATEWAY_MESSAGE = "message";
 	public static final String GATEWAY_QUERY_ID = "queryId";

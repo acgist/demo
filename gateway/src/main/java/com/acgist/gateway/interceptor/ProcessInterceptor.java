@@ -9,7 +9,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.acgist.gateway.GatewaySession;
+import com.acgist.gateway.config.Gateway;
 import com.acgist.gateway.config.GatewayCode;
+import com.acgist.gateway.notice.NoticeService;
+import com.acgist.gateway.service.GatewayService;
 import com.acgist.gateway.service.UniqueIdService;
 
 /**
@@ -22,6 +25,10 @@ public class ProcessInterceptor implements HandlerInterceptor {
 
 	@Autowired
 	private ApplicationContext context;
+	@Autowired
+	private NoticeService noticeService;
+	@Autowired
+	private GatewayService gatewayService;
 	@Autowired
 	private UniqueIdService uniqueIdService;
 	
@@ -39,6 +46,11 @@ public class ProcessInterceptor implements HandlerInterceptor {
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
 		final GatewaySession session = GatewaySession.getInstance(this.context);
+		final Gateway gateway = session.getGateway();
+		if(gateway != null && gateway.record()) {
+			this.gatewayService.update(session.getQueryId(), session.getResponseData());
+			this.noticeService.put(session);
+		}
 		session.completeProcess(request);
 	}
 

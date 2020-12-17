@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import com.acgist.gateway.config.Gateway;
 import com.acgist.gateway.config.GatewayCode;
+import com.acgist.gateway.executor.GatewayExecutor;
 import com.acgist.gateway.request.GatewayRequest;
 import com.acgist.gateway.service.GatewayService;
 import com.acgist.gateway.service.SignatureService;
@@ -38,12 +39,10 @@ public class GatewaySession implements Serializable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GatewaySession.class);
 
 	@Autowired
+	private ApplicationContext context;
+	@Autowired
 	private SignatureService signatureService;
 	
-	/**
-	 * <p>请求时间</p>
-	 */
-	private long time;
 	/**
 	 * <p>处理中</p>
 	 */
@@ -69,11 +68,6 @@ public class GatewaySession implements Serializable {
 	 * <p>响应数据</p>
 	 */
 	private final Map<String, Object> responseData = new HashMap<>();
-
-	/**
-	 * <p>交易请求处理超时时间：两分钟</p>
-	 */
-	private static final long MAX_PROCESS_TIME = 2L * 60 * 1000;
 
 	public static final GatewaySession getInstance(ApplicationContext context) {
 		return context.getBean(GatewaySession.class);
@@ -118,17 +112,13 @@ public class GatewaySession implements Serializable {
 	 * @return 是否处于请求处理中
 	 */
 	private boolean inProcess() {
-		if (this.process) {
-			return (this.process = (System.currentTimeMillis() - this.time < MAX_PROCESS_TIME));
-		}
-		return false;
+		return this.process;
 	}
 
 	/**
 	 * <p>创建新请求</p>
 	 */
 	private void newProcess(String queryId) {
-		this.time = System.currentTimeMillis();
 		this.process = true;
 		this.queryId = queryId;
 	}
@@ -157,6 +147,10 @@ public class GatewaySession implements Serializable {
 	public void completeProcess(HttpServletRequest request) {
 		synchronized (this) {
 			this.process = false;
+			this.queryId = null;
+			this.gateway = null;
+			this.requestData = null;
+			this.responseData.clear();
 		}
 	}
 	
@@ -233,6 +227,16 @@ public class GatewaySession implements Serializable {
 	 */
 	public boolean verifySignature() {
 		return this.signatureService.verify(this.requestData);
+	}
+	
+	/**
+	 * <p>响应数据</p>
+	 * 
+	 * @return 响应
+	 */
+	public Map<String, Object> response() {
+		final GatewayExecutor<GatewayRequest> executor = this.context.getBean(this.gateway.executorClass());
+		return executor.response();
 	}
 	
 	/**

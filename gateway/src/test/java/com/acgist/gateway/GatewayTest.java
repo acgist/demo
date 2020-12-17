@@ -35,7 +35,7 @@ public class GatewayTest {
 		final Map<String, Object> request = new HashMap<>();
 		request.put("requestTime", DateUtils.buildTime());
 		request.put("orderId", "1234");
-//		request.put("gateway", "pay");
+		request.put("gateway", "/pay");
 //		request.put("orderId", "fail");
 //		request.put("orderId", "exception");
 		request.put("reserved", "保留数据");
@@ -46,7 +46,7 @@ public class GatewayTest {
 		final long begin = System.currentTimeMillis();
 		for (int i = 0; i < count; i++) {
 			executors.submit(() -> {
-				final String json = HTTPUtils.post("http://localhost:8080/gateway/pay", JSONUtils.serialize(request));
+				final String json = HTTPUtils.post("http://localhost:8080/gateway", JSONUtils.serialize(request));
 				this.response(json);
 				down.countDown();
 			});

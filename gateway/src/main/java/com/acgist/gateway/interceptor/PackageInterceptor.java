@@ -18,6 +18,7 @@ import com.acgist.gateway.GatewaySession;
 import com.acgist.gateway.config.Gateway;
 import com.acgist.gateway.config.GatewayCode;
 import com.acgist.gateway.request.GatewayRequest;
+import com.acgist.gateway.service.GatewayService;
 import com.acgist.utils.JSONUtils;
 
 /**
@@ -39,20 +40,16 @@ public class PackageInterceptor implements HandlerInterceptor {
 			session.buildFail(GatewayCode.CODE_1002).response(response);
 			return false;
 		}
-		final Gateway gateway = Gateway.of(request);
-		session.setGateway(gateway);
+		final Map<String, Object> requestData = JSONUtils.toMap(json);
+		final Gateway gateway = Gateway.of((String) requestData.get(GatewayService.GATEWAY));
 		if(gateway == null) {
 			session.buildFail(GatewayCode.CODE_1000).response(response);
 			return false;
 		}
 		final GatewayRequest gatewayRequest = JSONUtils.unserialize(json, gateway.reqeustClass());
-		final Map<String, Object> requestData = JSONUtils.toMap(json);
+		session.setGateway(gateway);
 		session.setRequest(gatewayRequest);
 		session.setRequestData(requestData);
-		if(!gateway.name().equals(gatewayRequest.getGateway())) {
-			session.buildFail(GatewayCode.CODE_1004).response(response);
-			return false;
-		}
 		return true;
 	}
 
