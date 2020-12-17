@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	<!--
+	版本配置：
+	pom.xml
+	
+	编译命令：
+	编译命令：mvn -e clean package|install|deploy
+	-->
+	
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>com.acgist</groupId>
+	<artifactId>acgist-utils</artifactId>
+	<version>1.0.0</version>
+	<packaging>jar</packaging>
+	
+	<properties>
+		<!-- 版本 -->
+		<acgist.version>1.0.0</acgist.version>
+		<!-- 作者 -->
+		<vendor>acgist</vendor>
+		<!-- 模块 -->
+		<module>com.acgist.acgist.utils</module>
+		<!-- 编码 -->
+		<encoding>UTF-8</encoding>
+		<!-- Java版本 -->
+		<java.version>1.8</java.version>
+		<!-- 依赖版本 -->
+		<slf4j.version>1.7.30</slf4j.version>
+		<logback.version>1.2.3</logback.version>
+		<jackson.version>2.12.0</jackson.version>
+		<fastjson.version>1.2.75</fastjson.version>
+		<!-- JUnit版本 -->
+		<junit.version>5.6.2</junit.version>
+		<!-- Maven插件版本 -->
+		<maven.gpg.version>1.6</maven.gpg.version>
+		<maven.jar.version>3.2.0</maven.jar.version>
+		<maven.nexus.version>1.6.8</maven.nexus.version>
+		<maven.jacoco.version>0.8.6</maven.jacoco.version>
+		<maven.source.version>3.2.0</maven.source.version>
+		<maven.javadoc.version>3.2.0</maven.javadoc.version>
+		<maven.compiler.version>3.8.1</maven.compiler.version>
+		<maven.resources.version>3.1.0</maven.resources.version>
+		<maven.dependency.version>3.1.2</maven.dependency.version>
+		<!-- 文件编码 -->
+		<project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<!-- HTTP -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.13</version>
+		</dependency>
+		<!-- 图片压缩 -->
+		<dependency>
+			<groupId>net.coobird</groupId>
+			<artifactId>thumbnailator</artifactId>
+			<version>0.4.8</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<!-- 环境：-P develop|release -->
+	<profiles>
+		<profile>
+			<id>develop</id>
+			<activation>
+				<!-- 设置默认 -->
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<package.environment>develop</package.environment>
+			</properties>
+		</profile>
+		<profile>
+			<id>release</id>
+			<properties>
+				<package.environment>release</package.environment>
+			</properties>
+		</profile>
+	</profiles>
+	
+	<build>
+		<!-- 配置文件属性替换路径 -->
+		<!--
+		<filters></filters>
+		-->
+		<!-- 资源文件 -->
+		<!--
+		<resources></resources>
+		-->
+		<!-- Maven插件 -->
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	
+		<!-- 插件管理 -->
+		<pluginManagement>
+			<plugins>
+				<!--
+				编译代码：
+					mvn compile
+					mvn test-compile
+				-->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven.compiler.version}</version>
+					<configuration>
+						<source>${java.version}</source>
+						<target>${java.version}</target>
+						<encoding>${encoding}</encoding>
+					</configuration>
+				</plugin>
+				<!--
+				打包资源：
+					mvn resources:resources
+					mvn resources:testResources
+					mvn resources:copy-resources
+				-->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>${maven.resources.version}</version>
+					<configuration>
+						<resources>
+							<resource>
+								<directory>src/main/resources</directory>
+								<!-- 配置文件属性替换：properties -->
+								<filtering>false</filtering>
+								<includes>
+									<include>**</include>
+								</includes>
+								<!-- 排除环境资源文件 -->
+								<excludes>
+									<exclude>profiles/**</exclude>
+								</excludes>
+							</resource>
+						</resources>
+					</configuration>
+					<executions>
+						<!-- 自动复制环境资源 -->
+						<execution>
+							<id>auto-copy-resources</id>
+							<phase>compile</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<!-- 遗传 -->
+							<inherited>true</inherited>
+							<configuration>
+								<!-- 覆盖资源 -->
+								<overwrite>true</overwrite>
+								<outputDirectory>${project.build.outputDirectory}</outputDirectory>
+								<resources>
+									<!-- 环境资源 -->
+									<resource>
+										<directory>src/main/resources/profiles/${package.environment}</directory>
+										<filtering>false</filtering>
+									</resource>
+									<!-- 开源协议、README -->
+									<resource>
+										<directory>./</directory>
+										<filtering>false</filtering>
+										<targetPath>META-INF/</targetPath>
+										<includes>
+											<include>LICENSE</include>
+											<include>README.md</include>
+										</includes>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<!--
+				测试报告：
+					mvn test jacoco:report
+					mvn test jacoco:prepare-agent
+				质检报告：
+					mvn sonar:sonar -D "sonar.projectKey=snail" -D "sonar.host.url=http://localhost:9000" -D "sonar.login=token"
+				排除性能测试：-D cost=skip|false
+				忽略没有测试：-D failIfNoTests=false
+				设置测试路径：-D "test=com.acgist.snail.*"
+				跳过测试代码（编译测试代码）：-D skipTests=true
+				跳过测试代码（跳过编译测试代码）：-D maven.test.skip=true
+				-->
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${maven.jacoco.version}</version>
+					<configuration>
+						<skip>${skipTests}</skip>
+						<!--
+						<skip>${maven.test.skip}</skip>
+						-->
+					</configuration>
+					<executions>
+						<!--
+						生成测试数据：
+							必须显式调用
+							提供Sonar展示
+							生命周期（phase）默认或者必须前于test-compile
+						-->
+						<execution>
+							<id>prepare-agent</id>
+							<goals>
+								<goal>prepare-agent</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- 打包项目：mvn package -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>${maven.jar.version}</version>
+					<configuration>
+						<!-- MANIFEST.MF -->
+						<archive>
+							<manifestEntries>
+								<Built-By>${vendor}</Built-By>
+								<Automatic-Module-Name>${module}</Automatic-Module-Name>
+								<Specification-Title>${project.artifactId}</Specification-Title>
+								<Specification-Vendor>${vendor}</Specification-Vendor>
+								<Specification-Version>${project.version}</Specification-Version>
+								<Implementation-Title>${project.artifactId}</Implementation-Title>
+								<Implementation-Vendor>${vendor}</Implementation-Vendor>
+								<Implementation-Version>${project.version}</Implementation-Version>
+								<Implementation-Vendor-Id>${vendor}</Implementation-Vendor-Id>
+							</manifestEntries>
+						</archive>
+					</configuration>
+				</plugin>
+				<!--
+				打包源码：
+					mvn source:jar
+					mvn source:test-jar
+				跳过打包源码：-D maven.source.skip=true
+				-->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>${maven.source.version}</version>
+					<configuration>
+						<attach>true</attach>
+					</configuration>
+					<executions>
+						<!-- 自动打包源码 -->
+						<execution>
+							<id>auto-build-source</id>
+							<!--
+							打包源码：mvn install|deploy
+							生命周期：
+								package不用打包源码
+								install|deploy不能正常签名
+							-->
+							<phase>verify</phase>
+							<goals>
+								<!-- 和jar一样：不会分叉构建 -->
+								<goal>jar-no-fork</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<!--
+				打包文档：
+					mvn site
+					mvn javadoc:jar
+					mvn javadoc:javadoc
+				跳过打包文档：-D maven.javadoc.skip=true
+				-->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>${maven.javadoc.version}</version>
+					<configuration>
+						<!-- 忽略警告：注解、标签等等 -->
+						<doclint>none</doclint>
+						<charset>${encoding}</charset>
+						<encoding>${encoding}</encoding>
+						<aggregate>true</aggregate>
+						<docencoding>${encoding}</docencoding>
+						<description>${project.description}</description>
+						<!-- 忽略模块描述 -->
+						<!--
+						<sourceFileExcludes>
+							<sourceFileExclude>**/module-info.java</sourceFileExclude>
+						</sourceFileExcludes>
+						-->
+					</configuration>
+					<executions>
+						<!-- 自动打包文档 -->
+						<execution>
+							<id>auto-build-javadoc</id>
+							<!--
+							打包文档：mvn install|deploy
+							生命周期：
+								package不用打包文档
+								install|deploy不能正常签名
+							-->
+							<phase>verify</phase>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<!--
+				复制依赖：
+					mvn dependency:copy
+					mvn dependency:copy-dependencies
+				-->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>${maven.dependency.version}</version>
+					<configuration>
+						<stripVersion>false</stripVersion>
+						<includeScope>compile</includeScope>
+						<excludeTransitive>false</excludeTransitive>
+						<outputDirectory>${project.build.directory}/lib</outputDirectory>
+					</configuration>
+					<executions>
+						<!-- 自动复制依赖 -->
+						<execution>
+							<id>auto-copy-dependencies</id>
+							<phase>package</phase>
+							<goals>
+								<goal>copy-dependencies</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<!--
+				生成签名：mvn verify
+				跳过生成签名：-D gpg.skip=true
+				-->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>${maven.gpg.version}</version>
+					<executions>
+						<!-- 自动生成签名 -->
+						<execution>
+							<id>auto-build-sign</id>
+							<phase>verify</phase>
+							<goals>
+								<goal>sign</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- 发布项目：mvn deploy -->
+				<plugin>
+					<groupId>org.sonatype.plugins</groupId>
+					<artifactId>nexus-staging-maven-plugin</artifactId>
+					<version>${maven.nexus.version}</version>
+					<extensions>true</extensions>
+					<configuration>
+						<serverId>sonatype_releases</serverId>
+						<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+						<!-- close后自动release -->
+						<autoReleaseAfterClose>false</autoReleaseAfterClose>
+						<!-- release后自动drop -->
+						<!--
+						<autoDropAfterRelease>true</autoDropAfterRelease>
+						-->
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<!-- 依赖管理 -->
+	<dependencyManagement>
+		<dependencies>
+			<!-- 日志：slf4j -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<!-- 日志：logback -->
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>${logback.version}</version>
+			</dependency>
+			<!-- JSON：jackson -->
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-core</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<!-- JSON：fastjson -->
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>fastjson</artifactId>
+				<version>${fastjson.version}</version>
+			</dependency>
+			<!-- 测试：JUnit -->
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter</artifactId>
+				<version>${junit.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
+	<!-- 基本信息 -->
+	<url>https://gitee.com/acgist/acgist-utils</url>
+	<name>acgist-utils</name>
+	<description>常用工具类</description>
+	<inceptionYear>2020</inceptionYear>
+
+	<!-- 仓库信息 -->
+	<scm>
+		<tag>HEAD</tag>
+		<url>https://gitee.com/acgist/acgist-utils</url>
+		<connection>scm:git:git://gitee.com/acgist/acgist-utils</connection>
+		<developerConnection>scm:git:git@gitee.com:acgist/acgist-utils</developerConnection>
+	</scm>
+	
+	<!-- 开源许可 -->
+	<licenses>
+		<license>
+			<url>https://opensource.org/licenses/Apache-2.0</url>
+			<name>Apache-2.0</name>
+		</license>
+	</licenses>
+
+	<!-- 开发人员 -->
+	<developers>
+		<developer>
+			<id>acgist</id>
+			<url>https://gitee.com/acgist</url>
+			<name>Sheng Yu</name>
+			<email>admin@acgist.com</email>
+			<timezone>+8</timezone>
+			<organization>https://www.acgist.com</organization>
+			<roles>
+				<role>master</role>
+				<role>developer</role>
+			</roles>
+		</developer>
+	</developers>
+
+	<!-- 组织信息 -->
+	<organization>
+		<url>https://www.acgist.com</url>
+		<name>acgist</name>
+	</organization>
+	
+	<!-- issues -->
+	<issueManagement>
+		<url>https://gitee.com/acgist/acgist-utils/issues</url>
+		<system>Gitee Issues</system>
+	</issueManagement>
+	
+	<!-- https://oss.sonatype.org/ -->
+	<!-- https://issues.sonatype.org/browse/OSSRH-51336 -->
+	<distributionManagement>
+		<repository>
+			<id>sonatype_releases</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+			<name>Nexus Release Repository</name>
+		</repository>
+		<snapshotRepository>
+			<id>sonatype_snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<name>Nexus Snapshot Repository</name>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>
