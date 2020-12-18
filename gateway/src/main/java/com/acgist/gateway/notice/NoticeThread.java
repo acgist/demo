@@ -46,7 +46,7 @@ public class NoticeThread extends Thread {
 	 * @param message 异步通知消息
 	 */
 	public void notice(NoticeMessage message) {
-		LOGGER.debug("发送异步通知消息：{}", message.getQueryId());
+		LOGGER.info("发送异步通知消息：{}", message.getQueryId());
 	}
 	
 }

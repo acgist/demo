@@ -8,7 +8,7 @@ import com.acgist.gateway.Gateway;
  * 
  * @author acgist
  */
-public class GatewayResponse extends Gateway {
+public abstract class GatewayResponse extends Gateway {
 
 	private static final long serialVersionUID = 1L;
 	
