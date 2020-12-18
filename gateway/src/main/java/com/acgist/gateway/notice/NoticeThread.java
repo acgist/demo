@@ -10,21 +10,24 @@ import org.springframework.stereotype.Component;
 
 /**
  * <p>异步通知消息线程</p>
+ * 
+ * @author acgist
  */
 @Component
 public class NoticeThread extends Thread {
-
-	@Autowired
-	private NoticeService noticeService;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(NoticeThread.class);
+	
 	private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(100);
+	
+	@Autowired
+	private NoticeService noticeService;
 	
 	@Override
 	public void run() {
 		while (true) {
 			try {
-				final NoticeMessage message = noticeService.take();
+				final NoticeMessage message = this.noticeService.take();
 				if(message == null) {
 					continue;
 				}

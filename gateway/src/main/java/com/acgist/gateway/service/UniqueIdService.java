@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>编号生成</p>
+ * <p>Service - 编号</p>
+ * 
+ * @author acgist
  */
 @Service
 public class UniqueIdService {

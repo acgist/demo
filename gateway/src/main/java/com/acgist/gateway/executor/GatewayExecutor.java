@@ -7,17 +7,20 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.acgist.gateway.Executor;
+import com.acgist.gateway.Gateway;
 import com.acgist.gateway.GatewaySession;
-import com.acgist.gateway.request.GatewayRequest;
 
 /**
- * <p>请求执行者</p>
+ * <p>请求执行器</p>
+ * 
+ * @param <T> 请求
  * 
  * @author acgist
  */
 @Component
 @Scope("prototype")
-public abstract class GatewayExecutor<T extends GatewayRequest> {
+public abstract class GatewayExecutor<T extends Gateway> implements Executor {
 
 	/**
 	 * <p>请求</p>
@@ -36,18 +39,14 @@ public abstract class GatewayExecutor<T extends GatewayRequest> {
 	 */
 	protected abstract void execute();
 
-	/**
-	 * <p>执行请求返回响应</p>
-	 * 
-	 * @return 响应
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> response() {
 		final GatewaySession session = GatewaySession.getInstance(this.context);
 		this.request = (T) session.getRequest();
 		this.session = session;
 		this.execute();
-		return session.getResponseData();
+		return session.buildResponse().getResponseData();
 	}
 
 }

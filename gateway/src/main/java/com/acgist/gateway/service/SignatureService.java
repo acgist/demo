@@ -20,21 +20,42 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>签名工具</p>
+ * <p>Service - 签名</p>
  * <p>公钥私钥生成：http://web.chacuo.net/netrsakeypair</p>
+ * 
+ * @author acgist
  */
 @Service
 public class SignatureService {
 
-	private static final String RSA_ALGORITHM = "RSA";
-	private static final String SIGNATURE_ALGORITHM = "SHA256WithRSA";
 	private static final Logger LOGGER = LoggerFactory.getLogger(SignatureService.class);
+	
+	/**
+	 * <p>密钥算法</p>
+	 */
+	private static final String RSA_ALGORITHM = "RSA";
+	/**
+	 * <p>签名算法</p>
+	 */
+	private static final String SIGNATURE_ALGORITHM = "SHA256WithRSA";
 
+	/**
+	 * <p>文本公钥</p>
+	 */
 	@Value("${system.public.key:}")
 	private String publicKeyValue;
+	/**
+	 * <p>文本私钥</p>
+	 */
 	@Value("${system.private.key:}")
 	private String privateKeyValue;
+	/**
+	 * <p>公钥</p>
+	 */
 	private PublicKey publicKey;
+	/**
+	 * <p>私钥</p>
+	 */
 	private PrivateKey privateKey;
 
 	public SignatureService() {
@@ -47,11 +68,10 @@ public class SignatureService {
 
 	@PostConstruct
 	public void init() {
-		LOGGER.info("初始化签名工具类");
 		LOGGER.info("初始化公钥");
-		this.publicKey = this.stringToPublicKey(this.publicKeyValue);
+		this.publicKey = stringToPublicKey(this.publicKeyValue);
 		LOGGER.info("初始化私钥");
-		this.privateKey = this.stringToPrivateKey(this.privateKeyValue);
+		this.privateKey = stringToPrivateKey(this.privateKeyValue);
 	}
 
 	/**
@@ -93,7 +113,7 @@ public class SignatureService {
 	 * 
 	 * @return 散列值
 	 */
-	public static final String dataToDigest(final Map<String, Object> data) {
+	private static final String dataToDigest(final Map<String, Object> data) {
 		final StringBuilder builder = new StringBuilder();
 		final TreeMap<String, String> sortData = new TreeMap<>();
 		data.entrySet().stream()
@@ -185,7 +205,7 @@ public class SignatureService {
 	 * 
 	 * @return 公钥
 	 */
-	private PublicKey stringToPublicKey(String key) {
+	private static final PublicKey stringToPublicKey(String key) {
 		final byte[] bytes = Base64.getMimeDecoder().decode(key);
 		final X509EncodedKeySpec keySpec = new X509EncodedKeySpec(bytes);
 		try {
@@ -204,7 +224,7 @@ public class SignatureService {
 	 * 
 	 * @return 私钥
 	 */
-	private PrivateKey stringToPrivateKey(String key) {
+	private static final PrivateKey stringToPrivateKey(String key) {
 		final byte[] bytes = Base64.getMimeDecoder().decode(key);
 		final PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(bytes);
 		try {

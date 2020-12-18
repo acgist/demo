@@ -12,7 +12,7 @@ import com.acgist.gateway.GatewaySession;
 import com.acgist.gateway.config.GatewayCode;
 
 /**
- * <p>验签</p>
+ * <p>Interceptor - 验签</p>
  */
 @Component
 public class SignatureInterceptor implements HandlerInterceptor {

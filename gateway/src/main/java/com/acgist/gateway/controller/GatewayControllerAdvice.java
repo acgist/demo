@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.acgist.gateway.GatewayCodeException;
 import com.acgist.gateway.GatewaySession;
 import com.acgist.gateway.config.GatewayCode;
+import com.acgist.gateway.config.GatewayCodeException;
 
 /**
- * <p>异常处理</p>
+ * <p>系统异常</p>
+ * 
+ * @author acgist
  */
 @ControllerAdvice
 public class GatewayControllerAdvice {
@@ -26,9 +28,8 @@ public class GatewayControllerAdvice {
 	@Autowired
 	private ApplicationContext context;
 	
+	@ResponseStatus(HttpStatus.OK)
 	@ExceptionHandler(Exception.class)
-	@ResponseStatus(HttpStatus.OK) // 状态码：200
-//	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 状态码：500
 	public void exception(Exception e, HttpServletResponse response) {
 		LOGGER.error("系统异常", e);
 		final GatewaySession session = GatewaySession.getInstance(this.context);

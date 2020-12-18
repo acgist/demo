@@ -9,14 +9,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.acgist.gateway.GatewaySession;
-import com.acgist.gateway.config.Gateway;
 import com.acgist.gateway.config.GatewayCode;
 import com.acgist.gateway.notice.NoticeService;
 import com.acgist.gateway.service.GatewayService;
 import com.acgist.gateway.service.UniqueIdService;
 
 /**
- * <p>拦截处理过程中请求</p>
+ * <p>Interceptor - 正在处理拦截</p>
  * 
  * @author acgist
  */
@@ -46,12 +45,11 @@ public class ProcessInterceptor implements HandlerInterceptor {
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
 		final GatewaySession session = GatewaySession.getInstance(this.context);
-		final Gateway gateway = session.getGateway();
-		if(gateway != null && gateway.record()) {
-			this.gatewayService.update(session.getQueryId(), session.getRequest(), session.getResponseData());
+		if(session.record()) {
 			this.noticeService.put(session);
+			this.gatewayService.record(session);
 		}
-		session.completeProcess(request);
+		session.completeProcess();
 	}
 
 }

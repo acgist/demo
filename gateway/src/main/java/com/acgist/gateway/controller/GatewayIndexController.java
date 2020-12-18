@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.acgist.gateway.GatewaySession;
 import com.acgist.gateway.service.GatewayService;
 
+/**
+ * <p>Controller - 网关</p>
+ * 
+ * @author acgist
+ */
 @RestController
 public class GatewayIndexController {
 
@@ -22,7 +27,7 @@ public class GatewayIndexController {
 		return GatewaySession.getInstance(this.context).buildSuccess().getResponseData();
 	}
 
-	@RequestMapping(value = GatewayService.URL_GATEWAY, method = RequestMethod.POST)
+	@RequestMapping(value = GatewayService.GATEWAY, method = RequestMethod.POST)
 	public Map<String, Object> gateway() {
 		return GatewaySession.getInstance(this.context).response();
 	}

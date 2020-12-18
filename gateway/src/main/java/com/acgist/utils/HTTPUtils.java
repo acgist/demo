@@ -59,7 +59,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <p>HTTP工具</p>
+ * <p>工具 - HTTP</p>
  * 
  * @author acgist
  */

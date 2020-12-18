@@ -14,15 +14,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.acgist.gateway.Gateway;
 import com.acgist.gateway.GatewaySession;
-import com.acgist.gateway.config.Gateway;
 import com.acgist.gateway.config.GatewayCode;
-import com.acgist.gateway.request.GatewayRequest;
+import com.acgist.gateway.config.GatewayMapping;
+import com.acgist.gateway.config.GatewayMappingConfig;
 import com.acgist.gateway.service.GatewayService;
 import com.acgist.utils.JSONUtils;
 
 /**
- * <p>数据打包到GatewaySession</p>
+ * <p>Interceptor - 数据打包</p>
  * 
  * @author acgist
  */
@@ -31,6 +32,8 @@ public class PackageInterceptor implements HandlerInterceptor {
 
 	@Autowired
 	private ApplicationContext context;
+	@Autowired
+	private GatewayMappingConfig gatewayMappingConfig;
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -41,28 +44,32 @@ public class PackageInterceptor implements HandlerInterceptor {
 			return false;
 		}
 		final Map<String, Object> requestData = JSONUtils.toMap(json);
-		final Gateway gateway = Gateway.of((String) requestData.get(GatewayService.GATEWAY));
-		if(gateway == null) {
-			session.buildFail(GatewayCode.CODE_1000).response(response);
-			return false;
-		}
-		final GatewayRequest gatewayRequest = JSONUtils.unserialize(json, gateway.reqeustClass());
-		if(gatewayRequest == null) {
+		if(requestData == null) {
 			session.buildFail(GatewayCode.CODE_1002).response(response);
 			return false;
 		}
-		session.setGateway(gateway);
-		session.setRequest(gatewayRequest);
 		session.setRequestData(requestData);
+		final GatewayMapping gatewayMapping = this.gatewayMappingConfig.gatewayMapping(requestData.get(GatewayService.GATEWAY_GATEWAY));
+		if(gatewayMapping == null) {
+			session.buildFail(GatewayCode.CODE_1000).response(response);
+			return false;
+		}
+		session.setGateway(gatewayMapping);
+		final Gateway gateway = JSONUtils.unserialize(json, gatewayMapping.getRequestClass());
+		if(gateway == null) {
+			session.buildFail(GatewayCode.CODE_1002).response(response);
+			return false;
+		}
+		session.setRequest(gateway);
 		return true;
 	}
 
 	/**
-	 * <p>读取JSON数据</p>
+	 * <p>读取JSON请求数据</p>
 	 * 
 	 * @param request 请求
 	 * 
-	 * @return JSON数据
+	 * @return JSON请求数据
 	 * 
 	 * @throws IOException IO异常
 	 */

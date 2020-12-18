@@ -4,14 +4,21 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.acgist.gateway.executor.pay.PayExecutor;
 import com.acgist.gateway.request.GatewayRequest;
 
 /**
- * <p>交易请求</p>
+ * <p>请求 - 交易</p>
+ * 
+ * @author acgist
  */
-public class PayRequest extends GatewayRequest {
-	
+public class PayRequest extends GatewayRequest<PayExecutor> {
+
 	private static final long serialVersionUID = 1L;
+	
+	public PayRequest() {
+		super(PayExecutor.class);
+	}
 
 	/**
 	 * <p>交易金额</p>

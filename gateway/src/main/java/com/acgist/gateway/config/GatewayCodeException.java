@@ -1,9 +1,9 @@
-package com.acgist.gateway;
-
-import com.acgist.gateway.config.GatewayCode;
+package com.acgist.gateway.config;
 
 /**
- * <p>状态码异常</p>
+ * <p>异常 - 状态码</p>
+ * 
+ * @author acgist
  */
 public class GatewayCodeException extends RuntimeException {
 
@@ -27,8 +27,14 @@ public class GatewayCodeException extends RuntimeException {
 		this.code = code;
 	}
 
+	/**
+	 * <p>状态码</p>
+	 */
 	private final GatewayCode code;
 
+	/**
+	 * @return 状态码
+	 */
 	public GatewayCode getCode() {
 		return code;
 	}

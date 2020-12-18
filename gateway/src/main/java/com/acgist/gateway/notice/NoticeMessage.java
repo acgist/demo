@@ -4,14 +4,16 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * <p>异步通知</p>
+ * <p>异步通知信息</p>
+ * 
+ * @author acgist
  */
 public class NoticeMessage implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * <p>请求ID</p>
+	 * <p>请求标识</p>
 	 */
 	private String queryId;
 	/**
@@ -26,6 +28,11 @@ public class NoticeMessage implements Serializable {
 	public NoticeMessage() {
 	}
 
+	/**
+	 * @param queryId 请求标识
+	 * @param noticeURL 通知地址
+	 * @param data 通知数据
+	 */
 	public NoticeMessage(String queryId, String noticeURL, Map<String, Object> data) {
 		this.queryId = queryId;
 		this.noticeURL = noticeURL;

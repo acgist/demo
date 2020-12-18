@@ -11,22 +11,23 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
- * <p>抽象请求：@JsonIgnoreProperties忽略传入的不需要的信息</p>
+ * <p>抽象网关</p>
+ * <p>请求和响应均需要继承</p>
+ * 
+ * @author acgist
  */
 @JsonInclude(Include.NON_NULL)
-//@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+//@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL) // 空值处理
 @JsonIgnoreProperties(ignoreUnknown = true)
-//@JsonIgnoreProperties(ignoreUnknown = true, value = {"signature"})
+//@JsonIgnoreProperties(ignoreUnknown = true, value = {"signature"}) // 忽略属性
 public abstract class Gateway implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * <p>网关类型</p>
-	 * 
-	 * @see com.acgist.gateway.config.Gateway
+	 * <p>网关地址</p>
 	 */
-	@NotBlank(message = "网关类型不能为空")
+	@NotBlank(message = "网关地址不能为空")
 	protected String gateway;
 	/**
 	 * <p>签名数据</p>
@@ -35,7 +36,7 @@ public abstract class Gateway implements Serializable {
 	@NotBlank(message = "签名内容不能为空")
 	protected String signature;
 	/**
-	 * <p>请求透传信息</p>
+	 * <p>透传信息</p>
 	 */
 	@Size(max = 512, message = "透传信息长度不能超过512")
 	protected String reserved;

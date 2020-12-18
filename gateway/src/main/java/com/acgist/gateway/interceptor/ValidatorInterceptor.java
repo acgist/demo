@@ -13,7 +13,7 @@ import com.acgist.gateway.GatewaySession;
 import com.acgist.gateway.config.GatewayCode;
 
 /**
- * <p>数据格式校验</p>
+ * <p>Interceptor - 数据格式校验</p>
  */
 @Component
 public class ValidatorInterceptor implements HandlerInterceptor {

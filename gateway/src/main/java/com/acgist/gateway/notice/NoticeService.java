@@ -15,7 +15,9 @@ import com.acgist.gateway.GatewaySession;
 import com.acgist.gateway.service.GatewayService;
 
 /**
- * <p>异步通知消息</p>
+ * <p>Service - 异步通知消息</p>
+ * 
+ * @author acgist
  */
 @Service
 public class NoticeService {
@@ -27,7 +29,7 @@ public class NoticeService {
 	
 	@PostConstruct
 	public void init() {
-		LOGGER.info("初始化异步消息处理线程");
+		LOGGER.info("初始化异步通知消息线程");
 		this.context.getBean(NoticeThread.class).start();
 	}
 	
@@ -42,10 +44,8 @@ public class NoticeService {
 	 * @param session session
 	 */
 	public void put(GatewaySession session) {
-		if(session == null) {
-			return;
-		}
-		if(!MESSAGE_QUEUE.offer(new NoticeMessage(session.getQueryId(), (String) session.getRequest(GatewayService.GATEWAY_NOTICE_URL), session.getResponseData()))) {
+		final NoticeMessage noticeMessage = new NoticeMessage(session.getQueryId(), (String) session.getRequest(GatewayService.GATEWAY_NOTICE_URL), session.getResponseData());
+		if(!MESSAGE_QUEUE.offer(noticeMessage)) {
 			LOGGER.error("添加异步通知消息失败：{}", session.getQueryId());
 		}
 	}

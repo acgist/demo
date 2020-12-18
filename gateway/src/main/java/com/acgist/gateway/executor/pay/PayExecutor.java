@@ -9,7 +9,9 @@ import com.acgist.gateway.executor.GatewayExecutor;
 import com.acgist.gateway.request.pay.PayRequest;
 
 /**
- * <p>交易</p>
+ * <p>执行器 - 交易</p>
+ * 
+ * @author acgist
  */
 @Component
 @Scope("prototype")
@@ -27,7 +29,7 @@ public class PayExecutor extends GatewayExecutor<PayRequest> {
 		} else if ("exception".equals(orderId)) {
 			throw new RuntimeException();
 		} else {
-			this.session.buildSuccess().putResponse("status", "success");
+			this.session.putResponse("status", "success").buildSuccess();
 		}
 	}
 

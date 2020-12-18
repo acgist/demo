@@ -4,7 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * <p>日期工具</p>
+ * <p>工具 - 时间</p>
+ * 
+ * @author acgist
  */
 public final class DateUtils {
 

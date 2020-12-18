@@ -8,7 +8,9 @@ import com.acgist.gateway.executor.GatewayExecutor;
 import com.acgist.gateway.request.pay.DrawbackRequest;
 
 /**
- * <p>交易退款</p>
+ * <p>执行器 - 交易退款</p>
+ * 
+ * @author acgist
  */
 @Component
 @Scope("prototype")
@@ -20,7 +22,7 @@ public class DrawbackExecutor extends GatewayExecutor<DrawbackRequest> {
 	
 	@Override
 	protected void execute() {
-		this.session.buildSuccess().putResponse("status", "success");
+		this.session.putResponse("status", "success").buildSuccess();
 	}
 
 }

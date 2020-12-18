@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * <p>JSON工具（Jackson）</p>
+ * <p>工具 - JSON（Jackson）</p>
  * 
  * @author acgist
  */
@@ -28,8 +28,10 @@ public final class JSONUtils {
 	
 	static {
 		final ObjectMapper mapper = new ObjectMapper();
-		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL); // 不序列化null值，使用注解：@JsonInclude(Include.NON_NULL)
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // 未知属性不反序列化，使用注解：@JsonIgnoreProperties(ignoreUnknown = true)
+		// 不序列化null值，使用注解：@JsonInclude(Include.NON_NULL)
+		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		// 未知属性不反序列化，使用注解：@JsonIgnoreProperties(ignoreUnknown = true)
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		MAPPER = mapper;
 	}
 	

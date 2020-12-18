@@ -10,7 +10,9 @@ import javax.validation.groups.Default;
 import com.acgist.gateway.Gateway;
 
 /**
- * <p>数据校验工具</p>
+ * <p>工具 - 数据校验</p>
+ * 
+ * @author acgist
  */
 public final class ValidatorUtils {
 

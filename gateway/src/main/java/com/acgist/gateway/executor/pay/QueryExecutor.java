@@ -8,7 +8,9 @@ import com.acgist.gateway.executor.GatewayExecutor;
 import com.acgist.gateway.request.pay.QueryRequest;
 
 /**
- * <p>交易查询</p>
+ * <p>执行器 - 交易查询</p>
+ * 
+ * @author acgist
  */
 @Component
 @Scope("prototype")
@@ -20,7 +22,7 @@ public class QueryExecutor extends GatewayExecutor<QueryRequest> {
 	
 	@Override
 	protected void execute() {
-		this.session.buildSuccess().putResponse("status", "success");
+		this.session.putResponse("status", "success").buildSuccess();
 	}
 
 }
