@@ -1,2 +1,0 @@
-# ACGIST-COMMON
-通用工具
