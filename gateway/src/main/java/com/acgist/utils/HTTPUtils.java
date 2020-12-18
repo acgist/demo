@@ -76,10 +76,6 @@ public final class HTTPUtils {
 	 */
 	private static final int DEFAULT_TIMEOUT = 30 * 1000;
 	/**
-	 * <p>HTTP请求</p>
-	 */
-	private static final String HTTP_PREFIX = "http://";
-	/**
 	 * <p>HTTPS请求</p>
 	 */
 	private static final String HTTPS_PREFIX = "https://";
@@ -88,16 +84,12 @@ public final class HTTPUtils {
 	 */
 	private static final String DEFAULT_CHARSET = "UTF-8";
 	/**
-	 * <p>URL正则表达式</p>
-	 */
-	private static final String URL_REGEX = "(http://.*)|(https://.*)";
-	/**
 	 * <p>浏览器参数</p>
 	 */
 	private static final Map<String, String> BROWSER_HEADERS = new HashMap<>();
 	/**
 	 * <p>复用TCP连接</p>
-	 * <p>不能关闭response和client，工具自动管理，不同的域名会使用不同的TCP连接。</p>
+	 * <p>不能关闭Client：工具自动管理，不同的域名会使用不同的TCP连接。</p>
 	 */
 	private static final CloseableHttpClient REUSE_CLIENT;
 	/**
@@ -114,9 +106,6 @@ public final class HTTPUtils {
 //				.register("https", SSLConnectionSocketFactory.getSocketFactory()).build();
 			MANAGER = new PoolingHttpClientConnectionManager(registry);
 			REUSE_CLIENT = HttpClients.custom().setRedirectStrategy(DefaultRedirectStrategy.getInstance()).setConnectionManager(MANAGER).build();
-		} else {
-			MANAGER = null;
-			REUSE_CLIENT = null;
 		}
 	}
 	
@@ -222,7 +211,6 @@ public final class HTTPUtils {
 	 */
 	public static final String post(String url, Map<String, Object> data, Map<String, String> headers, int timeout) {
 		String content = null;
-		url = generateUrl(url, null);
 		if(StringUtils.isEmpty(url)) {
 			return content;
 		}
@@ -278,7 +266,6 @@ public final class HTTPUtils {
 	 */
 	public static final String post(String url, String data, Map<String, String> headers, int timeout) {
 		String content = null;
-		url = generateUrl(url, null);
 		if(StringUtils.isEmpty(url)) {
 			return content;
 		}
@@ -308,9 +295,6 @@ public final class HTTPUtils {
 	private static final String generateUrl(String url, Map<String, Object> data) {
 		if(StringUtils.isEmpty(url)) {
 			return url;
-		}
-		if(!url.matches(URL_REGEX)) {
-			url = HTTP_PREFIX + url;
 		}
 		if(MapUtils.isNotEmpty(data)) {
 			final String params = generateParamsString(data);
