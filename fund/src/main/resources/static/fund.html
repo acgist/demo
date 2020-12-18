@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+		
+	<title>自选基金</title>
+	
+	<link rel="stylesheet" href="/css/style.css" />
+	<!-- layui -->
+	<link rel="stylesheet" href="/layui/css/layui.css" />
+	<script src="/layui/layui.js"></script>
+	<!-- echarts -->
+	<script src="/echarts/echarts.min.js"></script>
+</head>
+<body>
+	<div class="fund-padding"></div>
+	<!-- 按钮区域 -->
+	<div class="layui-container">
+		<script type="text/html" id="operation">
+			<div class="layui-btn-container">
+				<button class="layui-btn layui-btn-warm" lay-event="update">更新数据</button>
+				<button class="layui-btn" lay-event="compare">比较数据</button>
+				<button class="layui-btn" lay-event="count">统计数量</button>
+			</div>
+		</script>
+		<script type="text/html" id="linkTemplate">
+			{{# if(d.select) { }}
+				<a href="/fund/link/{{ d.code }}" style="color:#FF0055;" class="layui-table-link" target="_blank">{{ d.code }}</a>
+			{{# } else { }}
+				<a href="/fund/link/{{ d.code }}" style="color:#008800;" class="layui-table-link" target="_blank">{{ d.code }}</a>
+			{{# } }}
+		</script>
+		<script type="text/html" id="earningsLastMonthTemplate">
+			{{# if(d.earningsLastMonth >= 0) { }}
+				<span style="color:#FF0055;">{{ d.earningsLastMonth }}</span>
+			{{# } else { }}
+				<span style="color:#008800;">{{ d.earningsLastMonth }}</span>
+			{{# } }}
+		</script>
+		<script type="text/html" id="earningsLastThreeMonthTemplate">
+			{{# if(d.earningsLastThreeMonth >= 0) { }}
+				<span style="color:#FF0055;">{{ d.earningsLastThreeMonth }}</span>
+			{{# } else { }}
+				<span style="color:#008800;">{{ d.earningsLastThreeMonth }}</span>
+			{{# } }}
+		</script>
+		<script type="text/html" id="earningsLastYearTemplate">
+			{{# if(d.earningsLastYear >= 0) { }}
+				<span style="color:#FF0055;">{{ d.earningsLastYear }}</span>
+			{{# } else { }}
+				<span style="color:#008800;">{{ d.earningsLastYear }}</span>
+			{{# } }}
+		</script>
+		<table id="fund" lay-filter="fund"></table>
+		<!-- 比较视图 -->
+		<div class="layui-tab layui-tab-brief">
+			<ul class="layui-tab-title">
+				<li class="layui-this">基本信息</li>
+				<li>收益对比</li>
+				<li>资产配置</li>
+				<li>行业配置</li>
+				<li>股票配置</li>
+				<li>债券配置</li>
+			</ul>
+			<div class="layui-tab-content">
+				<div class="layui-tab-item layui-show">
+					<table id="fundBase" lay-filter="fundBase"></table>
+				</div>
+				<div class="layui-tab-item">
+					<div id="fundEarnings" style="width:1120px;height:500px;"></div>
+				</div>
+				<div class="layui-tab-item">
+					<div id="fundAsset" style="width:1120px;height:500px;"></div>
+				</div>
+				<div class="layui-tab-item">
+					<div id="fundTrade" style="width:1120px;height:500px;"></div>
+				</div>
+				<div class="layui-tab-item">
+					<div id="fundStock" style="width:1120px;height:500px;"></div>
+				</div>
+				<div class="layui-tab-item">
+					<div id="fundBond" style="width:1120px;height:500px;"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		var fundData;
+		// 数据格式
+		function format(data) {
+			for(var index = 0; index < data.data.length; index++) {
+				var fund = data.data[index];
+				fund.worthNetWorth = fund.worth.netWorth;
+				fund.worthTotalNetWorth = fund.worth.totalNetWorth;
+				fund.worthMarketValue = fund.worth.marketValue;
+				fund.earningsLastMonth = fund.earnings.lastMonth;
+				fund.earningsLastThreeMonth = fund.earnings.lastThreeMonth;
+				fund.earningsLastYear = fund.earnings.lastYear;
+			}
+			fundData = data;
+		}
+		// 数据筛选
+		function select(codes) {
+			var data = [];
+			for(var index = 0; index < codes.length; index++) {
+				for(var jndex = 0; jndex < fundData.data.length; jndex++) {
+					if(codes[index] == fundData.data[jndex].code) {
+						data[index] = fundData.data[jndex];
+					}
+				}
+			}
+			return data;
+		}
+		layui.use(['form', 'table', 'jquery', 'element'], function() {
+			var table = layui.table;
+			table.render({
+				url : '/fund/list', // 数据接口
+				elem : '#fund',
+				page : false, // 关闭分页
+				height : 600,
+				toolbar : '#operation',
+				cols : [[ // 表头
+					{type : 'checkbox', fixed : 'left'},
+					{field : 'code', title : '编号', width : 80, sort : true, fixed : 'left', templet : '#linkTemplate'},
+					{field : 'name', title : '名称', width : 200},
+					{field : 'type', title : '类型', width : 100},
+					{field : 'earningsLastMonth', title : '近一月%', width : 100, sort : true, templet: '#earningsLastMonthTemplate'},
+					{field : 'earningsLastThreeMonth', title : '近三月%', width : 100, sort : true, templet: '#earningsLastThreeMonthTemplate'},
+					{field : 'earningsLastYear', title : '近一年%', width : 100, sort : true, templet: '#earningsLastYearTemplate'},
+					{field : 'worthNetWorth', title : '净值', width : 80, sort : true},
+					{field : 'worthTotalNetWorth', title : '累计净值', width : 120, sort : true, style : 'color:#FF0055;'},
+					{field : 'establishedDate', title : '成立时间', width : 120, sort : true},
+					{field : 'worthMarketValue', title : '基金规模', width : 120, sort : true},
+					{field : 'manager', title : '经理', width : 80},
+					{field : 'company', title : '公司', width : 120}
+				]],
+				// 数据转换
+				parseData : function(res) {
+					format(res);
+					return res;
+				}
+			});
+			table.on('toolbar(fund)', function(obj) {
+				var checkStatus = table.checkStatus(obj.config.id);
+				switch (obj.event) {
+				case 'update' :
+					update(checkStatus);
+					break;
+				case 'compare' :
+					compare(checkStatus);
+					break;
+				case 'count' :
+					layer.msg('选中了：'+ checkStatus.data.length + ' 个');
+					break;
+				}
+			});
+			// 更新数据
+			function update(checkStatus) {
+				var notice;
+				var codes = [];
+				if (checkStatus.data.length == 0) {
+					notice = "更新全部基金数据";
+				} else {
+					notice = "更新选中基金数据";
+					for(var index = 0; index < checkStatus.data.length; index++) {
+						codes[index] = checkStatus.data[index].code;
+					}
+				}
+				layer.confirm(notice, {
+					btn : [ '确定', '取消' ]
+				}, function() {
+					layer.close(layer.index);
+					layer.load();
+					layui.jquery.get('/fund/update', {"code" : codes.join(",")}, function() {
+						layer.close(layer.index);
+					});
+				}, function() {
+				});
+			}
+			// 比较数据
+			function compare(checkStatus) {
+				var codes = [];
+				if (checkStatus.data.length < 2) {
+					layer.msg("至少选择两组比较数据");
+					return;
+				} else if(checkStatus.data.length > 10) {
+					layer.msg("比较数据不能超过十个");
+					return;
+				} else {
+					for(var index = 0; index < checkStatus.data.length; index++) {
+						codes[index] = checkStatus.data[index].code;
+					}
+				}
+				var selectData = select(codes);
+				// 基本信息
+				table.render({
+					elem : '#fundBase',
+					page : false, // 关闭分页
+					cols : [[ // 表头
+						{field : 'code', title : '编号', width : 80, sort : true, fixed : 'left'},
+						{field : 'name', title : '名称', width : 200},
+						{field : 'type', title : '类型', width : 100},
+						{field : 'worthNetWorth', title : '净值', width : 80, sort : true},
+						{field : 'worthTotalNetWorth', title : '累计净值', width : 120, sort : true, style : 'color:#FF0055;'},
+						{field : 'establishedDate', title : '成立时间', width : 120, sort : true},
+						{field : 'worthMarketValue', title : '基金规模', width : 120, sort : true},
+						{field : 'manager', title : '经理', width : 80},
+						{field : 'company', title : '公司', width : 120}
+					]],
+					data : selectData
+				});
+				// 收益对比
+				var fundEarnings = echarts.init(document.getElementById('fundEarnings'), "light");
+				var fundEarningsTitle = ["最近一周", "最近一个月", "最近三个月", "最近六个月", "最近一年", "最近两年", "成立以来"];
+				var fundEarningsLegend = [];
+				var fundEarningsSeries = [];
+				for(var index = 0; index < selectData.length; index++) {
+					var fund = selectData[index];
+					var earnings = fund.earnings;
+					fundEarningsLegend[index] = fund.name;
+					fundEarningsSeries[index] = {
+						name : fund.name,
+						type : 'line',
+						stack : '收益',
+						label : {
+							normal : {show : true, position : 'top'}
+						},
+						areaStyle : {},
+						data : [ earnings.lastWeek, earnings.lastMonth, earnings.lastThreeMonth, earnings.lastSixMonth, earnings.lastYear, earnings.lastTwoYear, earnings.lastThreeYear, earnings.total ]
+					}
+				}
+				var fundEarningsOption = {
+					title : {
+						text : '收益信息（%）'
+					},
+					tooltip : {
+						trigger : 'axis',
+						axisPointer : {
+							type : 'cross',
+							label : {
+								backgroundColor : '#667788'
+							}
+						}
+					},
+					legend : {
+						data : fundEarningsLegend
+					},
+					toolbox : {
+						feature : {
+							saveAsImage : {}
+						}
+					},
+					grid : {
+						left : '3%',
+						right : '4%',
+						bottom : '3%',
+						containLabel : true
+					},
+					xAxis : [ {
+						type : 'category',
+						boundaryGap : false,
+						data : fundEarningsTitle
+					} ],
+					yAxis : [ {
+						type : 'value'
+					} ],
+					series : fundEarningsSeries
+				};
+				fundEarnings.setOption(fundEarningsOption);
+				// 资产配置
+				var fundAsset = echarts.init(document.getElementById('fundAsset'), "light");
+				var fundAssetTitle = [];
+				var fundAssetLegend = [];
+				var fundAssetSeries = [];
+				for(var index = 0; index < selectData.length; index++) {
+					var fund = selectData[index];
+					var assetPositions = fund.assetPositions;
+					fundAssetLegend[index] = fund.name;
+					for(var jndex = 0; jndex < assetPositions.length; jndex++) {
+						var assetPosition = assetPositions[jndex];
+						if(!fundAssetTitle.includes(assetPosition.name)) {
+							fundAssetTitle[fundAssetTitle.length] = assetPosition.name;
+						}
+					}
+				}
+				for(var index = 0; index < selectData.length; index++) {
+					var data = [];
+					var fund = selectData[index];
+					var assetPositions = fund.assetPositions;
+					for(var jndex = 0; jndex < fundAssetTitle.length; jndex++) {
+						for(var kndex = 0; kndex < assetPositions.length; kndex++) {
+							var assetPosition = assetPositions[kndex];
+							if(assetPosition.name == fundAssetTitle[jndex]) {
+								data[jndex] = assetPosition.percent;
+							}
+						}
+						if(!data[jndex]) {
+							data[jndex] = 0;
+						}
+					}
+					fundAssetSeries[index] = {
+			            name: fund.name,
+			            type: 'bar',
+			            data: data
+			        }
+				}
+				var fundAssetOption = {
+					// color: ['#003366', '#006699'],
+					title : {
+						text : '资产配置（%）'
+					},
+					tooltip : {
+						trigger : 'axis',
+						axisPointer : {
+							type : 'shadow'
+						}
+					},
+					legend : {
+						data : fundAssetLegend
+					},
+					toolbox : {
+						show : true,
+						orient : 'vertical',
+						left : 'right',
+						top : 'center',
+						feature : {
+							mark : {
+								show : true
+							},
+							dataView : {
+								show : true,
+								readOnly : false
+							},
+							magicType : {
+								show : true,
+								type : [ 'line', 'bar', 'stack', 'tiled' ]
+							},
+							restore : {
+								show : true
+							},
+							saveAsImage : {
+								show : true
+							}
+						}
+					},
+					xAxis : [ {
+						type : 'category',
+						axisTick : {
+							show : false
+						},
+						data : fundAssetTitle
+					} ],
+					yAxis : [ {
+						type : 'value'
+					} ],
+					series : fundAssetSeries
+				};
+				fundAsset.setOption(fundAssetOption);
+				// 行业配置
+				var fundTrade = echarts.init(document.getElementById('fundTrade'), "light");
+				var fundTradeTitle = [];
+				var fundTradeLegend = [];
+				var fundTradeSeries = [];
+				for(var index = 0; index < selectData.length; index++) {
+					var fund = selectData[index];
+					var tradePositions = fund.tradePositions;
+					fundTradeLegend[index] = fund.name;
+					for(var jndex = 0; jndex < tradePositions.length; jndex++) {
+						var tradePosition = tradePositions[jndex];
+						if(!fundTradeTitle.includes(tradePosition.name)) {
+							fundTradeTitle[fundTradeTitle.length] = tradePosition.name;
+						}
+					}
+				}
+				for(var index = 0; index < selectData.length; index++) {
+					var data = [];
+					var fund = selectData[index];
+					var tradePositions = fund.tradePositions;
+					for(var jndex = 0; jndex < fundTradeTitle.length; jndex++) {
+						for(var kndex = 0; kndex < tradePositions.length; kndex++) {
+							var tradePosition = tradePositions[kndex];
+							if(tradePosition.name == fundTradeTitle[jndex]) {
+								data[jndex] = tradePosition.percent;
+							}
+						}
+						if(!data[jndex]) {
+							data[jndex] = 0;
+						}
+					}
+					fundTradeSeries[index] = {
+			            name: fund.name,
+			            type: 'bar',
+			            data: data
+			        }
+				}
+				var fundTradeOption = {
+					// color: ['#003366', '#006699'],
+					title : {
+						text : '行业配置（%）'
+					},
+					tooltip : {
+						trigger : 'axis',
+						axisPointer : {
+							type : 'shadow'
+						}
+					},
+					legend : {
+						data : fundTradeLegend
+					},
+					toolbox : {
+						show : true,
+						orient : 'vertical',
+						left : 'right',
+						top : 'center',
+						feature : {
+							mark : {
+								show : true
+							},
+							dataView : {
+								show : true,
+								readOnly : false
+							},
+							magicType : {
+								show : true,
+								type : [ 'line', 'bar', 'stack', 'tiled' ]
+							},
+							restore : {
+								show : true
+							},
+							saveAsImage : {
+								show : true
+							}
+						}
+					},
+					xAxis : [ {
+						type : 'category',
+						axisTick : {
+							show : false
+						},
+						data : fundTradeTitle
+					} ],
+					yAxis : [ {
+						type : 'value'
+					} ],
+					series : fundTradeSeries
+				};
+				fundTrade.setOption(fundTradeOption);
+				// 股票配置
+				var fundStock = echarts.init(document.getElementById('fundStock'), "light");
+				var fundStockTitle = [];
+				var fundStockLegend = [];
+				var fundStockSeries = [];
+				for(var index = 0; index < selectData.length; index++) {
+					var fund = selectData[index];
+					var stockPositions = fund.stockPositions;
+					fundStockLegend[index] = fund.name;
+					for(var jndex = 0; jndex < stockPositions.length; jndex++) {
+						var stockPosition = stockPositions[jndex];
+						if(!fundStockTitle.includes(stockPosition.name)) {
+							fundStockTitle[fundStockTitle.length] = stockPosition.name;
+						}
+					}
+				}
+				for(var index = 0; index < selectData.length; index++) {
+					var data = [];
+					var fund = selectData[index];
+					var stockPositions = fund.stockPositions;
+					for(var jndex = 0; jndex < fundStockTitle.length; jndex++) {
+						for(var kndex = 0; kndex < stockPositions.length; kndex++) {
+							var stockPosition = stockPositions[kndex];
+							if(stockPosition.name == fundStockTitle[jndex]) {
+								data[jndex] = stockPosition.percent;
+							}
+						}
+						if(!data[jndex]) {
+							data[jndex] = 0;
+						}
+					}
+					fundStockSeries[index] = {
+			            name: fund.name,
+			            type: 'bar',
+			            data: data
+			        }
+				}
+				var fundStockOption = {
+					// color: ['#003366', '#006699'],
+					title : {
+						text : '股票配置（%）'
+					},
+					tooltip : {
+						trigger : 'axis',
+						axisPointer : {
+							type : 'shadow'
+						}
+					},
+					legend : {
+						data : fundStockLegend
+					},
+					toolbox : {
+						show : true,
+						orient : 'vertical',
+						left : 'right',
+						top : 'center',
+						feature : {
+							mark : {
+								show : true
+							},
+							dataView : {
+								show : true,
+								readOnly : false
+							},
+							magicType : {
+								show : true,
+								type : [ 'line', 'bar', 'stack', 'tiled' ]
+							},
+							restore : {
+								show : true
+							},
+							saveAsImage : {
+								show : true
+							}
+						}
+					},
+					xAxis : [ {
+						type : 'category',
+						axisTick : {
+							show : false
+						},
+						data : fundStockTitle
+					} ],
+					yAxis : [ {
+						type : 'value'
+					} ],
+					series : fundStockSeries
+				};
+				fundStock.setOption(fundStockOption);
+				// 债券配置
+				var fundBond = echarts.init(document.getElementById('fundBond'), "light");
+				var fundBondTitle = [];
+				var fundBondLegend = [];
+				var fundBondSeries = [];
+				for(var index = 0; index < selectData.length; index++) {
+					var fund = selectData[index];
+					var bondPositions = fund.bondPositions;
+					fundBondLegend[index] = fund.name;
+					for(var jndex = 0; jndex < bondPositions.length; jndex++) {
+						var bondPosition = bondPositions[jndex];
+						if(!fundBondTitle.includes(bondPosition.name)) {
+							fundBondTitle[fundBondTitle.length] = bondPosition.name;
+						}
+					}
+				}
+				for(var index = 0; index < selectData.length; index++) {
+					var data = [];
+					var fund = selectData[index];
+					var bondPositions = fund.bondPositions;
+					for(var jndex = 0; jndex < fundBondTitle.length; jndex++) {
+						for(var kndex = 0; kndex < bondPositions.length; kndex++) {
+							var bondPosition = bondPositions[kndex];
+							if(bondPosition.name == fundBondTitle[jndex]) {
+								data[jndex] = bondPosition.percent;
+							}
+						}
+						if(!data[jndex]) {
+							data[jndex] = 0;
+						}
+					}
+					fundBondSeries[index] = {
+			            name: fund.name,
+			            type: 'bar',
+			            data: data
+			        }
+				}
+				var fundBondOption = {
+					// color: ['#003366', '#006699'],
+					title : {
+						text : '股票配置（%）'
+					},
+					tooltip : {
+						trigger : 'axis',
+						axisPointer : {
+							type : 'shadow'
+						}
+					},
+					legend : {
+						data : fundBondLegend
+					},
+					toolbox : {
+						show : true,
+						orient : 'vertical',
+						left : 'right',
+						top : 'center',
+						feature : {
+							mark : {
+								show : true
+							},
+							dataView : {
+								show : true,
+								readOnly : false
+							},
+							magicType : {
+								show : true,
+								type : [ 'line', 'bar', 'stack', 'tiled' ]
+							},
+							restore : {
+								show : true
+							},
+							saveAsImage : {
+								show : true
+							}
+						}
+					},
+					xAxis : [ {
+						type : 'category',
+						axisTick : {
+							show : false
+						},
+						data : fundBondTitle
+					} ],
+					yAxis : [ {
+						type : 'value'
+					} ],
+					series : fundBondSeries
+				};
+				fundBond.setOption(fundBondOption);
+			}
+		});
+	</script>
+</body>
+</html>

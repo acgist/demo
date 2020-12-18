@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>vue</title>
+        <meta charset="utf-8" />
+    </head>
+    <body>
+        <div id="app">
+            <ul v-if="showBooks">
+                <li v-for="(book, index) in books" v-on:click="bookOpen">
+                    {{ index }}-{{ book.name }}-{{ book.price | priceFormat }}
+                </li>
+            </ul>
+            <a v-bind:href="acgist">acgist</a>
+            <a :href="candyAcgist">acgist</a>
+            <a :class="{'class' : showBooks}">acgist</a>
+            <a @click="candyClick">点我</a>
+            <p>{{ message }} - {{ lang }}</p>
+            <input v-model.lazy="message" />
+            <input type="radio" v-model="lang" value="c" />
+            <input type="radio" v-model="lang" value="java" />
+            <input type="radio" v-model="lang" value="python" />
+            <count-template :ext="'扩展属性'"></count-template>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <script>
+        	Vue.component('count-template', {
+        		"props" : ["ext"],
+        		"template" : '<div>{{ count }}</div>',
+        		"data" : function() {
+        			return {
+        				"count" : ("测试标签" + this.ext)
+        			}
+        		}
+        	});
+            var app = new Vue({
+                "el" : "#app",
+                "data" : {
+                    "showBooks" : true,
+                    "message" : "test",
+                    "lang" : "java",
+                    "acgist" : "https://www.acgist.com",
+                    "candyAcgist" : "https://www.acgist.com",
+                    "books" : [
+                        {"name" : "从入门到放弃", "price" : 2000 },
+                        {"name" : "就是干", "price" : 1000 }
+                    ]
+                },
+                "methods" : {
+                    "bookOpen" : function() {
+                        this.showBooks = false;
+                    },
+                    "candyClick" : function() {
+                        alert("你傻啊，叫你点你就点！");
+                    }
+                },
+                "filters" : {
+                    "priceFormat" : function(value) {
+                        return value + "￥";
+                    }
+                },
+                "created" : function() {
+                    console.log("开始创建");
+                },
+                "mounted" : function() {
+                    console.log("挂载完成");
+                }
+            });
+            console.log(app.books);
+            // console.log(app.data.books); // 错误
+        </script>
+    </body>
+</html>

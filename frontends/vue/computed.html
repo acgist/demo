@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>vue</title>
+        <meta charset="utf-8" />
+    </head>
+    <body>
+        <div id="app">
+            <ul v-if="showBooks">
+                <li v-for="book in books">
+                    {{ book.name }}-{{ book.price }}
+                </li>
+            </ul>
+            <span>{{ priceFormat }}</span>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <script>
+            var app = new Vue({
+                "el" : "#app",
+                "data" : {
+                    "showBooks" : true,
+                    "books" : [
+                        {"name" : "从入门到放弃", "price" : 2000 },
+                        {"name" : "就是干", "price" : 1000 }
+                    ]
+                },
+                "computed" : {
+                    "priceFormat" : {
+                        "set" : function(value) {
+                            console.log("setter：" + value);
+                        },
+                        "get" : function() {
+                            console.log("getter");
+                            var total = 0;
+                            for(var index in this.books) {
+                                total += this.books[index].price;
+                            }
+                            return total + "￥";
+                        }
+                    }
+                }
+            });
+            console.log(app.books);
+            // console.log(app.data.books); // 错误
+        </script>
+    </body>
+</html>

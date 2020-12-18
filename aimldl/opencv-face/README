@@ -1,0 +1,17 @@
+opencv-人脸识别
+opencv-face
+└─com
+    └─acgist
+        ├─face
+        │      CreateFace.java	人脸提取
+        │      FaceID.java		人脸识别
+        │      FaceJava.java	人脸识别
+        │      ImageFace.java	人脸探测-图片
+        │      VideoFace.java	人脸探测-视频
+        │
+        ├─player
+        │      AudioPlayer.java
+        │      VideoPlayer.java
+        │
+        └─utils
+                LocalPath.java

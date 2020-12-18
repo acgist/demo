@@ -1,0 +1,14 @@
+### ide config ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+.mvn
+.pydevproject
+
+### MAVEN ###
+*/target/
+*/logs/
