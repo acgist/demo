@@ -27,8 +27,10 @@ public class HTTPUtilsTest extends Performance {
 	
 	@Test
 	public void testReuse() {
-		HTTPUtils.get("https://www.acgist.com");
-		HTTPUtils.get("https://www.acgist.com");
+		this.log(HTTPUtils.get("https://www.acgist.com"));
+		this.log(HTTPUtils.get("https://www.acgist.com"));
+		this.log(HTTPUtils.get("https://www.baidu.com"));
+		this.log(HTTPUtils.get("https://www.baidu.com"));
 	}
 	
 }
