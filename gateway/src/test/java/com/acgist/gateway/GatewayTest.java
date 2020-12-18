@@ -55,9 +55,9 @@ public class GatewayTest {
 	
 	@Test
 	public void testGatewayCosted() throws InterruptedException {
-		final int count = 1000;
+		final int count = 10000;
 		final CountDownLatch down = new CountDownLatch(count);
-		final ExecutorService executors = Executors.newFixedThreadPool(10);
+		final ExecutorService executors = Executors.newFixedThreadPool(100);
 		final long begin = System.currentTimeMillis();
 		for (int i = 0; i < count; i++) {
 			executors.submit(() -> {
