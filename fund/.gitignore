@@ -1,7 +1,9 @@
-.project
-.settings
-.classpath
-
-/data/
 /logs/
+/data/
 /target/
+
+.settings
+
+.project
+.classpath
+.factorypath

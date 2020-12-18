@@ -1,14 +1,8 @@
-### ide config ###
-.apt_generated
+/logs/
+/target/
+
+.settings
+
+.project
 .classpath
 .factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-.mvn
-.pydevproject
-
-### MAVEN ###
-*/target/
-*/logs/

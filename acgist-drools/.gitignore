@@ -1,16 +1,8 @@
-#ºöÂÔÎÄ¼ş
-*.iml
+/logs/
+/target/
 
-#ºöÂÔÅäÖÃ
-.idea
-.project
 .settings
+
+.project
 .classpath
 .factorypath
-.springBeans
-.apt_generated
-.apt_generated_tests
-
-#ºöÂÔÄ¿Â¼
-**/logs/
-**/target/

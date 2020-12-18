@@ -1,17 +1,8 @@
-### ide config ###
-.apt_generated
+/logs/
+/target/
+
+.settings
+
+.project
 .classpath
 .factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-.mvn
-
-### MAVEN ###
-*/target/
-
-### ´óÎÄ¼þ ###
-dep.m
-pos.m
-seg.m
