@@ -1,0 +1,14 @@
+@media screen and (min-width:800px){html{font-size:16px;}}
+@media screen and (min-width:1200px){html{font-size:18px;}}
+@media screen and (min-width:1600px){html{font-size:20px;}}
+*{margin:0;padding:0;border:none;outline:none;box-sizing:content-box;}
+body{width:100%;height:100%;-webkit-tap-highlight-color:rgba(0,0,0,0);color:#222;font-family:Arial,Consolas,SimSun,"宋体";font-weight:normal;font-size:1rem;line-height:1.4em;}
+li{list-style:none;}
+.buttons li{background:#CCC;}
+.header{padding:1rem 0;float:none;clear:both;height:10%;}
+.header ul li{float:left;padding:0 1rem;}
+.main{float:none;clear:both;height:80%;overflow:auto;}
+.main ul li{float:left;padding:0 1rem;}
+.footer{float:none;clear:both;height:10%;}
+.footer ul.filter li{float:left;padding:0 1rem;}
+.footer ul.status li{float:right;padding:0 1rem;}
