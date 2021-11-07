@@ -23,7 +23,7 @@ public class NettyTest {
 		final Channel channel = client.getChannel();
 		final Scanner scanner = new Scanner(System.in);
 		while ((line = scanner.nextLine()) != null) {
-			channel.writeAndFlush(line);
+			channel.writeAndFlush(line.replace("\\n", "\n"));
 			if(line.equals("close")) {
 				channel.close();
 				break;

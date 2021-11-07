@@ -15,6 +15,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
@@ -35,9 +36,11 @@ public class Server {
 				protected void initChannel(SocketChannel channel) {
 					channel.pipeline()
 						.addLast(new StringEncoder())
+						.addLast(new LineBasedFrameDecoder(1024))
 						.addLast(new StringDecoder())
-//						.addLast(new LineBasedFrameDecoder(1024))
 						.addLast(new MesageHandler("Server"));
+//					channel.eventLoop().execute(() -> {
+//					});
 				}
 			});
 		final ChannelFuture future = serverBootstrap.bind(port).sync();
