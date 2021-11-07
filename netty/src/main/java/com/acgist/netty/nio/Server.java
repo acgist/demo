@@ -27,8 +27,8 @@ public class Server {
 		final InetSocketAddress address = new InetSocketAddress(port);
 		serverSocket.bind(address);
 		final Selector selector = Selector.open();
+		final Selector readSelector = Selector.open();
 		serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-		final ByteBuffer message = ByteBuffer.wrap("连接成功".getBytes());
 		while (true) {
 			try {
 				selector.select();
@@ -42,33 +42,58 @@ public class Server {
 				final SelectionKey key = iterator.next();
 				// 移除
 				iterator.remove();
+				if (key.isAcceptable()) {
+					final ServerSocketChannel socket = (ServerSocketChannel) key.channel();
+					final SocketChannel client = socket.accept();
+					client.configureBlocking(false);
+					// 不建议注册写出
+					client.register(readSelector, SelectionKey.OP_READ);
+//					client.write(ByteBuffer.wrap("acgist".getBytes()));
+					LOGGER.debug("接收请求：{}-{}", client, key);
+					// 线程池
+					new ReadThread(readSelector).start();
+				}
+			}
+		}
+	}
+	
+	public static class ReadThread extends Thread {
+		
+		private Selector readSelector;
+		
+		public ReadThread(Selector readSelector) {
+			this.readSelector = readSelector;
+		}
+
+		@Override
+		public void run() {
+			while (true) {
 				try {
-					if (key.isAcceptable()) {
-						final ServerSocketChannel socket = (ServerSocketChannel) key.channel();
-						final SocketChannel client = socket.accept();
-						client.configureBlocking(false);
-						// 可以注册另外一个selector
-						client.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE, message.duplicate());
-					}
-					if (key.isReadable()) {
-						final SocketChannel client = (SocketChannel) key.channel();
-						final ByteBuffer buffer = ByteBuffer.allocate(1024);
-						client.read(buffer);
-						LOGGER.debug("Server收到：{}", new String(buffer.array()));
-					}
-					if (key.isWritable()) {
-						final SocketChannel client = (SocketChannel) key.channel();
-						final ByteBuffer buffer = (ByteBuffer) key.attachment();
-						while (buffer.hasRemaining()) {
-							if (client.write(buffer) == 0) {
-								break;
-							}
-						}
-						client.close();
-					}
+					readSelector.select();
 				} catch (IOException e) {
 					// TODO：log
-					IoUtils.close(key.channel());
+					break;
+				}
+				final Set<SelectionKey> readKeys = readSelector.selectedKeys();
+				final Iterator<SelectionKey> readIterator = readKeys.iterator();
+				while (readIterator.hasNext()) {
+					final SelectionKey readKey = readIterator.next();
+					// 移除
+					readIterator.remove();
+					final SocketChannel client = (SocketChannel) readKey.channel();
+					LOGGER.debug("读取消息：{}-{}", client, readKey);
+					try {
+						if (readKey.isReadable()) {
+							final SocketChannel readClient = (SocketChannel) readKey.channel();
+							final ByteBuffer buffer = ByteBuffer.allocate(1024);
+							readClient.read(buffer);
+//							readClient.write(buffer);
+							LOGGER.debug("Server收到：{}", new String(buffer.array()));
+						}
+					} catch (IOException e) {
+						// TODO：log
+						IoUtils.close(readKey.channel());
+					}
 				}
 			}
 		}

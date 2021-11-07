@@ -1,13 +1,12 @@
 package com.acgist.netty.nio;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.Iterator;
 import java.util.Scanner;
 
 import org.slf4j.Logger;
@@ -24,28 +23,48 @@ public class Client {
 	
 	public void connect(int port) throws IOException {
 		final SocketChannel channel = SocketChannel.open();
-		channel.connect(new InetSocketAddress(port));
+		channel.configureBlocking(false);
 		final Selector selector = Selector.open();
 		channel.register(selector, SelectionKey.OP_CONNECT);
-		final Socket socket = new Socket("localhost", port);
-		final InputStream input = socket.getInputStream();
-		final OutputStream out = socket.getOutputStream();
-		String line;
-		final byte[] bytes = new byte[input.available()];
-		input.read(bytes);
-		LOGGER.debug("Client收到：{}", new String(bytes));
-		final Scanner scanner = new Scanner(System.in);
-		while ((line = scanner.nextLine()) != null) {
-			out.write(line.getBytes());
-			if (line.equals("close")) {
-				break;
+		channel.connect(new InetSocketAddress("localhost", port));
+		while(selector.select() > 0) {
+			Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
+			while(iterator.hasNext()) {
+				SelectionKey key = iterator.next();
+				iterator.remove();
+				if(key.isConnectable()) {
+					LOGGER.debug("Client连接：{}", key);
+					if(channel.isConnectionPending()) {
+						// 非常重要
+						if(channel.finishConnect()) {
+//							key.interestOps(SelectionKey.OP_READ);
+							channel.register(selector, SelectionKey.OP_READ);
+							LOGGER.debug("Client连接成功");
+						}
+					}
+					new Thread(() -> {
+						String line;
+						final Scanner scanner = new Scanner(System.in);
+						while ((line = scanner.nextLine()) != null) {
+							LOGGER.debug("Client发送消息：{}", line);
+							try {
+								channel.write(ByteBuffer.wrap(line.getBytes()));
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							if (line.equals("close")) {
+								break;
+							}
+						}
+						IoUtils.close(scanner);
+					}).start();
+				} else if(key.isReadable()) {
+					ByteBuffer buffer = ByteBuffer.allocate(1024);
+					channel.read(buffer);
+					LOGGER.debug("Client消息：{}", new String(buffer.array()));
+				}
 			}
 		}
-		IoUtils.close(out);
-		IoUtils.close(input);
-		IoUtils.close(socket);
-		IoUtils.close(scanner);
-	
 	}
 	
 }
