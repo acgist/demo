@@ -47,6 +47,7 @@ public class Server {
 						final ServerSocketChannel socket = (ServerSocketChannel) key.channel();
 						final SocketChannel client = socket.accept();
 						client.configureBlocking(false);
+						// 可以注册另外一个selector
 						client.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE, message.duplicate());
 					}
 					if (key.isReadable()) {
