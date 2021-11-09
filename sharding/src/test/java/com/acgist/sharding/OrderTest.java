@@ -46,7 +46,7 @@ public class OrderTest {
 	
 	@Test
 	public void testFind() {
-		this.orderRepository.findById(1);
+		this.orderRepository.findById(1L);
 	}
 	
 	@Test

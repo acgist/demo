@@ -22,9 +22,7 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
-		<!--
-		注意：如果使用druid-spring-boot-starter需要排除自动配置DruidDataSourceAutoConfigure
-		-->
+		<!-- 注意：如果使用druid-spring-boot-starter需要排除自动配置DruidDataSourceAutoConfigure -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>druid</artifactId>
