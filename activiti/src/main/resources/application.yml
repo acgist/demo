@@ -9,9 +9,9 @@ spring:
   activiti:
     history-level: full
     database-schema-update: true
-    check-process-definitions: true
-    process-definition-location-prefix: classpath:/processes/
+    check-process-definitions: false
   jpa:
     hibernate:
       ddl-auto: update
       open-in-view: false
+    show-sql: true
