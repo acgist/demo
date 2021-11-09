@@ -35,19 +35,17 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		<!-- 保存修改API -->
-		<!-- activiti-webapp-explorer2下载解压获取界面 -->
-		<!-- http://localhost:8080/modeler.html?modelId=id -->
+		<!-- AVG支持 -->
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>batik-codec</artifactId>
+			<version>1.14</version>
+		</dependency>
+		<!-- JSON支持 -->
 		<dependency>
 			<groupId>org.activiti</groupId>
-			<artifactId>activiti-modeler</artifactId>
-			<version>5.23.0</version>
-		</dependency>
-		<!-- 虽然上面已经包含，但是如果不加下面依赖启动不了。 -->
-		<dependency>
-		    <groupId>org.activiti</groupId>
-		    <artifactId>activiti-json-converter</artifactId>
-		    <version>6.0.0</version>
+			<artifactId>activiti-json-converter</artifactId>
+			<version>6.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.activiti</groupId>

@@ -2,8 +2,6 @@ package com.acgist.activiti;
 
 import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
 import org.activiti.engine.repository.Model;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +22,6 @@ public class ActivitiController {
 	private ObjectMapper objectMapper;
 	
 	@Autowired
-	private TaskService taskService;
-	@Autowired
-	private RuntimeService runtimeService;
-	@Autowired
 	private RepositoryService repositoryService;
 
 	@RequestMapping("/create")
@@ -35,7 +29,7 @@ public class ActivitiController {
 		if (StringUtils.isEmpty(name)) {
 			return null;
 		}
-		if(StringUtils.isEmpty(description)) {
+		if (StringUtils.isEmpty(description)) {
 			description = name;
 		}
 		String id = null;
@@ -52,12 +46,12 @@ public class ActivitiController {
 		model.setMetaInfo(modelNode.toString());
 		this.repositoryService.saveModel(model);
 		id = model.getId();
-		ObjectNode editorNode = this.objectMapper.createObjectNode();
+		final ObjectNode stencilSetNode = this.objectMapper.createObjectNode();
+		stencilSetNode.put("namespace", "http://b3mn.org/stencilset/bpmn2.0#");
+		final ObjectNode editorNode = this.objectMapper.createObjectNode();
 		editorNode.put("id", "canvas");
 		editorNode.put("resourceId", "canvas");
-		ObjectNode stencilSetNode = this.objectMapper.createObjectNode();
-		stencilSetNode.put("namespace", "http://b3mn.org/stencilset/bpmn2.0#");
-		editorNode.put("stencilset", stencilSetNode);
+		editorNode.set("stencilset", stencilSetNode);
 		this.repositoryService.addModelEditorSource(id, editorNode.toString().getBytes());
 		return "redirect:/modeler.html?modelId=" + id;
 	}
