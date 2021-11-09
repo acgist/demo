@@ -12,7 +12,7 @@ public class OrderTest {
 	private OrderRepository orderRepository;
 	@Autowired
 	private SnowflakeBuilder snowflakeBuilder;
-	
+    
 	@Test
 	public void testInsert() {
 		OrderEntity entity = new OrderEntity();
@@ -20,6 +20,13 @@ public class OrderTest {
 		entity.setId(this.snowflakeBuilder.buildId());
 		entity.setName("acgist");
 		this.orderRepository.save(entity);
+	}
+	
+	@Test
+	public void testInsertSQL() {
+		OrderEntity entity = new OrderEntity();
+		entity.setName("acgist");
+		this.orderRepository.insert(entity);
 	}
 	
 	@Test
