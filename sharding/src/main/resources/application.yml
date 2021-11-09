@@ -1,0 +1,72 @@
+spring:
+# 注意不要配置自动更新结构
+  jpa:
+    database: MYSQL
+    show-sql: false
+  shardingsphere:
+    datasource:
+      names: dsmaster,dsslave,ds0master,ds0slave,ds1master,ds1slave
+      dsmaster:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/dm?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+        username: root
+        password:
+        initialSize: 1
+        minIdle: 2
+        maxActive: 10
+      ds0master:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/dm0?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+        username: root
+        password:
+      ds1master:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/dm1?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+        username: root
+        password:
+      dsslave:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/ds?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+        username: root
+        password:
+      ds0slave:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/ds0?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+        username: root
+        password:
+      ds1slave:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/ds1?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+        username: root
+        password:
+    sharding:
+      default-data-source-name: ds
+      tables:
+        tb_order:
+          actual-data-nodes: ds$->{0..1}.tb_order_$->{0..1}
+          database-strategy:
+            inline:
+              sharding-column: id
+              algorithm-expression: ds$->{id % 2}
+          table-strategy:
+            inline:
+              sharding-column: id
+              algorithm-expression: tb_order_$->{id % 2}
+      master-slave-rules:
+        ds:
+          master-data-source-name: dsmaster
+          slave-data-source-names: dsslave
+        ds0:
+          master-data-source-name: ds0master
+          slave-data-source-names: ds0slave
+        ds1:
+          master-data-source-name: ds1master
+          slave-data-source-names: ds1slave
+    props:
+      sql.show: true
