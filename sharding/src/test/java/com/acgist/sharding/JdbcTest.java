@@ -13,10 +13,13 @@ public class JdbcTest {
 	
 	@Test
 	public void test() {
-		final String sql = "insert into tb_order (id, name) values(?, ?)";
-		Long id = 1L;
-		final Object[] args = new Object[] { id, "acgist" };
-		this.jdbcTemplate.update(sql, args);
+		// 不能使用ID
+//		final String sql = "insert into tb_order (id, name) values(", ?)";
+		final String sql = "insert into tb_order (name) values(?)";
+		final Object[] args = new Object[] { "acgist" };
+		for (int i = 0; i < 10; i++) {
+			this.jdbcTemplate.update(sql, args);
+		}
 	}
 
 }

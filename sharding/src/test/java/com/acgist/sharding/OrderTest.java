@@ -16,6 +16,7 @@ public class OrderTest {
 	@Test
 	public void testInsert() {
 		OrderEntity entity = new OrderEntity();
+		// hibernate自动检测ID不能为空
 		entity.setId(this.snowflakeBuilder.buildId());
 		entity.setName("acgist");
 		this.orderRepository.save(entity);
