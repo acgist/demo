@@ -94,9 +94,9 @@ public class ActivitiModelController {
 		// JSON
 		try {
 			final ObjectNode modelJson = (ObjectNode) this.objectMapper.readTree(model.getMetaInfo());
-			model.setName(name);
 			modelJson.put(ModelDataJsonConstants.MODEL_NAME, name);
 			modelJson.put(ModelDataJsonConstants.MODEL_DESCRIPTION, description);
+			model.setName(name);
 			model.setMetaInfo(modelJson.toString());
 			this.repositoryService.saveModel(model);
 			this.repositoryService.addModelEditorSource(model.getId(), json_xml.getBytes(StandardCharsets.UTF_8));

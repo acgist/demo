@@ -11,7 +11,7 @@ spring:
     database-schema-update: true
     check-process-definitions: false
   jpa:
+    show-sql: true
     hibernate:
       ddl-auto: update
-      open-in-view: false
-    show-sql: true
+    open-in-view: false
