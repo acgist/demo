@@ -31,7 +31,8 @@ public class RuntimeTest {
 //		this.runtimeService.suspendProcessInstanceById(null);
 		// 设置发起用户
 		this.identityService.setAuthenticatedUserId("acgist");
-		// 负责人变量
+		// 负责人变量：一般可以通过方法查询处理链上面的用户
+		// 通过发起用户查询关联的部门经理、人事等等
 		final Map<String, Object> variables = new HashMap<>();
 		variables.put("manager", "技术部经理");
 		variables.put("personnel", "人事主管");
@@ -57,6 +58,7 @@ public class RuntimeTest {
 	@Test
 	public void testProcessInstance() {
 		this.runtimeService.createProcessInstanceQuery().startedBy("acgist").list().forEach(instance -> {
+			this.runtimeService.deleteProcessInstance(instance.getId(), "作废");
 			LOGGER.info("----------------------------");
 			LOGGER.info("流程ID：{}", instance.getId());
 			LOGGER.info("流程名称：{}", instance.getName());

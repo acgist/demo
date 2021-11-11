@@ -31,6 +31,7 @@ public class TaskTest {
 		LOGGER.info("任务描述：{}", task.getDescription());
 		LOGGER.info("任务变量：{}", task.getProcessVariables());
 		LOGGER.info("任务变量：{}", task.getTaskLocalVariables());
+		LOGGER.info("任务变量：{}", this.taskService.getVariables(task.getId()));
 	}
 	
 	@Test
@@ -75,6 +76,12 @@ public class TaskTest {
 //		variables.put("mark", "年假已经修完");
 		this.taskService.complete("125005", variables);
 //		this.taskService.complete("117502");
+	}
+	
+	@Test
+	public void testDelete() {
+		// 不能单独删除任务
+		this.taskService.deleteTask("853315748804100", "测试");
 	}
 	
 }
