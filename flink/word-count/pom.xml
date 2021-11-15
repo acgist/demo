@@ -5,11 +5,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.acgist</groupId>
-	<artifactId>demo</artifactId>
+	<artifactId>word-count</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0.0</version>
 
-	<name>demo</name>
+	<name>word-count</name>
 	<url>https://www.acgist.com</url>
 
 	<dependencies>
