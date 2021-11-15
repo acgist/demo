@@ -13,20 +13,32 @@
 	<url>https://www.acgist.com</url>
 
 	<dependencies>
+		<!-- 批处理 -->
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-java</artifactId>
 			<version>1.14.0</version>
+			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-clients_2.12</artifactId>
-			<version>1.14.0</version>
-		</dependency>
+		<!-- 流处理 -->
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-streaming-java_2.12</artifactId>
 			<version>1.14.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- 客户端：本地环境运行 -->
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-clients_2.12</artifactId>
+			<version>1.14.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.32</version>
 		</dependency>
 
 		<dependency>

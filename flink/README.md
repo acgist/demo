@@ -1,43 +1,51 @@
 # Flink
 
-×öÒ»¸ö¼òµ¥µÄÊµÊ±¹ÊÕÏÍ³¼Æ
+åšä¸€ä¸ªç®€å•çš„å®žæ—¶æ•…éšœç»Ÿè®¡
 
-ÇåÏ´¡¢·ÖÁ÷¡¢±£´æÊý¾Ý
-°´ÕÕÊ±¶ÎÍ³¼Æ¹ÊÕÏµØÍ¼ºÍÇúÏßÍ¼
+æ¸…æ´—ã€åˆ†æµã€ä¿å­˜æ•°æ®
+æŒ‰ç…§æ—¶æ®µç»Ÿè®¡æ•…éšœåœ°å›¾å’Œæ›²çº¿å›¾
 
-µ¥»ú²¿Êð
+å•æœºéƒ¨ç½²
 
-## ÄÚ´æ
+## å†…å­˜
 
 jobmanager.memory.process.size
 taskmanager.memory.process.size
 
-## °æ±¾
+## ç‰ˆæœ¬
 
 flink-1.14.0
 
-## µ¥»ú²¿Êð
+## å•æœºéƒ¨ç½²
 
 ./start-cluster.sh
 
 > http://localhost:8081/
 
-## Ìá½»ÈÎÎñ
+## æäº¤ä»»åŠ¡
 
 flink run -c com.acgist.Main acgist.jar
 
-## ²éÑ¯ÈÎÎñ
+## æŸ¥è¯¢ä»»åŠ¡
 
 flink list
 
-## Í£Ö¹ÈÎÎñ
+## åœæ­¢ä»»åŠ¡
 
 flink cancel ${id}
 
-## ¹Ø±Õ
+## å…³é—­
 
 stop-cluster.sh
 
-## MVN´´½¨ÏîÄ¿
+## MVNåˆ›å»ºé¡¹ç›®
 
-mvn archetype:generate "-DgroupId=com.acgist" "-DartifactId=demo" "-DarchetypeArtifactId=maven-archetype-quickstart"
+mvn archetype:generate "-DgroupId=com.acgist" "-DarchetypeGroupId=org.apache.flink" "-DarchetypeVersion=1.14.0" "-DarchetypeArtifactId=flink-quickstart-java"
+
+## å¤„ç†è¿‡ç¨‹
+
+Source Operator -> Transformation Operator -> Sink Operator
+
+## æ—¶é—´
+
+Event Time -> Ingestion Time -> Process Time

@@ -12,21 +12,33 @@ public class SocketServerTest {
 
 	@Test
 	public void testServer() throws IOException {
-		ServerSocket server = new ServerSocket(9000);
-		Socket socket = server.accept();
-		Scanner scanner = new Scanner(System.in);
-		OutputStream output = socket.getOutputStream();
-		String line;
-		while(scanner.hasNextLine()) {
-			line = scanner.nextLine();
-			output.write(line.getBytes());
-			if(line.equals("close")) {
+		final ServerSocket server = new ServerSocket(9000);
+		final Scanner scanner = new Scanner(System.in);
+		while (true) {
+			String line = null;
+			final Socket socket = server.accept();
+			final OutputStream output = socket.getOutputStream();
+			System.out.println("客户端接入：" + socket);
+			while (scanner.hasNextLine()) {
+				line = scanner.nextLine() + "\r\n";
+				try {
+					output.write(line.getBytes());
+					output.flush();
+				} catch (IOException e) {
+					break;
+				}
+				if (line.equals("close")) {
+					break;
+				}
+			}
+			System.out.println("客户端关闭：" + socket);
+			socket.close();
+			if (line.equals("close")) {
 				break;
 			}
 		}
-		socket.close();
 		server.close();
 		scanner.close();
 	}
-	
+
 }

@@ -1,6 +1,10 @@
 package com.acgist;
 
-public class WordCount {
+import java.io.Serializable;
+
+public class WordCount implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private String word;
 	private long count;
