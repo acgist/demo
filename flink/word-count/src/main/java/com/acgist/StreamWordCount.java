@@ -22,6 +22,8 @@ public class StreamWordCount {
 //		env.getConfig().enableForceKryo();
 //		env.getConfig().addDefaultKryoSerializer(null, null);
 		final DataStream<String> data = env.socketTextStream("localhost", 9000, "\n");
+		// 合并
+//		data.union(null);
 //		泛型注解：@TypeInfo
 		data.flatMap((String value, Collector<WordCount> out) -> {
 			Stream.of(value.split("\\W+")).forEach(word -> out.collect(new WordCount(word, 1)));
@@ -33,6 +35,8 @@ public class StreamWordCount {
 		// 不推荐使用
 //		.keyBy(0)
 //		.keyBy("word")
+//		DataSet.groupBy - DataStream.keyBy
+//		不能使用keyBy：没有重写hashCode、任何数组
 		.keyBy(word -> word.getWord())
 		// 窗口：WindowAssigner
 		// 基于时间：滚动窗口（Tumbling）、滑动窗口（Sliding）、会话窗口（Session）
@@ -54,5 +58,5 @@ public class StreamWordCount {
 		// 流计算需要显示调用
 		env.execute("StreamWordCount");
 	}
-
+	
 }

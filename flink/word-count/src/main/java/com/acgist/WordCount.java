@@ -1,6 +1,7 @@
 package com.acgist;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class WordCount implements Serializable {
 
@@ -33,6 +34,11 @@ public class WordCount implements Serializable {
 		this.count = count;
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.word, this.count);
+	}
+	
 	@Override
 	public String toString() {
 		return this.word + " : " + this.count;
