@@ -65,7 +65,7 @@ public class StreamWordCount {
 //		.trigger(null)
 		// 迟到数据
 //		.allowedLateness(null)
-		// 输出Tag
+		// 输出Tag：可以用来分流延迟和正确数据
 //		.sideOutputLateData(null)
 		// 窗口函数：增量聚合：reduce、aggregate、fold（已经删除）
 		// 基于中间状态计算，占用内存少。
