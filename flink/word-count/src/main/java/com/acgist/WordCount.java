@@ -9,13 +9,15 @@ public class WordCount implements Serializable {
 
 	private String word;
 	private long count;
+	private long time;
 
 	public WordCount() {
 	}
-
-	public WordCount(String word, long count) {
+	
+	public WordCount(String word, long count, long time) {
 		this.word = word;
 		this.count = count;
+		this.time = time;
 	}
 
 	public String getWord() {
@@ -34,14 +36,22 @@ public class WordCount implements Serializable {
 		this.count = count;
 	}
 
+	public long getTime() {
+		return time;
+	}
+
+	public void setTime(long time) {
+		this.time = time;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.word, this.count);
+		return Objects.hash(this.word, this.count, this.time);
 	}
 	
 	@Override
 	public String toString() {
-		return this.word + " : " + this.count;
+		return this.word + " : " + this.count + " : " + this.time;
 	}
 
 }
