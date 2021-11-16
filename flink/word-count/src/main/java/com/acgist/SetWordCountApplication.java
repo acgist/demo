@@ -8,7 +8,7 @@ import org.apache.flink.api.java.operators.DataSource;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.util.Collector;
 
-public class SetWordCount {
+public class SetWordCountApplication {
 
 	public static void main(String[] args) throws Exception {
 //		ExecutionEnvironment.createLocalEnvironment(10)

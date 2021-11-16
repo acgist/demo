@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 import org.junit.jupiter.api.Test;
 
-public class SocketServerTest {
+public class StreamWordCountTest {
 
 	@Test
 	public void testServer() throws IOException {

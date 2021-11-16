@@ -10,7 +10,7 @@ import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindo
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.util.Collector;
 
-public class StreamWordCount {
+public class StreamWordCountApplication {
 
 	public static void main(String[] args) throws Exception {
 //		final ParameterTool params = ParameterTool.fromArgs(args);

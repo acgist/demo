@@ -49,3 +49,10 @@ Source Operator -> Transformation Operator -> Sink Operator
 ## 时间
 
 Event Time -> Ingestion Time -> Process Time
+
+## 理解
+
+WindowFunction
+ProcessFunction
+KeyedProcessFunction
+ProcessWindowFunction
