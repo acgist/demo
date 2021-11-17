@@ -19,6 +19,13 @@
 			<version>1.14.0</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- 表处理 -->
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-table-planner_2.12</artifactId>
+			<version>1.14.0</version>
+			<scope>provided</scope>
+		</dependency>
 		<!-- 批处理 -->
 		<dependency>
 			<groupId>org.apache.flink</groupId>

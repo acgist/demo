@@ -23,6 +23,8 @@ public class SetJoinApplication {
 //		(2,b,0,)
 		source.leftOuterJoin(target).where(0).equalTo(0).with((a, b) -> Tuple4.of(a.f0, a.f1, b == null ? 0 : b.f0, b == null ? "" : b.f1))
 			.returns(Types.TUPLE(Types.INT, Types.STRING, Types.INT, Types.STRING)).print();
+//		source.leftOuterJoin(target).where(0).equalTo(0).with((a, b) -> Tuple4.of(a.f0, a.f1, b == null ? 0 : b.f0, b == null ? "" : b.f1))
+//			.returns(Types.TUPLE(Types.INT, Types.STRING, Types.INT, Types.STRING)).withForwardedFieldsFirst("f1->f3").print();
 //		(0,,3,c)
 //		(1,a,1,a)
 		source.rightOuterJoin(target).where(0).equalTo(0).with((a, b) -> Tuple4.of(a == null ? 0 : a.f0, a == null ? "" : a.f1, b.f0, b.f1))
