@@ -26,6 +26,8 @@ public class StreamWordCountApplication {
 		final DataStream<String> data = env.socketTextStream("localhost", 9000, "\n");
 		// 合并
 //		data.union(null);
+		// 分组
+//		data.global().shuffle().broadcast().forward().rebalance().rescale().partitionCustom(null, null)
 //		泛型注解：@TypeInfo
 		data.flatMap((String value, Collector<WordCount> out) -> {
 			Stream.of(value.split("\\W+")).forEach(word -> out.collect(new WordCount(word, 1, System.currentTimeMillis())));
@@ -63,7 +65,7 @@ public class StreamWordCountApplication {
 //		.window(TumblingEventTimeWindows.of(Time.seconds(5), Time.seconds(2)))
 		// 触发事件：全局窗口
 //		.trigger(null)
-		// 迟到数据
+		// 迟到数据：主要控制窗口销毁
 //		.allowedLateness(null)
 		// 输出Tag：可以用来分流延迟和正确数据
 //		.sideOutputLateData(null)
