@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.stream.Stream;
 
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
+import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
@@ -23,23 +24,31 @@ public class StreamWordCountApplication {
 //		env.getConfig().enableForceKryo();
 //		env.getConfig().addDefaultKryoSerializer(null, null);
 		// 重写source指定watermark
-		final DataStream<String> data = env.socketTextStream("localhost", 9000, "\n");
+		ParameterTool parameter = ParameterTool.fromArgs(args);
+		final DataStream<String> data = env.socketTextStream(parameter.get("host", "localhost"), parameter.getInt("port", 9000), "\n");
+//		final DataStream<String> data = env.socketTextStream("localhost", 9000, "\n");
 		// 合并
 //		data.union(null);
 		// 分组
 //		data.global().shuffle().broadcast().forward().rebalance().rescale().partitionCustom(null, null)
 //		泛型注解：@TypeInfo
+//		data.flatMap((String value, Collector<Tuple3<String, Integer, Long>> out) -> {
 		data.flatMap((String value, Collector<WordCount> out) -> {
+//			Stream.of(value.split("\\W+")).forEach(word -> out.collect(Tuple3.of(word, 1, System.currentTimeMillis())));
 			Stream.of(value.split("\\W+")).forEach(word -> out.collect(new WordCount(word, 1, System.currentTimeMillis())));
 		})
+//		.returns(Types.TUPLE(Types.STRING, Types.INT, Types.LONG))
 		.returns(WordCount.class)
+//		.returns(new TypeHint<WordCount>() {})
 		// 单调递增：WatermarkStrategy.<WordCount>forBoundedOutOfOrderness(Duration.ofSeconds(0))
 //		.assignTimestampsAndWatermarks(WatermarkStrategy.<WordCount>forMonotonousTimestamps())
 		// 固定延迟
 		.assignTimestampsAndWatermarks(
-			WatermarkStrategy.<WordCount>forBoundedOutOfOrderness(Duration.ofSeconds(2))
+//			WatermarkStrategy.<Tuple3<String, Integer, Long>>forBoundedOutOfOrderness(Duration.ofSeconds(5))
+			WatermarkStrategy.<WordCount>forBoundedOutOfOrderness(Duration.ofSeconds(1))
 			// 设置时间：IngestionTimeAssigner、RecordTimestampAssigner
-//			.withTimestampAssigner((wordCount, timestamp) -> wordCount.getTime())
+//			.withTimestampAssigner((wordCount, timestamp) -> wordCount.f2)
+			.withTimestampAssigner((wordCount, timestamp) -> wordCount.getTime())
 			// 空闲时间
 //			.withIdleness(Duration.ofMillis(1))
 		)
@@ -49,6 +58,7 @@ public class StreamWordCountApplication {
 //		DataSet.groupBy - DataStream.keyBy
 //		不能使用keyBy：没有重写hashCode、任何数组
 		.keyBy(word -> word.getWord())
+//		.keyBy(word -> word.f0)
 		// Non-Keyed
 //		.windowAll(null)
 		// 基于数量
@@ -63,6 +73,7 @@ public class StreamWordCountApplication {
 //		.window(TumblingProcessingTimeWindows.of(Time.seconds(5)))
 		// 指定时间偏移
 //		.window(TumblingEventTimeWindows.of(Time.seconds(5), Time.seconds(2)))
+//		.windowAll(TumblingEventTimeWindows.of(Time.seconds(5)))
 		// 触发事件：全局窗口
 //		.trigger(null)
 		// 迟到数据：主要控制窗口销毁
@@ -71,6 +82,7 @@ public class StreamWordCountApplication {
 //		.sideOutputLateData(null)
 		// 窗口函数：增量聚合：reduce、aggregate、fold（已经删除）
 		// 基于中间状态计算，占用内存少。
+//		.reduce((source, target) -> Tuple3.of(source.f0, source.f1 + target.f1, 0L))
 		.reduce((source, target) -> new WordCount(source.getWord(), source.getCount() + target.getCount(), 0L))
 		// 窗口函数：全量函数：process
 		// 性能较弱，用来数据缓存。

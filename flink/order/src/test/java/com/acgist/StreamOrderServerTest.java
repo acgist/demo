@@ -33,7 +33,7 @@ public class StreamOrderServerTest {
 				.append(random.nextInt(1000)).append("-")
 				.append(fruit[random.nextInt(fruit.length)]).append("-")
 				.append(random.nextInt(10))
-				.append("\r\n");
+				.append("\n");
 			System.out.print(builder.toString());
 			try {
 				output.write(builder.toString().getBytes());

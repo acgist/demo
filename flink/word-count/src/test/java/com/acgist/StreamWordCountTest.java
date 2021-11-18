@@ -20,7 +20,7 @@ public class StreamWordCountTest {
 			final OutputStream output = socket.getOutputStream();
 			System.out.println("客户端接入：" + socket);
 			while (scanner.hasNextLine()) {
-				line = scanner.nextLine() + "\r\n";
+				line = scanner.nextLine() + "\n";
 				try {
 					output.write(line.getBytes());
 					output.flush();
