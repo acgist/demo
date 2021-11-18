@@ -48,11 +48,26 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- 新版本啥都没 -->
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-ml-api</artifactId>
+			<version>1.12.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-ml-lib_2.12</artifactId>
+			<version>1.12.5</version>
+		</dependency>
+
+		<!-- 旧版本不维护 -->
+		<!--
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-ml_2.12</artifactId>
 			<version>1.8.3</version>
 		</dependency>
+		-->
 
 		<dependency>
 			<groupId>org.apache.flink</groupId>
