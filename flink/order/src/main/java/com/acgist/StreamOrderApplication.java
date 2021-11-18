@@ -12,6 +12,10 @@ import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.tuple.Tuple6;
+import org.apache.flink.cep.CEP;
+import org.apache.flink.cep.PatternStream;
+import org.apache.flink.cep.pattern.Pattern;
+import org.apache.flink.cep.pattern.conditions.SimpleCondition;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -62,6 +66,33 @@ public class StreamOrderApplication {
 			.withTimestampAssigner((value, timestamp) -> value.f0)
 		)
 		.filter(value -> value.f5 > 0D);
+		
+		// 十秒连续三次高于100
+		Pattern<Tuple6<Long, String, Double, String, Integer, Double>, Tuple6<Long, String, Double, String, Integer, Double>> pattern = Pattern
+			.<Tuple6<Long, String, Double, String, Integer, Double>>begin("begin")
+			.where(new SimpleCondition<Tuple6<Long,String,Double,String,Integer,Double>>() {
+				private static final long serialVersionUID = 1L;
+				@Override
+				public boolean filter(Tuple6<Long, String, Double, String, Integer, Double> value) throws Exception {
+					return value.f5 > 100;
+				}
+			})
+			.next("next")
+			.where(new SimpleCondition<Tuple6<Long,String,Double,String,Integer,Double>>() {
+				private static final long serialVersionUID = 1L;
+				@Override
+				public boolean filter(Tuple6<Long, String, Double, String, Integer, Double> value) throws Exception {
+					return value.f5 > 100;
+				}
+			})
+			.timesOrMore(2)
+			.within(Time.seconds(10));
+		PatternStream<Tuple6<Long, String, Double, String, Integer, Double>> patternStream = CEP.pattern(orderStream.keyBy(value -> value.f1), pattern);
+		patternStream.select(map -> {
+			map.get("begin").forEach(System.out::println);
+			map.get("next").forEach(System.out::println);
+			return "超卖：" + map;
+		}).print();
 		// 交易总额
 		orderStream
 			.map(value -> value.f5)
