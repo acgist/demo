@@ -1,0 +1,10 @@
+EUREKA消费者
+访问链接：
+	http://localhost:9999/date
+	http://localhost:9999/v2/date
+	http://localhost:9999/user/name
+
+提供接口查看：
+	http://localhost:9999/swagger-ui.html
+
+重试只有feign客户端才有效果

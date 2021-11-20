@@ -1,0 +1,42 @@
+server:
+  port: 8888
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - beans
+          - metrics
+          - prometheus
+spring:
+  cloud:
+    gateway:
+      routes:
+       - id: acgist-host
+         uri: https://www.acgist.com
+         predicates:
+           - Host=*.acgist.com
+       - id: acgist-path
+         uri: https://www.acgist.com
+         predicates:
+           - Path=/acgist/**
+         filters:
+           - StripPrefix=1
+       - id: acs-customer
+         uri: lb://acs-customer
+         predicates:
+           - Host=*.acgist.com
+       - id: prometheus
+         uri: http://localhost:9090
+         predicates:
+           - Path=/prometheus/**
+         filters:
+           - StripPrefix=1
+       - id: grafana
+         uri: http://localhost:3000
+         predicates:
+           - Path=/grafana
+       - id: nacos
+         uri: http://localhost:8848
+         predicates:
+           - Path=/nacos/**
