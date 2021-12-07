@@ -118,11 +118,13 @@ public class ExcelChartUtils {
 		} else {
 			sheet = workbook.createSheet(name);
 		}
-		int lastRowNum = sheet.getLastRowNum();
+		int lastRowNum = sheet.getLastRowNum() + 1;
 		for (final Chart chart : charts) {
 			final int chartRowNum = lastRowNum + chart.getPadding();
 			final int chartRowNumEnd = chartRowNum + chart.getRow();
-			final XSSFChart xssfChart = buildDrawingPatriarch(sheet, chart.getPadding(), chartRowNum, chart.getCol(), chartRowNumEnd, chart.getName());
+			final int chartColNum = chart.getPadding();
+			final int chartColNumEnd = chartColNum + chart.getCol();
+			final XSSFChart xssfChart = buildDrawingPatriarch(sheet, chartColNum, chartRowNum, chartColNumEnd, chartRowNumEnd, chart.getName());
 			if(chart instanceof PieChart) {
 				buildPieChart(xssfChart, (PieChart) chart);
 			} else if(chart instanceof LineChart) {
