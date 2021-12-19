@@ -2,15 +2,6 @@
 
 ACGIST Chrome插件
 
-<p align="center">
-	<img alt="GitHub stars" src="https://img.shields.io/github/stars/acgist/chrome?style=flat-square&label=Github%20stars&color=crimson" />
-	<img alt="Gitee stars" src="https://img.shields.io/badge/dynamic/json?style=flat-square&label=Gitee%20stars&color=crimson&url=https://gitee.com/api/v5/repos/acgist/chrome&query=$.stargazers_count&cacheSeconds=3600" />
-	<br />
-	<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/acgist/chrome?style=flat-square&color=orange" />
-	<img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/acgist/chrome?style=flat-square&color=blue" />
-	<img alt="GitHub" src="https://img.shields.io/github/license/acgist/chrome?style=flat-square&color=blue" />
-</p>
-
 ----
 
 ## 功能

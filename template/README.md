@@ -1,15 +1,5 @@
 <h1 align="center">acgist</h1> 
 
-<p align="center">
-	<a target="_blank" href="https://openjdk.java.net/">
-		<img alt="Java" src="https://img.shields.io/badge/Java-11-yellow.svg?style=flat-square" />
-	</a>
-	<img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/acgist/template/build?style=flat-square">
-	<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/acgist/template?style=flat-square" />
-	<img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/acgist/template?color=crimson&style=flat-square" />
-	<img alt="GitHub" src="https://img.shields.io/github/license/acgist/template?style=flat-square" />
-</p>
-
 ## 介绍
 
 简单模板项目
