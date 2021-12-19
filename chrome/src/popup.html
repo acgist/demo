@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>ACGIST Chrome插件</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="keywords" content="Acgist" />
+		<meta name="description" content="Acgist" />
+		
+		<link href="popup.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+	<main class="main">
+		<ul>
+			<li>
+				<input id="search" type="text" placeholder="匹配元素（多个使用英文逗号分隔）" />
+			</li>
+			<li>
+				<select id="rule"></select>
+			</li>
+			<li>
+				<input id="ruleKey" type="text" placeholder="规则名称" />
+			</li>
+			<li>
+				<textarea id="ruleValue" rows="10" cols="20" placeholder="规则文本"></textarea>
+			</li>
+			<li>
+				<button class="update" id="update">更新规则</button>
+				<button class="delete" id="delete">删除规则</button>
+				<button class="backup" id="backup">备份配置</button>
+				<button class="load" id="load">导入配置</button>
+				<input class="hidden" id="loadFile" type="file" accept="text/plain,application/json" />
+			</li>
+		</ul>
+	</main>
+	<script type="text/javascript" src="popup.js"></script>
+	</body>
+</html>

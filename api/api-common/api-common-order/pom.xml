@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>api-common-order</artifactId>
+	<packaging>jar</packaging>
+
+	<name>api-common-order</name>
+	<description>通用模块-订单服务（订单相关操作）</description>
+
+	<parent>
+		<groupId>com.acgist</groupId>
+		<artifactId>api-common-parent</artifactId>
+		<version>${api.version}</version>
+		<relativePath>../</relativePath>
+	</parent>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.acgist</groupId>
+			<artifactId>api-common-data</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.acgist</groupId>
+			<artifactId>api-common-feign</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+
+</project>

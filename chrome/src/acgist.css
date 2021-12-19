@@ -1,0 +1,9 @@
+/** 搜索工具 */
+.acgist-search{color:#FFF!important;background:#C00!important;position:relative!important;overflow:visible!important;}
+.acgist-search *{color:#FFF!important;background:#C00!important;position:relative!important;overflow:visible!important;}
+* .acgist-search{color:#FFF!important;background:#C00!important;position:relative!important;overflow:visible!important;}
+.acgist-search:before{color:#FFF;background:#494;position:absolute;content:'😍';display:block;width:auto;height:100%;padding:0 10px;top:0;left:100%;}
+/** 视频工具 */
+.acgist-video{position:absolute!important;z-index:10000!important;width:50%!important;left:25%!important;height:50%!important;top:25%!important;border:none!important;}
+.acgist-video-large{position:absolute!important;z-index:10000!important;width:80%!important;left:10%!important;height:80%!important;top:10%!important;border:none!important;}
+.acgist-video-parent{position:fixed!important;z-index:9999!important;height:100%!important;width:100%!important;background:rgb(0, 0, 0, 0.9)!important;top:0!important;left:0!important;margin:0!important;padding:0!important;}

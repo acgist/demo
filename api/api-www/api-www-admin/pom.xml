@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>api-www-admin</artifactId>
+	<packaging>jar</packaging>
+
+	<name>api-www-admin</name>
+	<description>网站-后台（后台网站）</description>
+
+	<parent>
+		<groupId>com.acgist</groupId>
+		<artifactId>api-www-parent</artifactId>
+		<version>${api.version}</version>
+		<relativePath>../</relativePath>
+	</parent>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.acgist</groupId>
+			<artifactId>api-common-asyn</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.acgist</groupId>
+			<artifactId>api-common-user</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.acgist</groupId>
+			<artifactId>api-common-order</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>io.zipkin.java</groupId>
+		    <artifactId>zipkin-server</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>io.zipkin.java</groupId>
+		    <artifactId>zipkin-autoconfigure-ui</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.zipkin.java</groupId>
+			<artifactId>zipkin-autoconfigure-collector-rabbitmq</artifactId>
+		</dependency>
+		<!--
+		保存zipkin链路信息到elasticsearch
+		<dependency>
+			<groupId>io.zipkin.java</groupId>
+			<artifactId>zipkin-autoconfigure-storage-elasticsearch</artifactId>
+		</dependency>
+		-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-data-redis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
+		<!--
+		使用HTTP接口收集
+		turbine.app-config=api-www,api-www-admin
+		turbine.combine-host-port=true
+		turbine.cluster-name-expression="default"
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-turbine</artifactId>
+		</dependency>
+		-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-turbine-stream</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>

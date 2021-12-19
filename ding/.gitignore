@@ -1,0 +1,9 @@
+*/.settings
+
+ding/bin
+ding/lib
+
+dingSite/plugins
+dingSite/features
+dingSite/content.jar
+dingSite/artifacts.jar

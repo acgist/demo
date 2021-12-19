@@ -1,0 +1,225 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.acgist</groupId>
+	<artifactId>api-parent</artifactId>
+	<version>${api.version}</version>
+	<packaging>pom</packaging>
+
+	<name>api-parent</name>
+	<description>一个基于Spring Cloud的微服务项目（https://www.acgist.com）</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.0.RELEASE</version>
+		<relativePath />
+	</parent>
+
+	<properties>
+		<api.version>1.0.0</api.version>
+		<api.encoding>UTF-8</api.encoding>
+		<java.version>11</java.version>
+		<project.build.sourceEncoding>${api.encoding}</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>${api.encoding}</project.reporting.outputEncoding>
+		<scala.version>2.11</scala.version>
+		<c3p0.version>0.9.5.5</c3p0.version>
+		<flink.version>1.7.0</flink.version>
+		<jsoup.version>1.14.2</jsoup.version>
+		<zipkin.version>2.11.7</zipkin.version>
+		<activation.version>1.1.1</activation.version>
+		<jaxb-runtime.version>2.3.1</jaxb-runtime.version>
+		<commons-codec.version>1.11</commons-codec.version>
+		<commons-lang3.version>3.8.1</commons-lang3.version>
+		<spring-cloud.version>Greenwich.RC2</spring-cloud.version>
+		<spring-boot-admin.version>2.0.4</spring-boot-admin.version>
+		<commons-beanutils.version>1.9.4</commons-beanutils.version>
+		<mysql-connector-java.version>8.0.16</mysql-connector-java.version>
+	</properties>
+
+	<modules>
+		<module>api-admin</module>
+		<module>api-config</module>
+		<module>api-registry</module>
+		<module>api-common</module>
+		<module>api-service</module>
+		<module>api-www</module>
+		<module>api-gateway</module>
+	</modules>
+
+	<dependencies>
+		<!-- JAVA被移除模块 -->
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+		</dependency>
+		<!-- JAVA被移除模块 -->
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+		</dependency>
+		
+		<!-- 测试 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- 通用模块 -->
+			<dependency>
+				<groupId>com.acgist</groupId>
+				<artifactId>api-common</artifactId>
+				<version>${api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.acgist</groupId>
+				<artifactId>api-common-data</artifactId>
+				<version>${api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.acgist</groupId>
+				<artifactId>api-common-feign</artifactId>
+				<version>${api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.acgist</groupId>
+				<artifactId>api-common-asyn</artifactId>
+				<version>${api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.acgist</groupId>
+				<artifactId>api-common-user</artifactId>
+				<version>${api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.acgist</groupId>
+				<artifactId>api-common-order</artifactId>
+				<version>${api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.acgist</groupId>
+				<artifactId>api-common-baize</artifactId>
+				<version>${api.version}</version>
+			</dependency>
+			<!-- 第三方依赖 -->
+			<dependency>
+				<groupId>javax.activation</groupId>
+				<artifactId>activation</artifactId>
+				<version>${activation.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.glassfish.jaxb</groupId>
+				<artifactId>jaxb-runtime</artifactId>
+				<version>${jaxb-runtime.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>${commons-codec.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons-lang3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-beanutils</groupId>
+				<artifactId>commons-beanutils</artifactId>
+				<version>${commons-beanutils.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jsoup</groupId>
+				<artifactId>jsoup</artifactId>
+				<version>${jsoup.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.mchange</groupId>
+				<artifactId>c3p0</artifactId>
+				<version>${c3p0.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>${mysql-connector-java.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>io.zipkin.java</groupId>
+			    <artifactId>zipkin-server</artifactId>
+			    <version>${zipkin.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>io.zipkin.java</groupId>
+			    <artifactId>zipkin-autoconfigure-ui</artifactId>
+			    <version>${zipkin.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.zipkin.java</groupId>
+				<artifactId>zipkin-autoconfigure-collector-rabbitmq</artifactId>
+			    <version>${zipkin.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.zipkin.java</groupId>
+				<artifactId>zipkin-autoconfigure-storage-elasticsearch</artifactId>
+				<version>${zipkin.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.apache.flink</groupId>
+			    <artifactId>flink-ml_${scala.version}</artifactId>
+			    <version>${flink.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.apache.flink</groupId>
+			    <artifactId>flink-clients_${scala.version}</artifactId>
+			    <version>${flink.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<!--
+	将依赖打包到生成的包里面
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	-->
+
+	<!--
+	Spring Cloud非开发版MAVEN库
+	-->
+	<repositories>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+</project>
