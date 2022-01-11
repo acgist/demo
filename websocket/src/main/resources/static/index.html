@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Websocket</title>
+</head>
+<body>
+</body>
+<script type="text/javascript">
+	const socket = new WebSocket("ws://localhost:8080/websocket");
+	socket.onmessage = function(message) {
+		console.log("message：", message);
+	};
+	socket.onclose = function(e) {
+		console.log("close：", e);
+	};
+	socket.onopen = function(e) {
+		console.log("open：", e);
+		//socket.send('finish'.repeat(10))
+	};
+	socket.onerror = function(e) {
+		console.log("error：", e);
+	}
+</script>
+</html>
