@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<included>
+	​
+	<appender name="diy_debug" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_PATH}/diy/debug.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<maxHistory>30</maxHistory>
+			<maxFileSize>128MB</maxFileSize>
+			<totalSizeCap>8GB</totalSizeCap>
+			<fileNamePattern>${LOG_PATH}/diy/%d{yyyy-MM, aux}/debug.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+		</rollingPolicy>
+		<encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>DEBUG</level>
+		</filter>
+	</appender>
+
+	<appender name="diy_info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_PATH}/diy/info.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<maxHistory>30</maxHistory>
+			<maxFileSize>128MB</maxFileSize>
+			<totalSizeCap>8GB</totalSizeCap>
+			<fileNamePattern>${LOG_PATH}/diy/%d{yyyy-MM, aux}/info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+		</rollingPolicy>
+		<encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+	</appender>
+
+	<appender name="diy_error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_PATH}/diy/error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<maxHistory>30</maxHistory>
+			<maxFileSize>128MB</maxFileSize>
+			<totalSizeCap>8GB</totalSizeCap>
+			<fileNamePattern>${LOG_PATH}/diy/%d{yyyy-MM, aux}/error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+		</rollingPolicy>
+		<encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+	</appender>
+	​
+	<appender name="diy_data" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_PATH}/diy/data.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<maxHistory>30</maxHistory>
+			<maxFileSize>128MB</maxFileSize>
+			<totalSizeCap>8GB</totalSizeCap>
+			<fileNamePattern>${LOG_PATH}/diy/%d{yyyy-MM, aux}/data.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+		</rollingPolicy>
+		<encoder>
+            <pattern>${REQ_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+	</appender>
+
+	<appender name="diy_debug_async" class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="diy_debug" />
+		<queueSize>2048</queueSize>
+		<includeCallerData>true</includeCallerData>
+		<discardingThreshold>0</discardingThreshold>
+	</appender>
+	<appender name="diy_info_async" class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="diy_info" />
+		<queueSize>2048</queueSize>
+		<includeCallerData>true</includeCallerData>
+		<discardingThreshold>0</discardingThreshold>
+	</appender>
+	<appender name="diy_error_async" class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="diy_error" />
+		<queueSize>2048</queueSize>
+		<includeCallerData>true</includeCallerData>
+		<discardingThreshold>0</discardingThreshold>
+	</appender>
+	<appender name="diy_data_async" class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="diy_data" />
+		<queueSize>2048</queueSize>
+		<includeCallerData>true</includeCallerData>
+		<discardingThreshold>0</discardingThreshold>
+	</appender>
+	
+	<logger name="com.acgist.diy" level="info">
+		<appender-ref ref="diy_debug_async" />
+		<appender-ref ref="diy_info_async" />
+		<appender-ref ref="diy_error_async" />
+	</logger>
+	<logger name="diy-data" additivity="false" level="info">
+		<appender-ref ref="diy_data_async" />
+	</logger>
+    
+</included>
