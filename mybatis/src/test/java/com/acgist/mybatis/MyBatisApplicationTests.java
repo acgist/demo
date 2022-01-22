@@ -33,4 +33,9 @@ class MyBatisApplicationTests {
 		assertEquals(1, page.getNumberOfElements());
 	}
 
+	@Test
+	void testDelete() {
+		this.demoMapper.delete(3L);
+	}
+	
 }

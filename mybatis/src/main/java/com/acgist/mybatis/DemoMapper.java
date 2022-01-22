@@ -27,4 +27,6 @@ public interface DemoMapper {
 		return new PageImpl<Demo>(pageInfo.getList(), pageable, pageInfo.getTotal());
 	}
 	
+	void delete(Long id);
+	
 }
