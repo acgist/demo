@@ -1,0 +1,26 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: mybatis
+  datasource:
+    url: jdbc:mysql://localhost:3306/demo?serverTimezone=Asia/Shanghai&useSSL=false&useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowPublicKeyRetrieval=true
+    username: root
+    password: 
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 10
+      max-lifetime: 600000
+      maximum-pool-size: 20
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      connection-test-query: SELECT 1 FROM dual
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations:
+    - classpath:/mybatis/mapper/**/*.xml
+pagehelper:
+  params: count=countSql
+  reasonable: true
+  helperDialect: mysql
+  supportMethodsArguments: true
