@@ -33,7 +33,7 @@
 		<!-- 依赖版本 -->
 		<slf4j.version>1.7.30</slf4j.version>
 		<logback.version>1.2.3</logback.version>
-		<jackson.version>2.12.0</jackson.version>
+		<jackson.version>2.13.4.1</jackson.version>
 		<fastjson.version>1.2.75</fastjson.version>
 		<!-- JUnit版本 -->
 		<junit.version>5.6.2</junit.version>
