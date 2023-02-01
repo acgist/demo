@@ -12,6 +12,8 @@
 //}
 
 int main(int argc, char **argv) {
-	std::cout << "1234" << std::endl;
+	system("chcp 65001");
+	std::cout << "Hello World" << std::endl;
+	std::cout << "中文测试" << std::endl;
 	return 0;
 }

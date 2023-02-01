@@ -3,5 +3,6 @@
 .settings
 .classpath
 
-*/logs/
-*/target/
+logs
+build
+target
