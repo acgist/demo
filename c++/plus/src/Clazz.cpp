@@ -11,5 +11,5 @@ Clazz::~Clazz() {
 }
 
 void Clazz::say() {
-	std::cout << "clazz say" << std::endl;
+    std::cout << "clazz say" << std::endl;
 }

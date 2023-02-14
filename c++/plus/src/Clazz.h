@@ -3,9 +3,9 @@
 
 class Clazz {
 public:
-	Clazz();
-	virtual ~Clazz();
-	void say();
+    Clazz();
+    virtual ~Clazz();
+    void say();
 };
 
 #endif

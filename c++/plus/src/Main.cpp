@@ -15,20 +15,21 @@ using std::endl;
  */
 int main(int argc, char **argv) {
 //	using namespace std;
-	Clazz clazz;
-	Clazz* clazzNew = new Clazz();
-	clazzNew->say();
-	delete clazzNew;
-	clazz.say();
-	Clazz* pClazz = &clazz;
-	pClazz->say();
-	(*pClazz).say();
+    Clazz clazz;
+    Clazz *clazzNew = new Clazz();
+    clazzNew->say();
+    delete clazzNew;
+    clazz.say();
+    Clazz *pClazz = &clazz;
+    pClazz->say();
+    (*pClazz).say();
 //	Clazz* pClazz;
 //	pClazz = &clazz;
 //	pClazz->say();
-	cout << "namespace" << endl;
-	cout << &"namespace" << endl;
-	cout << *&"namespace" << endl;
-	cout << &"namespace" << endl;
-	cout << *&"namespace" << endl;
+    cout << "namespace" << endl;
+    cout << &"namespace" << endl;
+    cout << *&"namespace" << endl;
+    cout << &"namespace" << endl;
+    cout << *&"namespace" << endl;
+    return 0;
 }

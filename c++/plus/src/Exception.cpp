@@ -4,22 +4,22 @@
 using namespace std;
 
 int main() {
-        int a = 100;
-        int b = 10;
-        int c = a / b;
-        cout << c << endl;
-        b = 0;
-        try {
-                if(b == 0) {
-                        throw "³ıÊı²»ÄÜÎªÁã";
-                }
-                // ³ıÁãÊÇ²»ÄÜ²¶»ñµÄ
-                c = a / b;
-        } catch(char const* e) {
-                cout << "Òì³££º" << e << endl;
-        } catch(exception& e) {
-                cout << "Òì³££º" << e.what() << endl;
+    int a = 100;
+    int b = 10;
+    int c = a / b;
+    cout << c << endl;
+    b = 0;
+    try {
+        if (b == 0) {
+            throw "é™¤æ•°ä¸èƒ½ä¸ºé›¶";
         }
-        cout << c << endl;
-        return 0;
+        // é™¤é›¶æ˜¯ä¸èƒ½æ•è·çš„
+        c = a / b;
+    } catch (char const *e) {
+        cout << "å¼‚å¸¸ï¼š" << e << endl;
+    } catch (exception &e) {
+        cout << "å¼‚å¸¸ï¼š" << e.what() << endl;
+    }
+    cout << c << endl;
+    return 0;
 }
