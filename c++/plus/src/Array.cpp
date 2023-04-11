@@ -26,5 +26,8 @@ int main() {
         cout << arrayB[index] << endl;
         cout << arrayC[index] << endl;
     }
+    int* pArray = new int[10];
+    delete [] pArray;
+//    int arrayD[] = new int[10];
     return 0;
 }
