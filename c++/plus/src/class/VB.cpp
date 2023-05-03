@@ -17,12 +17,7 @@ public:
 Animel(std::string* name) : name(name) {
 }
 
-virtual ~Animel() {
-    std::cout << "Animel析构" << std::endl;
-    if(this->name != nullptr) {
-        delete this->name;
-    }
-}
+virtual ~Animel();
 // ~Animel() {
 //     std::cout << "Animel析构" << std::endl;
 //     if(this->name != nullptr) {
@@ -31,6 +26,13 @@ virtual ~Animel() {
 // }
 
 };
+
+Animel::~Animel() {
+    std::cout << "Animel析构" << std::endl;
+    if(this->name != nullptr) {
+        delete this->name;
+    }
+}
 
 class Cat : public Animel {
 
