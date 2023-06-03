@@ -1,6 +1,7 @@
 *.exe
 *.gch
 
+.vscode
 .project
 .cproject
 .settings
