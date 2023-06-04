@@ -1,4 +1,4 @@
-package com.xyh.camera;
+package com.acgist.camera;
 
 import android.annotation.SuppressLint;
 import android.graphics.SurfaceTexture;
@@ -20,7 +20,7 @@ import android.view.TextureView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.xyh.camera.databinding.ActivityMainBinding;
+import com.acgist.camera.databinding.ActivityMainBinding;
 
 import java.util.List;
 

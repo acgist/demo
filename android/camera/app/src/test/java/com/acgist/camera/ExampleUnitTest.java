@@ -1,4 +1,4 @@
-package com.xyh.camera;
+package com.acgist.camera;
 
 import org.junit.Test;
 

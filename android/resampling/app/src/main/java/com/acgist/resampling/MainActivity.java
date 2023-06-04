@@ -1,76 +1,68 @@
 package com.acgist.resampling;
 
 import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
+import android.os.Environment;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
-
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
 import com.acgist.resampling.databinding.ActivityMainBinding;
 
-import android.view.Menu;
-import android.view.MenuItem;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AppBarConfiguration appBarConfiguration;
+    private Resampling resampling;
     private ActivityMainBinding binding;
+
+    static {
+        System.loadLibrary("avutil");
+        System.loadLibrary("rnnoise");
+        System.loadLibrary("swresample");
+        System.loadLibrary("resampling");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.binding = ActivityMainBinding.inflate(this.getLayoutInflater());
+        this.setContentView(this.binding.getRoot());
+        this.resampling = new Resampling();
+        this.resampling();
+    }
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        setSupportActionBar(binding.toolbar);
-
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+    private void resampling() {
+        final Path pcmPath = Paths.get(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath(),
+            "a.pcm"
+        );
+        final Path outPath = Paths.get(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath(),
+            "z.pcm"
+        );
+        try {
+            if(outPath.toFile().exists()) {
+                Files.delete(outPath);
             }
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            final byte[] src = new byte[160];
+            final byte[] bytes = Files.readAllBytes(pcmPath);
+            for (int i = 0; i < bytes.length; i += 160) {
+                if(i + 160 >= bytes.length) {
+                    break;
+                }
+                System.arraycopy(bytes, i, src, 0, 160);
+                final byte[] dst = this.resampling.resampling(src, 8000, 48000);
+                Files.write(outPath, dst, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+            }
+        } catch (IOException e) {
+            Log.e(MainActivity.class.getSimpleName(), "读取文件异常", e);
+        } finally{
+            Log.i(MainActivity.class.getSimpleName(), "完成");
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-            || super.onSupportNavigateUp();
-    }
 }

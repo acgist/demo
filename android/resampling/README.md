@@ -48,3 +48,54 @@ libswresample.so
 ```
 
 > 重采样只需要：`libavutil.so`、`libswresample.so`
+
+## rnnoise
+
+```
+cmake_minimum_required(VERSION 3.22.1)
+
+project(rnnoise VERSION 1.0.0 LANGUAGES C)
+
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -std=c11 -O0 -g")
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -std=c11 -O3")
+
+set(
+    SOURCE_DIR
+    src
+)
+
+set(
+    SOURCE_FILES
+    ${SOURCE_DIR}/rnn.h
+    ${SOURCE_DIR}/arch.h
+    ${SOURCE_DIR}/pitch.h
+    ${SOURCE_DIR}/common.h
+    ${SOURCE_DIR}/rnn_data.h
+    ${SOURCE_DIR}/celt_lpc.h
+    ${SOURCE_DIR}/kiss_fft.h
+    ${SOURCE_DIR}/opus_types.h
+    ${SOURCE_DIR}/tansig_table.h
+    ${SOURCE_DIR}/_kiss_fft_guts.h
+    ${SOURCE_DIR}/rnn.c
+    ${SOURCE_DIR}/pitch.c
+    ${SOURCE_DIR}/denoise.c
+    ${SOURCE_DIR}/rnn_data.c
+    ${SOURCE_DIR}/kiss_fft.c
+    ${SOURCE_DIR}/celt_lpc.c
+    ${SOURCE_DIR}/rnn_reader.c
+)
+
+include_directories(include)
+
+add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
+
+set_source_files_properties(
+    ${SOURCE_FILES} PROPERTIES COMPILE_FLAGS -Wall -Wextra -Wpedantic
+)
+
+target_include_directories(
+    ${PROJECT_NAME} PUBLIC
+    "${SOURCE_DIR}/include"
+)
+```
