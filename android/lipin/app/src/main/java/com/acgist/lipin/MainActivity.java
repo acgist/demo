@@ -23,10 +23,10 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
     static {
+        System.loadLibrary("lipin");
         System.loadLibrary("avutil");
         System.loadLibrary("rnnoise");
         System.loadLibrary("swresample");
-        System.loadLibrary("resampling");
     }
 
     @Override
@@ -47,21 +47,22 @@ public class MainActivity extends AppCompatActivity {
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath(),
             "z.pcm"
         );
-        this.lipin.init(16, 160, 8000, 16000);
+        int byteSize = 2 * 80;
+        this.lipin.init(16, byteSize, 8000, 48000);
         try (
             final ByteArrayOutputStream output = new ByteArrayOutputStream();
             ) {
             if(outPath.toFile().exists()) {
                 Files.delete(outPath);
             }
-            final byte[] src = new byte[160];
+            final byte[] src = new byte[byteSize];
             final byte[] bytes = Files.readAllBytes(pcmPath);
             long a = System.currentTimeMillis();
-            for (int i = 0; i < bytes.length; i += 160) {
-                if(i + 160 >= bytes.length) {
+            for (int i = 0; i < bytes.length; i += byteSize) {
+                if(i + byteSize >= bytes.length) {
                     break;
                 }
-                System.arraycopy(bytes, i, src, 0, 160);
+                System.arraycopy(bytes, i, src, 0, byteSize);
                 final byte[] dst = this.lipin.rnnoise(src);
 //              final byte[] dst = this.lipin.resample(src);
                 output.write(dst);

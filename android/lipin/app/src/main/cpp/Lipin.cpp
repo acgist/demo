@@ -41,11 +41,11 @@ public:
     }
 
     virtual ~LipinConfig() {
-        delete this->denoise_state;
-        delete this->srcBuffer;
-        delete this->dstBuffer;
-        delete this->rnnoiseSrc;
-        delete this->rnnoiseDst;
+        rnnoise_destroy(this->denoise_state);
+        delete[] this->srcBuffer;
+        delete[] this->dstBuffer;
+        delete[] this->rnnoiseSrc;
+        delete[] this->rnnoiseDst;
         swr_free(&this->swr_context);
         swr_free(&this->swr_context_restore);
     }
@@ -100,7 +100,6 @@ public:
     }
 
 };
-
 JNIEXPORT jlong JNICALL
 Java_com_acgist_lipin_Lipin_Init(
     JNIEnv* env,
@@ -135,19 +134,16 @@ Java_com_acgist_lipin_Lipin_Rnnoise(
         src[i] = (uint8_t) srcBytes[i];
     }
     swr_convert(config->swr_context, &config->dstBuffer, config->dst_nb_samples, (const uint8_t**) &src, config->src_nb_samples);
-//    for (int i = 0; i < config->dstBytesLength; i++) {
-//        config->rnnoiseSrc[i] = config->dstBuffer[i];
-//    }
-    for (int i = 0; i < config->dstBytesLength; i+=2) {
-        config->rnnoiseSrc[i] = config->dstBuffer[i];
+    for (int i = 0; i < config->dstBytesLength / 2; i++) {
+        short v = (((int8_t) config->dstBuffer[2 * i])          & 0x00FF) |
+                  (((int8_t) config->dstBuffer[2 * i + 1] << 8) & 0xFF00);
+        config->rnnoiseDst[i] = v;
     }
-//    memcpy(config->rnnoiseDst, config->rnnoiseSrc, config->dstBytesLength);
-    rnnoise_process_frame(config->denoise_state, config->rnnoiseDst, config->rnnoiseSrc);
-//    for (int i = 0; i < config->dstBytesLength; i++) {
-//        config->dstBuffer[i] = config->rnnoiseDst[i];
-//    }
-    for (int i = 0; i < config->dstBytesLength; i+=2) {
-        config->dstBuffer[i] = config->rnnoiseDst[i];
+    rnnoise_process_frame(config->denoise_state, config->rnnoiseDst, config->rnnoiseDst);
+    for (int i = 0; i < config->dstBytesLength / 2; i++) {
+        short v = config->rnnoiseDst[i];
+        config->dstBuffer[2 * i]     = (uint8_t) (v        & 0xFF);
+        config->dstBuffer[2 * i + 1] = (uint8_t) ((v >> 8) & 0xFF);
     }
     swr_convert(config->swr_context_restore, &config->srcBuffer, config->src_nb_samples, (const uint8_t**) &config->dstBuffer, config->dst_nb_samples);
     jbyteArray result = env->NewByteArray(config->srcBytesLength);
