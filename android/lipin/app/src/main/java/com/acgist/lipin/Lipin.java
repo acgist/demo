@@ -50,7 +50,7 @@ public class Lipin {
      *
      * @return config pointer
      */
-    public native long Init(int bits, int size, int srcRate, int dstRate);
+    private native long Init(int bits, int size, int srcRate, int dstRate);
 
     /**
      * 降噪
@@ -60,7 +60,7 @@ public class Lipin {
      *
      * @return PCM数据
      */
-    public native byte[] Rnnoise(long pointer, byte[] pcm);
+    private native byte[] Rnnoise(long pointer, byte[] pcm);
 
     /**
      * 重采样
@@ -70,13 +70,13 @@ public class Lipin {
      *
      * @return PCM数据
      */
-    public native byte[] Resample(long pointer, byte[] pcm);
+    private native byte[] Resample(long pointer, byte[] pcm);
 
     /**
      * 释放资源
      *
      * @param pointer 指针
      */
-    public native void Release(long pointer);
+    private native void Release(long pointer);
 
 }
