@@ -23,5 +23,11 @@ int main(int argc, char **argv) {
 	std::cout << b << std::endl;
 	std::cout << c << std::endl;
 	std::cout << d << std::endl;
+	int x1 = 1.1D;
+	int x2(1.2D);
+	// int x3{1.3D}; // 编译不过
+	std::cout << x1 << std::endl;
+	std::cout << x2 << std::endl;
+	// std::cout << x3 << std::endl;
 	return 0;
 }
