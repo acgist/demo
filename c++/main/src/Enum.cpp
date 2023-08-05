@@ -17,10 +17,17 @@ enum Char {
 
 };
 
-int main() {
+using integer = int;
+
+int v(void) {
+    return 0;
+}
+
+int main(void) {
     std::cout << Number::ONE << std::endl;
     std::cout << (char) Char::A << std::endl;
     std::cout << (char) Char::C << std::endl;
     std::cout << (char) Char::F << std::endl;
+    integer a = 1;
     return 0;
 }
