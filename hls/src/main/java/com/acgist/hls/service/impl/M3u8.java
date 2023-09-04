@@ -6,9 +6,7 @@ import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -105,17 +103,12 @@ public class M3u8 {
      */
     private RandomAccessFile input;
     /**
-     * 输出流
-     */
-    private List<OutputStream> output;
-    /**
      * 定时任务
      */
     private ScheduledFuture<?> scheduled;
     
     public M3u8() {
         this.index   = new HashMap<>();
-        this.output  = new ArrayList<>();
         this.content = new StringBuilder();
     }
     
@@ -183,7 +176,6 @@ public class M3u8 {
     public void close() {
         log.debug("关闭M3U8：{}", this.file);
         IOUtils.closeQuietly(this.input);
-        this.output.forEach(IOUtils::closeQuietly);
         this.closeScheduled();
     }
     
@@ -235,19 +227,21 @@ public class M3u8 {
                         break;
                     }
                 }
-                if(this.tsPos > 0) {
-                    if(this.stream) {
-                        this.pos = this.lastTsPos;
-                    } else {
-                        this.buildTs();
-                    }
-                    this.tsPos      = 0;
-                    this.tsDuration = 0L;
-                }
             } catch (IOException e) {
                 log.error("读取M3U8文件", e);
             }
-            if(this.checkStream()) {
+            this.checkStream();
+            if(this.tsPos > 0) {
+                if(this.stream) {
+                    // 没有处理
+                } else {
+                    this.buildTs();
+                }
+                this.pos        = this.lastTsPos;
+                this.tsPos      = 0;
+                this.tsDuration = 0L;
+            }
+            if(this.stream) {
                 // 没有处理
             } else {
                 this.content.append(M3U8_Z);
@@ -287,35 +281,15 @@ public class M3u8 {
     private void buildTs() {
         final String name     = String.format("%06d.ts", this.tsIndex++);
         final double duration = this.tsDuration * 1D / 1000_000;
-        final String content  = String.format("#EXTINF:%f,\r\n%s\r\n", duration, name);
         final Ts ts = new Ts(this.lastTsPos, this.tsPos, duration);
-        this.content.append(content);
+        this.content.append(String.format("#EXTINF:%f,\r\n%s\r\n", duration, name));
         log.debug("解析TS文件：{} - {} - {}", ts.getPos(), ts.getLength(), ts.getDuration());
         this.index.put(name, ts);
         this.tsPos      = 0;
         this.tsDuration = 0L;
         this.lastTsPos  = this.pos;
-        this.flushTs(content);
     }
 
-    /**
-     * 刷出TS信息
-     */
-    private void flushTs(String content) {
-        final List<OutputStream> close = new ArrayList<>();
-        this.output.forEach(output -> {
-            try {
-                output.write(content.getBytes());
-            } catch (IOException e) {
-                close.add(output);
-            }
-        });
-        close.forEach(v -> {
-            this.output.remove(v);
-            IOUtils.closeQuietly(v);
-        });
-    }
-    
     /**
      * 读取M3U8文件
      * 
@@ -327,7 +301,7 @@ public class M3u8 {
         if(this.stream) {
             synchronized (this.content) {
                 output.write(this.content.toString().getBytes());
-                this.output.add(output);
+                output.flush();
             }
         } else {
             output.write(this.content.toString().getBytes());
