@@ -1,0 +1,17 @@
+<html>
+<body>
+<script src="./hls.js"></script>
+<video id="video" width="1280" controls="true"></video>
+<script>
+  let video    = document.getElementById('video');
+  let videoSrc = '/hls/20230830181718.ts/index.m3u8';
+  if (Hls.isSupported()) {
+    let hls = new Hls();
+    hls.loadSource(videoSrc);
+    hls.attachMedia(video);
+  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = videoSrc;
+  }
+</script>
+</body>
+</html>
