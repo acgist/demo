@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +46,7 @@ public class M3u8 {
     /**
      * 最大分片时间
      */
-    private static final long MAX_DURATION = 10L * 1000_000;
+    private static final double MAX_DURATION = 10D;
     /**
      * 定时任务
      */
@@ -75,13 +74,17 @@ public class M3u8 {
      */
     private int lastTsPos;
     /**
+     * TS分片时间
+     */
+    private double tsDuration;
+    /**
+     * 最后TS分片时间
+     */
+    private double lastTsDuration;
+    /**
      * TS分片索引
      */
     private int tsIndex;
-    /**
-     * TS分片时间
-     */
-    private long tsDuration;
     /**
      * 文件
      */
@@ -93,7 +96,7 @@ public class M3u8 {
     /**
      * 是否是流媒体
      */
-    private boolean stream = true;
+    private boolean stream;
     /**
      * 最后访问时间
      */
@@ -109,6 +112,7 @@ public class M3u8 {
     
     public M3u8() {
         this.index   = new HashMap<>();
+        this.stream  = true;
         this.content = new StringBuilder();
     }
     
@@ -200,31 +204,23 @@ public class M3u8 {
             if(this.pos <= 0L) {
                 this.content.append(M3U8_A);
             }
-            // PAT = 0000 = 0x01 = 188
-            // PMT = 0042 = 0x02 = 188
-            // PCR = 0101 = 0    = 188
-            // PES = 0045 = 1+   = 188
             try {
+                int type;
                 final byte[]     bytes        = new byte[188];
-                final ByteBuffer typeBuffer   = ByteBuffer.allocate(2);
                 while(this.pos < this.input.length()) {
+                    type = 0;
                     this.input.seek(this.pos);
                     this.input.read(bytes);
                     this.pos   += bytes.length;
                     this.tsPos += bytes.length;
-                    typeBuffer.put(bytes[1]);
-                    typeBuffer.put(bytes[2]);
-                    typeBuffer.flip();
-                    final int type = typeBuffer.getShort() & 0B0001111111111111;
-                    typeBuffer.compact();
-                    switch(type) {
-                    case 0x0000:
-                    case 0x0042:
-                        break;
-                    case 0x0101:
-                    case 0x0045:
+                    type = (type << 0) | (bytes[1] & 0xFF);
+                    type = (type << 8) | (bytes[2] & 0xFF);
+                    type = type & 0B0001111111111111;
+                    // 0x0100 = audio 0x0101 = video
+                    // 使用音频解析简单
+                    if(type == 0x0100 && (bytes[1] & 0B0100_0000) == 0B0100_0000) {
+//                  if(type == 0x0101 && (bytes[1] & 0B0100_0000) == 0B0100_0000) {
                         this.buildTs(bytes);
-                        break;
                     }
                 }
             } catch (IOException e) {
@@ -239,7 +235,7 @@ public class M3u8 {
                 }
                 this.pos        = this.lastTsPos;
                 this.tsPos      = 0;
-                this.tsDuration = 0L;
+                this.tsDuration = this.lastTsDuration;
             }
             if(this.stream) {
                 // 没有处理
@@ -256,21 +252,18 @@ public class M3u8 {
      * @param bytes 当前数据
      */
     private void buildTs(byte[] bytes) {
-        long pts;
-        if((bytes[3] & 0x0F) != 0) {
-            int index = 13;
-            pts = 0L;
-            pts = (pts << 0) | ((bytes[index]     & 0B0000_1110L) >>> 1);
-            pts = (pts << 8) | ((bytes[index + 1] & 0B1111_1111L));
-            pts = (pts << 7) | ((bytes[index + 2] & 0B1111_1110L) >>> 1);
-            pts = (pts << 8) | ((bytes[index + 3] & 0B1111_1111L));
-            pts = (pts << 7) | ((bytes[index + 4] & 0B1111_1110L) >>> 1);
-            if(((bytes[7] >>> 6) & 0B00000011) >= 0) {
-                pts             /= 90000;
-                this.tsDuration += pts;
-            }
-        }
-        if(this.tsDuration >= MAX_DURATION) {
+        long pts  = 0L;
+        // 音频
+        int index = 15;
+        // 视频
+//      int index = bytes[13] == 0x21 ? 13 : bytes[15] == 0x21 ? 15 : 21;
+        pts = (pts << 0) | ((bytes[index]     & 0B0000_1110L) >>> 1);
+        pts = (pts << 8) | ((bytes[index + 1] & 0B1111_1111L));
+        pts = (pts << 7) | ((bytes[index + 2] & 0B1111_1110L) >>> 1);
+        pts = (pts << 8) | ((bytes[index + 3] & 0B1111_1111L));
+        pts = (pts << 7) | ((bytes[index + 4] & 0B1111_1110L) >>> 1);
+        this.tsDuration = (1D * pts / 90000);
+        if(this.tsDuration - this.lastTsDuration >= MAX_DURATION) {
             this.buildTs();
         }
     }
@@ -279,15 +272,14 @@ public class M3u8 {
      * 构建TS分片
      */
     private void buildTs() {
-        final String name     = String.format("%06d.ts", this.tsIndex++);
-        final double duration = this.tsDuration * 1D / 1000_000;
-        final Ts ts = new Ts(this.lastTsPos, this.tsPos, duration);
-        this.content.append(String.format("#EXTINF:%f,\r\n%s\r\n", duration, name));
+        final String name = String.format("%06d.ts", this.tsIndex++);
+        final Ts ts = new Ts(this.lastTsPos, this.tsPos, this.tsDuration - this.lastTsDuration);
+        this.content.append(String.format("#EXTINF:%f,\r\n%s\r\n", this.tsDuration - this.lastTsDuration, name));
         log.debug("解析TS文件：{} - {} - {}", ts.getPos(), ts.getLength(), ts.getDuration());
         this.index.put(name, ts);
-        this.tsPos      = 0;
-        this.tsDuration = 0L;
-        this.lastTsPos  = this.pos;
+        this.tsPos          = 0;
+        this.lastTsPos      = this.pos;
+        this.lastTsDuration = this.tsDuration;
     }
 
     /**
