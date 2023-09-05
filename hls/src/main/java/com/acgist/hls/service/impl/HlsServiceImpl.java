@@ -44,17 +44,22 @@ public class HlsServiceImpl implements HlsService {
     }
     
     @Override
+    public M3u8 preheat(String file) {
+        return this.map.computeIfAbsent(file, key -> {
+            final M3u8 m3u8 = new M3u8();
+            try {
+                m3u8.load(file, Paths.get(this.rootPath, file).toAbsolutePath().toString());
+            } catch (FileNotFoundException e) {
+                log.error("加载文件异常：{}", file, e);
+            }
+            return m3u8;
+        });
+    }
+    
+    @Override
     public void indexM3u8(String file, HttpServletResponse response) {
         try {
-            this.map.computeIfAbsent(file, key -> {
-                final M3u8 m3u8 = new M3u8();
-                try {
-                    m3u8.load(file, Paths.get(this.rootPath, file).toAbsolutePath().toString());
-                } catch (FileNotFoundException e) {
-                    log.error("加载文件异常：{}", file, e);
-                }
-                return m3u8;
-            }).readM3u8(response.getOutputStream());
+            this.preheat(file).readM3u8(response.getOutputStream());
         } catch (IOException e) {
             log.error("写出M3U8文件异常：{}", file, e);
         }

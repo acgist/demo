@@ -206,7 +206,7 @@ public class M3u8 {
             }
             try {
                 int type;
-                final byte[]     bytes        = new byte[188];
+                final byte[] bytes = new byte[188];
                 while(this.pos < this.input.length()) {
                     type = 0;
                     this.input.seek(this.pos);
