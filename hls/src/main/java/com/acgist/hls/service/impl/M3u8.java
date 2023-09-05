@@ -62,6 +62,10 @@ public class M3u8 {
     private final StringBuilder content;
     
     /**
+     * 音频类型
+     */
+    private int pid = 0;
+    /**
      * 最后读取文件偏移
      */
     private int pos;
@@ -93,6 +97,10 @@ public class M3u8 {
      * 结束文件
      */
     private String closeFile;
+    /**
+     * 媒体文件
+     */
+    private String mediaFile;
     /**
      * 是否是流媒体
      */
@@ -156,6 +164,7 @@ public class M3u8 {
         final int index = path.lastIndexOf('.');
         this.file       = file;
         this.closeFile  = path.substring(0, index) + ".mp4";
+        this.mediaFile  = path.substring(0, index) + ".sdp";
         this.input      = new RandomAccessFile(path, "r");
         this.checkStream();
         this.buildM3u8();
@@ -216,10 +225,22 @@ public class M3u8 {
                     type = (type << 0) | (bytes[1] & 0xFF);
                     type = (type << 8) | (bytes[2] & 0xFF);
                     type = type & 0B0001111111111111;
-                    // 0x0100 = audio 0x0101 = video
+                    if(type == 0x1000 && this.pid == 0) {
+                        int pid = 0;
+                        if(bytes[17] == 0x0F) {
+                            pid = (pid << 0) | (bytes[18] & 0B0001_1111);
+                            pid = (pid << 8) | (bytes[19] & 0B1111_1111);
+                        } else {
+                            pid = (pid << 0) | (bytes[23] & 0B0001_1111);
+                            pid = (pid << 8) | (bytes[24] & 0B1111_1111);
+                        }
+                        this.pid = pid;
+                    }
+                    if(this.pid == 0) {
+                        continue;
+                    }
                     // 使用音频解析简单
-                    if(type == 0x0100 && (bytes[1] & 0B0100_0000) == 0B0100_0000) {
-//                  if(type == 0x0101 && (bytes[1] & 0B0100_0000) == 0B0100_0000) {
+                    if(type == this.pid && (bytes[1] & 0B0100_0000) == 0B0100_0000) {
                         this.buildTs(bytes);
                     }
                 }
@@ -253,10 +274,7 @@ public class M3u8 {
      */
     private void buildTs(byte[] bytes) {
         long pts  = 0L;
-        // 音频
-        int index = 15;
-        // 视频
-//      int index = bytes[13] == 0x21 ? 13 : bytes[15] == 0x21 ? 15 : 21;
+        int index = 14 + (bytes[4] & 0xFF);
         pts = (pts << 0) | ((bytes[index]     & 0B0000_1110L) >>> 1);
         pts = (pts << 8) | ((bytes[index + 1] & 0B1111_1111L));
         pts = (pts << 7) | ((bytes[index + 2] & 0B1111_1110L) >>> 1);
@@ -328,7 +346,11 @@ public class M3u8 {
      */
     private boolean checkStream() {
         if(this.stream) {
-            this.stream = !Paths.get(this.closeFile).toFile().exists();
+            if(Paths.get(this.mediaFile).toFile().exists()) {
+                this.stream = !Paths.get(this.closeFile).toFile().exists();
+            } else {
+                this.stream = false;
+            }
         }
         return this.stream;
     }

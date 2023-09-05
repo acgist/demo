@@ -14,7 +14,7 @@ public class M3u8Test {
     @Test
     public void testM3u8() throws FileNotFoundException, InterruptedException {
         final M3u8 m3u8 = new M3u8();
-        m3u8.load("1.ts", "D:\\tmp\\1.ts");
+        m3u8.load("1.ts", "D:\\download\\1.ts");
         Thread.sleep(5000L);
         log.info("{}", m3u8.getContent());
     }
