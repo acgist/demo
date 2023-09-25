@@ -7,11 +7,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 分布式定时任务切点
+ * 分布式锁切点
  * 
- * 定时任务一个周期内只能有一个任务执行，所以不用重试拿锁。
- * 任务完成最好不要立即释放锁，因为时间同步以及执行周期问题导致重复执行。
- * Zookeeper一个节点拿锁成功以后其他节点永远不能在拿到锁。
+ * 方法执行完成以后应该立即释放锁资源，注解只能保证方法原子性，如果需要实现性能更加优秀的指定资源的原子性建议直接使用代码实现锁定某个资源。
  * 
  * @author acgist
  */
@@ -21,7 +19,7 @@ import java.lang.annotation.Target;
 })
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-public @interface DistributedScheduled {
+public @interface DistributedLock {
 
     /**
      * @return 分布式锁键值
@@ -34,19 +32,18 @@ public @interface DistributedScheduled {
     String name() default "";
 
     /**
-     * 定时任务：
-     * 1. Zookeeper可以不用设置
-     * 2. Redis时长最好大于定时任务间隔
-     * 
      * @return 分布式锁锁定时长（单位：毫秒）
      */
     int ttl() default 30000;
     
     /**
-     * 定时任务最好不要立即释放（时间不同可能导致重复执行）
-     * 
+     * @return 分布式锁等待时长（单位：毫秒）
+     */
+    int duration() default 30000;
+    
+    /**
      * @return 执行完成立即释放
      */
-    boolean release() default false;
+    boolean release() default true;
 
 }

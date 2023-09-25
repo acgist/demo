@@ -14,24 +14,24 @@ import org.springframework.context.annotation.Configuration;
 import com.acgist.scheduled.lock.DistributedLock;
 
 /**
- * 分布式定时任务逻辑
+ * 分布式锁逻辑
  * 
  * @author acgist
  */
 @Aspect
 @Configuration
 @ConditionalOnBean(value = DistributedLock.class)
-public class DistributedScheduledConfiguration {
+public class DistributedLockConfiguration {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DistributedScheduledConfiguration.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DistributedLockConfiguration.class);
 
     @Autowired
     private DistributedLock distributedLock;
-
+    
     /**
      * 注解切点
      */
-    @Pointcut("@annotation(com.acgist.scheduled.aop.DistributedScheduled)")
+    @Pointcut("@annotation(com.acgist.scheduled.aop.DistributedLock)")
     public void scheduled() {
     }
 
@@ -46,23 +46,23 @@ public class DistributedScheduledConfiguration {
      */
     @Around("scheduled()")
     public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        final DistributedScheduled distributedScheduled = this.getAnnotation(proceedingJoinPoint);
-        if (distributedScheduled == null) {
+        final com.acgist.scheduled.aop.DistributedLock distributedLock = this.getAnnotation(proceedingJoinPoint);
+        if (distributedLock == null) {
             return null;
         }
-        final String key  = distributedScheduled.key();
-        final String name = distributedScheduled.name();
+        final String key  = distributedLock.key();
+        final String name = distributedLock.name();
         try {
-            if (this.distributedLock.tryLock(key, distributedScheduled.ttl())) {
-                LOGGER.debug("分布式定时任务加锁成功执行：{} - {}", key, name);
+            if (this.distributedLock.tryLock(key, distributedLock.duration(), distributedLock.ttl())) {
+                LOGGER.debug("分布式锁加锁成功执行：{} - {}", key, name);
                 return proceedingJoinPoint.proceed();
             } else {
-                LOGGER.warn("分布式定时任务加锁失败执行：{} - {}", key, name);
+                LOGGER.warn("分布式锁加锁失败执行：{} - {}", key, name);
             }
         } catch (Throwable e) {
             throw e;
         } finally {
-            if(distributedScheduled.release()) {
+            if(distributedLock.release()) {
                 this.distributedLock.unlock(key);
             }
         }
@@ -74,10 +74,10 @@ public class DistributedScheduledConfiguration {
      * 
      * @return 注解
      */
-    private DistributedScheduled getAnnotation(ProceedingJoinPoint proceedingJoinPoint) {
+    private com.acgist.scheduled.aop.DistributedLock getAnnotation(ProceedingJoinPoint proceedingJoinPoint) {
         if (proceedingJoinPoint.getSignature() instanceof MethodSignature) {
             final MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
-            return methodSignature.getMethod().getAnnotation(DistributedScheduled.class);
+            return methodSignature.getMethod().getAnnotation(com.acgist.scheduled.aop.DistributedLock.class);
         }
         return null;
     }

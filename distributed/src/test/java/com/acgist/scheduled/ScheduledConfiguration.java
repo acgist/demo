@@ -8,16 +8,16 @@ import com.acgist.scheduled.aop.DistributedScheduled;
 @Configuration
 public class ScheduledConfiguration {
 
-	@Scheduled(cron = "*/5 * * * * ?")
-	@DistributedScheduled(name = "group-a", ttl = 10)
-	public void scheduledGroupA() {
-		System.out.println("scheduledGroupA");
-	}
-
-	@Scheduled(cron = "*/5 * * * * ?")
-	@DistributedScheduled(name = "group-b", ttl = 10)
-	public void scheduledGroupB() {
-		System.out.println("scheduledGroupB");
-	}
-	
+    @Scheduled(cron = "*/5 * * * * ?")
+    @DistributedScheduled(key = "group-a")
+    public void scheduledGroupAA() {
+        System.out.println("scheduledGroupA");
+    }
+    
+    @Scheduled(cron = "*/5 * * * * ?")
+    @DistributedScheduled(key = "group-b")
+    public void scheduledGroupB() {
+        System.out.println("scheduledGroupB");
+    }
+    
 }

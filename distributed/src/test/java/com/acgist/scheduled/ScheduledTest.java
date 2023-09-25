@@ -6,9 +6,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class ScheduledTest {
 
-	@Test
-	public void testScheduled() throws InterruptedException {
-		Thread.sleep(100000);
-	}
+    @Test
+    public void testScheduled() throws InterruptedException {
+        Thread.sleep(100000);
+    }
 
 }

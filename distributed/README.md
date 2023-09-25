@@ -10,15 +10,14 @@ Redis和Zookeeper任选一种
 
 ```
 # Redis
-spring.redis.host=localhost
+spring.redis.host=127.0.0.1
 spring.redis.port=6379
 # Zookeeper
 zookeeper.address=127.0.0.1:2181
 zookeeper.timeout=10000
-# 配置
-# Zookeeper锁根
+# Zookeeper根
 zookeeper.lock.root=lock
-# Zookeeper锁名
+# Zookeeper锁
 zookeeper.lock.keys=acgist,group-a,group-b
 ```
 
@@ -54,7 +53,7 @@ zookeeper.lock.keys=acgist,group-a,group-b
 private DistributedLock distributedLock;
 
 try {
-	if (this.distributedLock.tryLock("acgist", 10)) {
+	if (this.distributedLock.tryLock("acgist", 30000, 10)) {
 		// 成功
 	} else {
 		// 失败
@@ -68,9 +67,9 @@ try {
 
 ```
 @Scheduled(cron = "*/5 * * * * ?")
-@DistributedScheduled(name = "lockName", ttl = 10)
-public void scheduledGroupB() {
-	System.out.println("scheduledGroupB");
+@DistributedScheduled(key = "lockName")
+public void scheduledTask() {
+	System.out.println("scheduledTask");
 }
 ```
 
@@ -81,5 +80,3 @@ public void scheduledGroupB() {
 * 默认优先使用Redis
 * 保证Redis或者Zookeeper都在同一集群
 * 使用Zookeeper需要提前配置定时任务名称
-
-> 有时间以后做成starter
