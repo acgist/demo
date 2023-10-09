@@ -72,5 +72,29 @@ int main(int argc, char const *argv[]) {
     std::cout << (personFind == persons.end()) << std::endl;
     personFind = std::find(persons.begin(), persons.end(), pe);
     std::cout << (personFind == persons.end()) << std::endl;
+    v.push_back(10);
+    v.push_back(20);
+    v.push_back(20);
+    v.push_back(20);
+    v.push_back(30);
+    v.push_back(20);
+    auto af = std::adjacent_find(v.begin(), v.end());
+    if(af == v.end()) {
+        std::cout << "没有相邻重复" << std::endl;
+    } else {
+        std::cout << "重复相邻元素：" << *af << std::endl;
+        af = std::adjacent_find(af + 1, v.end());
+        if(af == v.end()) {
+            std::cout << "没有相邻重复" << std::endl;
+        } else {
+            std::cout << "重复相邻元素：" << *af << std::endl;
+            af = std::adjacent_find(af + 1, v.end());
+            if(af == v.end()) {
+                std::cout << "没有相邻重复" << std::endl;
+            } else {
+                std::cout << "重复相邻元素：" << *af << std::endl;
+            }
+        }
+    }
     return 0;
 }

@@ -223,7 +223,7 @@ public class M3u8 {
                     this.input.read(bytes);
                     type = (type << 0) | (bytes[1] & 0xFF);
                     type = (type << 8) | (bytes[2] & 0xFF);
-                    type = type & 0B0001111111111111;
+                    type = type & 0B0001_1111_1111_1111;
                     if(type == 0x0011 && this.tsDuration - this.lastTsDuration >= MAX_DURATION) {
                         this.buildTs();
                     }
