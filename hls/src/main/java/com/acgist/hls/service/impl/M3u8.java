@@ -33,11 +33,11 @@ public class M3u8 {
      * M3U8开始
      */
     private static final String M3U8_A =
-        "#EXTM3U\r\n"                 +
-        "#EXT-X-VERSION:3\r\n"        +
-        "#EXT-X-ALLOW-CACHE:YES\r\n"  +
+        "#EXTM3U\r\n"                  +
+        "#EXT-X-VERSION:3\r\n"         +
+        "#EXT-X-ALLOW-CACHE:YES\r\n"   +
         "#EXT-X-TARGETDURATION:20\r\n" +
-        "#EXT-X-MEDIA-SEQUENCE:0\r\n" +
+        "#EXT-X-MEDIA-SEQUENCE:0\r\n"  +
         "#EXT-X-DISCONTINUITY\r\n";
     /**
      * M3U8结束

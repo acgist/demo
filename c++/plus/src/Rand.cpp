@@ -2,7 +2,6 @@
 #include <iostream>
 
 int main() {
-
     // 水仙花数
     int abc = 100;
     int a, b, c;
