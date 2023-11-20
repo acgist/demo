@@ -7,8 +7,11 @@ int main(int argc, char const *argv[]) {
     source.push_back(1);
     source.push_back(2);
     source.push_back(3);
+    source.push_back(3);
+    source.push_back(3);
     std::vector<int> target;
     target.push_back(1);
+    target.push_back(2);
     target.push_back(4);
     target.push_back(5);
     std::vector<int> result;
