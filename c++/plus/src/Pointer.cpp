@@ -3,6 +3,16 @@
 using namespace std;
 
 int main() {
+    int array[] = { 1, 4, 8, 16 };
+    std::cout << *array << std::endl;
+    std::cout << *array + 1 << std::endl;
+    std::cout << *(array + 1) << std::endl;
+    std::cout << &array << std::endl;
+    // &array是整个数组的地址
+    std::cout << &array + 1 << std::endl;
+    std::cout << array + 3 << std::endl;
+    std::cout << *(array + 3) << std::endl;
+    std::cout << array + 4 << std::endl;
     cout << "指针常量" << endl;
     int a = 10;
     // const int a = 10; // 不能这样定义

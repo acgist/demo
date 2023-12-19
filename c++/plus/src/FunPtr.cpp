@@ -10,9 +10,12 @@ int* mult(const int& a, const int& b) {
 } 
 
 int main(int argc, char const *argv[]) {
-    int (*addPtr)(const int& a, const int& b) = add;
+    // 如果没有括号表示定义一个返回int*的函数
+    int (*addPtr)(const int&, const int&) = add;
+    // int (*addPtr)(const int& a, const int& b) = add;
     // int (*addPtr)(const int& a, const int& b) = &add;
-    int c = addPtr(1, 2);
+    // int c = addPtr(1, 2);
+    int c = (*addPtr)(1, 2);
     std::cout << c << std::endl;
     int* cPtr = mult(1, 2);
     std::cout << *cPtr << std::endl;

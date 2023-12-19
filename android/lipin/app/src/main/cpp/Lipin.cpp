@@ -146,6 +146,7 @@ Java_com_acgist_lipin_Lipin_Rnnoise(
         config->dstBuffer[2 * i + 1] = (uint8_t) ((v >> 8) & 0xFF);
     }
     swr_convert(config->swr_context_restore, &config->srcBuffer, config->src_nb_samples, (const uint8_t**) &config->dstBuffer, config->dst_nb_samples);
+    // 返回值不用释放否则需要手动释放
     jbyteArray result = env->NewByteArray(config->srcBytesLength);
     jbyte dstBytes[config->srcBytesLength];
     for (int i = 0; i < config->srcBytesLength; i++) {
@@ -173,6 +174,7 @@ Java_com_acgist_lipin_Lipin_Resample(
         src[i] = (uint8_t) srcBytes[i];
     }
     swr_convert(config->swr_context, &config->dstBuffer, config->dst_nb_samples, (const uint8_t**) &src, config->src_nb_samples);
+    // 返回值不用释放否则需要手动释放
     jbyteArray result = env->NewByteArray(config->dstBytesLength);
     jbyte dstBytes[config->dstBytesLength];
     for (int i = 0; i < config->dstBytesLength; i++) {
