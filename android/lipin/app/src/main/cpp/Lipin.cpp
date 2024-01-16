@@ -154,6 +154,7 @@ Java_com_acgist_lipin_Lipin_Rnnoise(
     }
     env->SetByteArrayRegion(result, 0, config->srcBytesLength, dstBytes);
     delete[] src;
+    env->ReleaseByteArrayElements(pcm, srcBytes, 0);
 //  env->DeleteLocalRef(result);
 //  env->ReleaseByteArrayElements(result, dstBytes, 0);
     return result;
@@ -182,6 +183,7 @@ Java_com_acgist_lipin_Lipin_Resample(
     }
     env->SetByteArrayRegion(result, 0, config->dstBytesLength, dstBytes);
     delete[] src;
+    env->ReleaseByteArrayElements(pcm, srcBytes, 0);
 //  env->DeleteLocalRef(result);
 //  env->ReleaseByteArrayElements(result, dstBytes, 0);
     return result;
