@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 int main() {
     std::vector<int> inta = { 1, 2 };
@@ -17,5 +18,12 @@ int main() {
     std::cout << " a == b > " << (sa == sb) << "\n";
     std::cout << " a == c > " << (sa == sc) << "\n";
     std::cout << " a == d > " << (sa == sd) << "\n";
+    std::vector<int> inte(inta.size() + intb.size());
+    // std::vector<int> inte;
+    // inte.resize(inta.size() + intb.size());
+    std::merge(inta.begin(), inta.end(), intb.begin(), intb.end(), inte.begin());
+    // std::vector<int> inte;
+    // std::merge(inta.begin(), inta.end(), intb.begin(), intb.end(), std::back_inserter(inte));
+    std::cout << inte.size() << "\n";
     return 0;
 }
