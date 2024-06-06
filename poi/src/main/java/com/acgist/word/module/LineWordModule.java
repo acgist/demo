@@ -37,6 +37,8 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 public class LineWordModule extends WordModule {
 
+    // 维度
+    private List<String> header;
     // 数据
     private Map<String, List<Integer>> data;
     
@@ -49,8 +51,8 @@ public class LineWordModule extends WordModule {
         this.createTitle();
         try {
             // 创建图表
-            final XWPFRun run = this.paragraph.createRun();
-            final XWPFChart chart = this.document.createChart(run, XDDFChart.DEFAULT_WIDTH * 10, XDDFChart.DEFAULT_HEIGHT * 5);
+            final XWPFRun run = this.content.createRun();
+            final XWPFChart chart = this.document.createChart(run, XDDFChart.DEFAULT_WIDTH * 11, XDDFChart.DEFAULT_HEIGHT * 8);
             chart.setTitleText(this.instance.getModelName());
             chart.setTitleOverlay(false);
             // 图例
@@ -62,10 +64,10 @@ public class LineWordModule extends WordModule {
             final XDDFLineChartData lineChart = (XDDFLineChartData) chart.createData(ChartTypes.LINE, categoryAxis, valuesAxis);
             // 数据
             this.data.forEach((k, v) -> {
-                final XDDFDataSource<String> category = XDDFDataSourcesFactory.fromArray(this.data.keySet().toArray(String[]::new));
-//              final XDDFDataSource<String> category = XDDFDataSourcesFactory.fromArray(new String[] { k });
+                final XDDFDataSource<String> category = XDDFDataSourcesFactory.fromArray(this.header.toArray(String[]::new));
                 final XDDFNumericalDataSource<Integer> values = XDDFDataSourcesFactory.fromArray(v.toArray(Integer[]::new));
                 final XDDFLineChartData.Series series = (XDDFLineChartData.Series) lineChart.addSeries(category, values);
+                series.setTitle(k, null);
                 series.setSmooth(false);
 //              series.setMarkerStyle(MarkerStyle.NONE);
                 series.setShowLeaderLines(false);

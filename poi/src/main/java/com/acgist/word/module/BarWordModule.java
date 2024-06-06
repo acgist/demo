@@ -49,8 +49,8 @@ public class BarWordModule extends WordModule {
         this.createTitle();
         try {
             // 创建图表
-            final XWPFRun run = this.paragraph.createRun();
-            final XWPFChart chart = this.document.createChart(run, XDDFChart.DEFAULT_WIDTH * 10, XDDFChart.DEFAULT_HEIGHT * 5);
+            final XWPFRun run = this.content.createRun();
+            final XWPFChart chart = this.document.createChart(run, XDDFChart.DEFAULT_WIDTH * 11, XDDFChart.DEFAULT_HEIGHT * 6);
             chart.setTitleText(this.instance.getModelName());
             chart.setTitleOverlay(false);
             // 图例

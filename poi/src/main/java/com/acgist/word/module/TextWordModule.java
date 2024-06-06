@@ -50,7 +50,8 @@ public class TextWordModule extends WordModule {
     private void createHtml(String html) {
         final Document document = Jsoup.parse(html);
         final Elements elements = document.body().children();
-        elements.forEach(element -> {
+        for (int index = 0; index < elements.size(); index++) {
+            final Element element = elements.get(index);
             final String tagName = element.tagName();
             switch (tagName) {
             case "h1":
@@ -64,10 +65,12 @@ public class TextWordModule extends WordModule {
             default:
                 final XWPFRun run = this.createText(element.text());
                 this.setStyle(run, element);
-                run.addBreak();
+                if(index + 1 < elements.size()) {
+                    run.addBreak();
+                }
                 break;
             }
-        });
+        }
     }
     
     /**

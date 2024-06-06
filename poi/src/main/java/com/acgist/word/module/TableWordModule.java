@@ -50,6 +50,8 @@ public class TableWordModule extends WordModule {
      */
     private void setStyle(XWPFTable table) {
         final String borderColor = "AAAAAA";
+        table.setWidth(100);
+        table.setWidthType(TableWidthType.PCT);
         final CTTblPr pr = table.getCTTbl().getTblPr();
         final CTTblBorders borders = pr.isSetTblBorders() ? pr.getTblBorders() : pr.addNewTblBorders();
         if(borders.isSetTop()) {

@@ -3,6 +3,8 @@ package com.acgist.report.word.impl;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -10,12 +12,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.poi.wp.usermodel.HeaderFooterType;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFStyle;
+import org.apache.poi.xwpf.usermodel.XWPFStyles;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrGeneral;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.google.common.primitives.Bytes;
 import com.acgist.data.report.entity.ReportHistory;
 import com.acgist.data.report.entity.ReportModelInstance;
 import com.acgist.data.report.vo.ReportAlarmCountVo;
@@ -40,7 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 public class WordServiceImpl implements IWordService {
 
     private final ReportModelInstanceService reportModelInstanceService;
-
+    
     /**
      * 模型类型
      */
@@ -151,6 +164,31 @@ public class WordServiceImpl implements IWordService {
         document.createFooter(HeaderFooterType.FIRST);
 //      document.addEndnote(null);
 //      document.addFootnote(null);
+        final XWPFStyles styles = document.createStyles();
+        styles.addStyle(this.createStyle("title_1", "大标题"));
+        styles.addStyle(this.createStyle("title_2", "小标题"));
+    }
+    
+    /**
+     * 通用样式
+     */
+    private XWPFStyle createStyle(String id, String name) {
+        final CTStyle ctStyle = CTStyle.Factory.newInstance();
+        ctStyle.setStyleId(id);
+        final CTString styleName = CTString.Factory.newInstance();
+        styleName.setVal(name);
+        ctStyle.setName(styleName);
+        final CTOnOff unhideWhenUsed = CTOnOff.Factory.newInstance();
+        ctStyle.setUnhideWhenUsed(unhideWhenUsed);
+        final CTDecimalNumber uiPriority = CTDecimalNumber.Factory.newInstance();
+        uiPriority.setVal(BigInteger.ONE);
+        ctStyle.setUiPriority(uiPriority);
+        final CTPPrGeneral outlineLvl = CTPPrGeneral.Factory.newInstance();
+        outlineLvl.setOutlineLvl(uiPriority);
+        ctStyle.setPPr(outlineLvl);
+        final XWPFStyle xwpfStyle = new XWPFStyle(ctStyle);
+        xwpfStyle.setType(STStyleType.PARAGRAPH);
+        return xwpfStyle;
     }
 
     /**
@@ -230,17 +268,25 @@ public class WordServiceImpl implements IWordService {
         final LineWordModule lineWordModule = new LineWordModule(instance, document);
         if(this.reportModelInstanceService == null) {
             final Map<String, List<Integer>> map = new LinkedHashMap<>();
-            map.put("销量1", List.of(10, 20, 30, 40));
-            map.put("销量2", List.of(20, 20, 30, 100));
-            map.put("销量3", List.of(30, 20, 50, 90));
-            map.put("销量4", List.of(40, 20, 60, 40));
+            map.put("销量1", Bytes.asList(RandomUtils.nextBytes(30)).stream().map(Byte::toUnsignedInt).collect(Collectors.toList()));
+            map.put("销量2", Bytes.asList(RandomUtils.nextBytes(30)).stream().map(Byte::toUnsignedInt).collect(Collectors.toList()));
+            map.put("销量3", Bytes.asList(RandomUtils.nextBytes(30)).stream().map(Byte::toUnsignedInt).collect(Collectors.toList()));
+            map.put("销量4", Bytes.asList(RandomUtils.nextBytes(30)).stream().map(Byte::toUnsignedInt).collect(Collectors.toList()));
             lineWordModule.setData(map);
+            lineWordModule.setHeader(IntStream.range(1, 31).boxed().map(v -> v + "日").collect(Collectors.toList()));
         } else {
             final ReportModelInstanceResultVo<Map<String, List<ReportResult>>> resultVo = this.reportModelInstanceService.selectReportItemsVo(instance, reportHistory.getReportDate());
             lineWordModule.setData(
                 resultVo.getData().entrySet().stream().map(v -> {
                     return Map.entry(v.getKey(), v.getValue().isEmpty() ? List.<Integer>of() : v.getValue().stream().map(x -> x.getCount().intValue()).collect(Collectors.toList()));
                 }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, z) -> z, LinkedHashMap::new))
+            );
+            final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            lineWordModule.setHeader(
+                resultVo.getData().values().stream()
+                .flatMap(v -> v.stream().map(x -> format.format(x.getDate())))
+                .distinct()
+                .collect(Collectors.toList())
             );
         }
         lineWordModule.buildModule();

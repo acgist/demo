@@ -15,8 +15,10 @@ import com.acgist.data.report.entity.ReportModelInstance;
  */
 public abstract class WordModule implements IWordModule {
 
-    // 段落
-    protected XWPFParagraph paragraph;
+    // 标题段落
+    protected XWPFParagraph title;
+    // 文本段落
+    protected XWPFParagraph content;
     // 文档
     protected final XWPFDocument document;
     // 实例
@@ -25,7 +27,8 @@ public abstract class WordModule implements IWordModule {
     public WordModule(ReportModelInstance instance, XWPFDocument document) {
         this.instance = instance;
         this.document = document;
-        this.paragraph = document.createParagraph();
+        this.title = document.createParagraph();
+        this.content = document.createParagraph();
         this.setBaseStyle();
     }
 
@@ -33,11 +36,14 @@ public abstract class WordModule implements IWordModule {
      * 基本样式
      */
     protected void setBaseStyle() {
-        this.paragraph.setSpacingAfter(200);
-        this.paragraph.setSpacingBefore(200);
-        this.paragraph.setIndentationLeft(100);
-        this.paragraph.setIndentationRight(100);
-        this.paragraph.setSpacingBetween(1.2, LineSpacingRule.AUTO);
+        this.title.setSpacingAfter(0);
+        this.title.setSpacingBefore(400);
+        this.title.setIndentationLeft(0);
+        this.title.setIndentationRight(0);
+        this.title.setIndentFromLeft(0);
+        this.title.setIndentFromRight(0);
+        this.title.setSpacingBetween(1.2, LineSpacingRule.AUTO);
+        this.content.setSpacingBetween(1.2, LineSpacingRule.AUTO);
     }
     
     protected void createNewLine() {
@@ -83,14 +89,15 @@ public abstract class WordModule implements IWordModule {
      * @return XWPFRun
      */
     protected XWPFRun createTitle(boolean newLine, String title) {
-        final XWPFRun run = this.paragraph.createRun();
+        final XWPFRun run = this.title.createRun();
         run.setBold(true);
         run.setFontSize(14);
         run.setText(title);
         if(newLine) {
             run.addBreak();
         }
-        this.paragraph.addRun(run);
+        this.title.addRun(run);
+        this.title.setStyle("title_1");
         return run;
     }
     
@@ -102,11 +109,11 @@ public abstract class WordModule implements IWordModule {
      * @return XWPFRun
      */
     protected XWPFRun createText(String text) {
-        final XWPFRun run = this.paragraph.createRun();
+        final XWPFRun run = this.content.createRun();
         run.setBold(false);
         run.setFontSize(10);
         run.setText(text);
-        this.paragraph.addRun(run);
+        this.content.addRun(run);
         return run;
     }
     
