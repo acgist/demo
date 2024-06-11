@@ -1,7 +1,80 @@
-#include "../../header/LibTorch.hpp"
+#include "../header/LibTorch.hpp"
 
 #include <chrono>
+#include <iostream>
 #include <filesystem>
+
+#include "torch/torch.h"
+#include "torch/script.h"
+
+#include "opencv2/highgui.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/imgcodecs.hpp"
+
+#include "../header/Layers.hpp"
+#include "../header/Datasets.hpp"
+
+/**
+ * 性别模型（参考VGG）
+ * 设置不要计算梯度：层.value().set_requires_grad()
+ */
+class GenderImpl : public torch::nn::Module {
+
+private:
+    // 卷积层
+    torch::nn::Sequential        features{ nullptr };
+    // 池化层
+    torch::nn::AdaptiveAvgPool2d avgPool{ nullptr };
+    // 全连接层
+    torch::nn::Sequential        classifier{ nullptr };
+
+public:
+    GenderImpl(int num_classes = 2);
+    torch::Tensor forward(torch::Tensor x);
+
+};
+TORCH_MODULE(Gender);
+
+class GenderHandler {
+
+public:
+    torch::Device device = torch::Device(torch::kCPU);
+    Gender model{ nullptr };
+
+public:
+    // 加载模型
+    void load(const std::string& modelPath);
+    // // 训练模型
+    void trian(
+        size_t epoch,
+        size_t batch_size,
+        torch::optim::Optimizer& optimizer,
+        lifuren::datasets::ImageFileDataset& dataset
+    );
+    // // 验证模型
+    void val(
+        size_t epoch,
+        size_t batch_size,
+        lifuren::datasets::ImageFileDataset& dataset
+    );
+    // // 测试模型
+    void test(
+        const std::string& data_dir,
+        const std::string& image_type
+    );
+    // 训练验证
+    virtual void trainAndVal(
+        size_t num_epochs,
+        size_t batch_size,
+        float  learning_rate,
+        const  std::string& data_dir,
+        const  std::string& image_type,
+        const  std::string& save_path
+    );
+    // 模型预测
+    int pred(cv::Mat& image);
+
+};
 
 /**
  * @see #conv2d
@@ -24,7 +97,7 @@ inline void conv2dBatchNorm2dRelu(
     sequential->push_back(lifuren::layers::relu(inplace));
 }
 
-lifuren::GenderImpl::GenderImpl(int num_classes){
+GenderImpl::GenderImpl(int num_classes){
     // // 卷积
     // torch::nn::Sequential features;
     // conv2dBatchNorm2dRelu(features, 3, 64, 3, 1, 1);
@@ -76,7 +149,7 @@ lifuren::GenderImpl::GenderImpl(int num_classes){
     this->classifier = register_module("classifier", classifier);
 }
 
-torch::Tensor lifuren::GenderImpl::forward(torch::Tensor x) {
+torch::Tensor GenderImpl::forward(torch::Tensor x) {
     x = this->features->forward(x);
     x = this->avgPool->forward(x);
     x = torch::flatten(x, 1);
@@ -84,7 +157,7 @@ torch::Tensor lifuren::GenderImpl::forward(torch::Tensor x) {
     return torch::log_softmax(x, 1);
 }
 
-void lifuren::GenderHandler::trainAndVal(
+void GenderHandler::trainAndVal(
     size_t num_epochs,
     size_t batch_size,
     float  learning_rate,
@@ -92,7 +165,7 @@ void lifuren::GenderHandler::trainAndVal(
     const  std::string& image_type,
     const  std::string& save_path
 ) {
-    SPDLOG_DEBUG("是否使用CUDA：{}", this->device.is_cuda());
+    printf("是否使用CUDA：%d", this->device.is_cuda());
     std::filesystem::path data_path = data_dir;
     std::string path_val   = (data_path / "val").u8string();
     std::string path_train = (data_path / "train").u8string();
@@ -112,16 +185,16 @@ void lifuren::GenderHandler::trainAndVal(
             auto a = std::chrono::system_clock::now();
             this->trian(epoch, batch_size, optimizer, data_loader_train);
             auto z = std::chrono::system_clock::now();
-            SPDLOG_DEBUG("训练耗时：{}", std::chrono::duration_cast<std::chrono::milliseconds>((z - a)).count());
+            printf("训练耗时：%lld", std::chrono::duration_cast<std::chrono::milliseconds>((z - a)).count());
             this->val(epoch, batch_size, data_loader_val);
         } catch(const std::exception& e) {
-            SPDLOG_ERROR("训练异常：{}", e.what());
+            printf("训练异常：%s", e.what());
         }
     }
     torch::save(this->model, save_path);
 }
 
-void lifuren::GenderHandler::trian(
+void GenderHandler::trian(
     size_t epoch,
     size_t batch_size,
     torch::optim::Optimizer& optimizer,
@@ -149,7 +222,7 @@ void lifuren::GenderHandler::trian(
     std::cout << std::endl;
 }
 
-void lifuren::GenderHandler::val(
+void GenderHandler::val(
     size_t epoch,
     size_t batch_size,
     lifuren::datasets::ImageFileDataset& dataset
@@ -173,35 +246,33 @@ void lifuren::GenderHandler::val(
     std::cout << std::endl;
 }
 
-void lifuren::GenderHandler::test(
+void GenderHandler::test(
     const std::string& data_dir,
     const std::string& image_type
 ) {
     // 没有测试
 }
 
-void lifuren::GenderHandler::load(const std::string& modelPath) {
+void GenderHandler::load(const std::string& modelPath) {
     torch::load(this->model, modelPath);
 }
 
-int lifuren::GenderHandler::pred(cv::Mat& image) {
+int GenderHandler::pred(cv::Mat& image) {
     cv::resize(image, image, cv::Size(200, 200));
     torch::Tensor image_tensor = torch::from_blob(image.data, { image.rows, image.cols, 3 }, torch::kByte).permute({ 2, 0, 1 });
     image_tensor = image_tensor.to(this->device).unsqueeze(0).to(torch::kF32).div(255.0);
     auto prediction = this->model->forward(image_tensor);
     prediction = torch::softmax(prediction, 1);
-    SPDLOG_DEBUG("预测结果：{}", prediction);
+    std::cout << "预测结果：" << prediction << "\n";
     auto class_id = prediction.argmax(1);
     int class_val = class_id.item<int>();
-    SPDLOG_DEBUG("预测结果：{} - {}", class_id.item().toInt(), prediction[0][class_val].item().toFloat());
+    printf("预测结果：%d - %f", class_id.item().toInt(), prediction[0][class_val].item().toFloat());
     return class_val;
 }
 
 int main(const int argc, const char * const argv[]) {
-    lifuren::logger::init();
-    SPDLOG_DEBUG("测试");
-    lifuren::Gender gender;
-    lifuren::GenderHandler handler;
+    Gender gender;
+    GenderHandler handler;
     handler.model = gender;
     if(torch::cuda::is_available()) {
         handler.device = torch::Device(torch::kCUDA);
@@ -217,10 +288,10 @@ int main(const int argc, const char * const argv[]) {
     );
     // handler.load("D:\\tmp\\gender\\model.pt");
     cv::Mat image = cv::imread("D:\\tmp\\yusheng.jpg");
-    SPDLOG_DEBUG("预测结果：{}", handler.pred(image));
+    printf("预测结果：%d", handler.pred(image));
     image.release();
     image = cv::imread("D:\\tmp\\girl.png");
-    SPDLOG_DEBUG("预测结果：{}", handler.pred(image));
+    printf("预测结果：%d", handler.pred(image));
     image.release();
     #else
     handler.trainAndVal(
@@ -232,7 +303,5 @@ int main(const int argc, const char * const argv[]) {
         "/tmp/gender/model.pt"
     );
     #endif
-    SPDLOG_DEBUG("完成");
-    lifuren::logger::shutdown();
     return 0;
 }
