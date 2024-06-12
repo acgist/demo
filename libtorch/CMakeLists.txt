@@ -87,6 +87,13 @@ target_link_libraries(
     ${TORCH_LIBRARIES}
 )
 
+add_executable(testLine src/source/TestLine.cpp)
+add_test(NAME testLine COMMAND testLine)
+target_link_libraries(
+    testLine PUBLIC
+    ${TORCH_LIBRARIES}
+)
+
 add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${TORCH_DLLS}  $<TARGET_FILE_DIR:${PROJECT_NAME}>
