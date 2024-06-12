@@ -79,18 +79,25 @@ find_package(OpenCV REQUIRED)
     
 add_executable(${PROJECT_NAME} src/source/Main.cpp)
 
+add_executable(testLine src/source/TestLine.cpp)
+add_test(NAME testLine COMMAND testLine)
+target_link_libraries(
+    testLine PUBLIC
+    ${TORCH_LIBRARIES}
+)
+
+add_executable(testTensor src/source/TestTensor.cpp)
+add_test(NAME testTensor COMMAND testTensor)
+target_link_libraries(
+    testTensor PUBLIC
+    ${TORCH_LIBRARIES}
+)
+
 add_executable(testGenderHandler src/source/Files.cpp src/source/Layers.cpp src/source/Datasets.cpp src/source/TestGenderHandler.cpp)
 add_test(NAME testGenderHandler COMMAND testGenderHandler)
 target_link_libraries(
   testGenderHandler PUBLIC
     ${OpenCV_LIBS}
-    ${TORCH_LIBRARIES}
-)
-
-add_executable(testLine src/source/TestLine.cpp)
-add_test(NAME testLine COMMAND testLine)
-target_link_libraries(
-    testLine PUBLIC
     ${TORCH_LIBRARIES}
 )
 
