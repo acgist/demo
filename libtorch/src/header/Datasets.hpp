@@ -114,6 +114,21 @@ using ImageFileDataset = std::result_of<decltype(&lifuren::datasets::loadImageFi
     const std::function<void(const cv::Mat&)>
 )>::type;
 
+class TensorDataset : public torch::data::Dataset<TensorDataset> {
+
+public:
+    torch::Tensor features;
+    torch::Tensor labels;
+
+public:
+    TensorDataset(torch::Tensor& features, torch::Tensor& lables);
+
+public:
+    torch::optional<size_t> size() const override;
+    torch::data::Example<> get(size_t index) override;
+
+};
+
 }
 }
 

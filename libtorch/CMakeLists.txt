@@ -68,8 +68,8 @@ if(CMAKE_HOST_WIN32)
     )
 
     file(GLOB OPENCV_DLLS "deps/opencv/x64/vc16/bin/opencv_videoio_ffmpeg480_64.dll"
-                            "deps/opencv/x64/vc16/bin/opencv_videoio_msmf480_64d.dll"
-                            "deps/opencv/x64/vc16/bin/opencv_world480d.dll"
+                          "deps/opencv/x64/vc16/bin/opencv_videoio_msmf480_64d.dll"
+                          "deps/opencv/x64/vc16/bin/opencv_world480d.dll"
     )
     file(GLOB TORCH_DLLS "deps/libtorch/lib/*.dll")
 endif()
@@ -90,6 +90,13 @@ add_executable(testTensor src/source/TestTensor.cpp)
 add_test(NAME testTensor COMMAND testTensor)
 target_link_libraries(
     testTensor PUBLIC
+    ${TORCH_LIBRARIES}
+)
+
+add_executable(testLibTorchLine src/source/Files.cpp src/source/Datasets.cpp src/source/TestLibTorchLine.cpp)
+add_test(NAME testLibTorchLine COMMAND testLibTorchLine)
+target_link_libraries(
+    testLibTorchLine PUBLIC
     ${TORCH_LIBRARIES}
 )
 

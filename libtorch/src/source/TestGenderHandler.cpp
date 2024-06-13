@@ -191,6 +191,15 @@ void GenderHandler::trainAndVal(
             printf("训练异常：%s", e.what());
         }
     }
+    // auto params = this->model->parameters();
+    // for(auto param = params.begin(); param != params.end(); ++param) {
+    //     std::cout << "parameters " << param->data() << "\n";
+    // }
+    // auto nameds = this->model->named_parameters();
+    // for(auto entry = nameds.begin(); entry != nameds.end(); ++entry) {
+    //     std::cout << "named_parameters k : " << entry->key() << "\n";
+    //     // std::cout << "named_parameters k : " << entry->key() << " | v : " << entry->value() << "\n";
+    // }
     torch::save(this->model, save_path);
 }
 
@@ -279,7 +288,7 @@ int main(const int argc, const char * const argv[]) {
     }
     #ifdef _WIN32
     handler.trainAndVal(
-        32,
+        2,
         8,
         0.001,
         "D:\\tmp\\gender",

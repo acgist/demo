@@ -45,3 +45,17 @@ torch::data::Example<> lifuren::datasets::FileDataset::get(size_t index) {
         label_tensor.clone()
     };
 }
+
+lifuren::datasets::TensorDataset::TensorDataset(torch::Tensor& features, torch::Tensor& labels) : features(features), labels(labels) {
+}
+
+torch::optional<size_t> lifuren::datasets::TensorDataset::size() const {
+    return this->features.sizes()[0];
+}
+
+torch::data::Example<> lifuren::datasets::TensorDataset::get(size_t index) {
+    return {
+        this->features[index],
+        this->labels[index]
+    };
+}

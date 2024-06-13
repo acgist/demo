@@ -10,8 +10,8 @@ static torch::Tensor model(torch::Tensor& x, torch::Tensor& w, torch::Tensor& b)
     // std::cout << "x = " << x.sizes() << "\n";
     // std::cout << "w = " << w.sizes() << "\n";
     // std::cout << "b = " << b.sizes() << "\n";
-    // return torch::mm(x, w) + b;
-    return torch::matmul(x, w) + b;
+    return torch::mm(x, w) + b;
+    // return torch::matmul(x, w) + b;
 }
 
 static torch::Tensor loss(torch::Tensor& p, torch::Tensor& y) {
@@ -22,18 +22,18 @@ static torch::Tensor loss(torch::Tensor& p, torch::Tensor& y) {
     return (p - y.view(p.sizes())).pow(2) / 2;
 }
 
-static void sgd(torch::Tensor& w, torch::Tensor& b, const float& lr, const size_t& batch_size) {
-    w.data() -= w.grad() * (lr / batch_size);
-    b.data() -= b.grad() * (lr / batch_size);
+static void sgd(torch::Tensor& w, torch::Tensor& b, const float& lr, const float& batch_size) {
+    w.data() -= w.grad() * lr / batch_size;
+    b.data() -= b.grad() * lr / batch_size;
 }
 
 int main() {
     std::random_device device;
     std::mt19937 rand(device());
-    std::normal_distribution<> normal(100, 10);
+    std::normal_distribution<> normal(20, 5);
     torch::Tensor features = torch::randn({ 1000, 2 });
-    // 5.8 * a + 87.4 * b + 1024 + rand = c
-    torch::Tensor labels = features.select(1, 0) * 5.8 + features.select(1, 1) * 87.4 + 1024 + normal(rand);
+    // 15.8 * a + 87.4 * b + 32 + rand = c
+    torch::Tensor labels = features.select(1, 0) * 15.8 + features.select(1, 1) * 87.4 + 32 + normal(rand);
     // std::cout << labels   << "\n";
     // std::cout << features << "\n";
     // std::cout << labels[999]   << "\n";
@@ -47,30 +47,38 @@ int main() {
         index.push_back(i);
     }
     try {
-        const int epochs = 100;
-        const int batch_size = 10;
+        const float lr = 0.01F;
+        const int batch_size  = 10;
+        const int epoch_count = 32;
         torch::Tensor w = torch::normal(0, 0.01, {2, 1});
+        // torch::Tensor w = torch::normal(0, 0.0, {2, 1});
         // torch::Tensor w = torch::zeros({2, 1}, torch::kFloat16);
         w.set_requires_grad(true);
         torch::Tensor b = torch::zeros({1}, torch::kFloat16);
         b.set_requires_grad(true);
-        for(long long epoch = 0; epoch < epochs; ++epoch) {
+        for(long long epoch = 0; epoch < epoch_count; ++epoch) {
+            // 洗牌
             std::shuffle(index.begin(), index.end(), rand);
             for(auto iterator = index.begin(); iterator != index.end(); iterator += batch_size) {
                 long long indexs[batch_size];
                 std::copy(iterator, iterator + batch_size, indexs);
-                // std::cout << "index = " << torch::from_blob(indexs, {batch_size}, torch::kLong) << "\n";
+                // 计算损失
                 auto tLoss = loss(
                     model(features.index_select(0, torch::from_blob(indexs, {batch_size}, torch::kLong)), w, b),
                     labels.index_select(0, torch::from_blob(indexs, {batch_size}, torch::kLong))
                 ).sum();
+                // tLoss /= batch_size;
+                // 反向传播
                 tLoss.backward();
-                sgd(w, b, 0.03, batch_size);
+                // 计算梯度
+                sgd(w, b, lr, batch_size);
+                // 梯度归零
                 w.grad().data().zero_();
                 b.grad().data().zero_();
                 // printf("epoch = %lld | batch = %lld | loss = %f\n", epoch, iterator - index.begin(), tLoss.mean().item<float>());
             }
             {
+                // 评估
                 torch::NoGradGuard guard;
                 torch::Tensor vLoss = loss(model(features, w, b), labels);
                 printf("epoch = %lld | loss = %f\n", epoch, vLoss.mean().item<float>());
