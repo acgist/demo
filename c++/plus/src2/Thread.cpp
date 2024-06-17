@@ -14,7 +14,9 @@ void fun(int a, int b, int c) {
 class P {
 
 public:
-    int say(int a, int b, int c) {
+    int say(int& a, const int& b, int c) {
+        std::cout << &a << "\n";
+        std::cout << &b << "\n";
         std::cout << a << b << c << "\n";
         return 0;
     }
@@ -37,7 +39,11 @@ int main() {
     std::thread c(fun, 1, 2, 3);
     c.join();
     P p;
-    std::thread d(P::say, &p, 1, 2, 3);
+    int v = 1;
+    int x = 2;
+    std::cout << &v << "\n";
+    std::cout << &x << "\n";
+    std::thread d(P::say, &p, std::ref(v), x, 3);
     d.join();
     return 0;
 }

@@ -79,6 +79,20 @@ find_package(OpenCV REQUIRED)
     
 add_executable(${PROJECT_NAME} src/source/Main.cpp)
 
+add_executable(testCV src/source/TestCV.cpp)
+add_test(NAME testCV COMMAND testCV)
+target_link_libraries(
+    testCV PUBLIC
+    ${OpenCV_LIBS}
+)
+
+add_executable(testMLP src/source/Files.cpp src/source/Datasets.cpp src/source/TestMLP.cpp)
+add_test(NAME testMLP COMMAND testMLP)
+target_link_libraries(
+    testMLP PUBLIC
+    ${TORCH_LIBRARIES}
+)
+
 add_executable(testLine src/source/TestLine.cpp)
 add_test(NAME testLine COMMAND testLine)
 target_link_libraries(
