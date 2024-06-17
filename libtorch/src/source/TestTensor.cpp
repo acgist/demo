@@ -4,18 +4,18 @@
 #include "torch/script.h"
 
 int main() {
-    long long ai[] { 1, 2, 3 };
-    auto a = torch::from_blob(ai, {3, 1}, torch::kLong);
-    std::cout << a << "\n";
-    long long bi[] { 1, 2, 3 };
-    auto b = torch::tensor(bi, torch::kLong);
-    std::cout << b << "\n";
-    auto c = torch::tensor({ 1, 2, 3 }, torch::kLong);
-    std::cout << c << "\n";
-    auto d = torch::tensor({ 1, 2, 3 }, torch::kLong).unsqueeze(1);
-    std::cout << d << "\n";
-    std::cout << d.sizes() << "\n";
-    std::cout << d.sizes()[0] << "\n";
+    // long long ai[] { 1, 2, 3 };
+    // auto a = torch::from_blob(ai, {3, 1}, torch::kLong);
+    // std::cout << a << "\n";
+    // long long bi[] { 1, 2, 3 };
+    // auto b = torch::tensor(bi, torch::kLong);
+    // std::cout << b << "\n";
+    // auto c = torch::tensor({ 1, 2, 3 }, torch::kLong);
+    // std::cout << c << "\n";
+    // auto d = torch::tensor({ 1, 2, 3 }, torch::kLong).unsqueeze(1);
+    // std::cout << d << "\n";
+    // std::cout << d.sizes() << "\n";
+    // std::cout << d.sizes()[0] << "\n";
 
     // auto a = torch::ones({1, 2});
     // auto b = torch::ones({2, 3});
@@ -49,5 +49,35 @@ int main() {
     // std::cout << b.sizes() << "\n";
     // std::cout << torch::cat({a, b}, 1) << "\n";
     // std::cout << torch::cat({a, b}, 1).sizes() << "\n";
+    
+    // auto t = torch::tensor({{1, 2, 3}, {4, 5, 6}});
+    // std::cout << t.sum() << "\n";
+    // std::cout << t.sum(0, true) << "\n";
+    // std::cout << t.sum(1, true) << "\n";
+    // std::cout << t.sum(0, false) << "\n";
+    // std::cout << t.sum(1, false) << "\n";
+
+    // auto t = torch::tensor({{1, 2, 3}, {4, 5, 6}});
+    // // auto e = t.clone();
+    // auto e = t.exp();
+    // auto s = e.sum(1, true);
+    // std::cout << t << "\n";
+    // std::cout << e << "\n";
+    // std::cout << s << "\n";
+    // auto softmax = t / s;
+    // std::cout << softmax << "\n";
+
+    // auto t = torch::tensor({{1, 2, 3}, {4, 5, 6}});
+    // // std::cout << t.view({-1, 4}) << "\n";
+    // std::cout << t.view({-1, 3}) << "\n";
+    // std::cout << t.view({-1, 2}) << "\n";
+    // std::cout << t.view({-1}) << "\n";
+    // std::cout << t.flatten() << "\n";
+    // std::cout << t.flatten(1) << "\n";
+
+    auto t = torch::tensor({{1, 2, 3}, {4, 5, 6}});
+    std::cout << t.argmax()  << "\n";
+    std::cout << t.argmax(1) << "\n";
+    // t.grad().data().zero_();
     return 0;
 }
