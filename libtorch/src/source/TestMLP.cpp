@@ -39,10 +39,13 @@ MLPImpl::~MLPImpl() {
 int main() {
     // const float lr = 0.001F;
     const float lr = 0.002F;
+    // const float lr = 0.003F;
+    // const float lr = 0.004F;
     // const float lr = 0.005F;
     const int batch_size  = 10;
     // const int epoch_count = 8;
     const int epoch_count = 128;
+    // const int epoch_count = 256;
     // 准备数据
     std::random_device device;
     std::mt19937 rand(device());
