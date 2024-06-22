@@ -107,10 +107,38 @@ target_link_libraries(
     ${TORCH_LIBRARIES}
 )
 
+add_executable(testReg src/source/TestReg.cpp)
+add_test(NAME testReg COMMAND testReg)
+target_link_libraries(
+    testReg PUBLIC
+    ${TORCH_LIBRARIES}
+)
+
+add_executable(testLoss src/source/TestLoss.cpp)
+add_test(NAME testLoss COMMAND testLoss)
+target_link_libraries(
+    testLoss PUBLIC
+    ${TORCH_LIBRARIES}
+)
+
+add_executable(testClassify src/source/Files.cpp src/source/Datasets.cpp  src/source/TestClassify.cpp)
+add_test(NAME testClassify COMMAND testClassify)
+target_link_libraries(
+    testClassify PUBLIC
+    ${TORCH_LIBRARIES}
+)
+
 add_executable(testLibTorchLine src/source/Files.cpp src/source/Datasets.cpp src/source/TestLibTorchLine.cpp)
 add_test(NAME testLibTorchLine COMMAND testLibTorchLine)
 target_link_libraries(
     testLibTorchLine PUBLIC
+    ${TORCH_LIBRARIES}
+)
+
+add_executable(testQuantitative src/source/TestQuantitative.cpp)
+add_test(NAME testQuantitative COMMAND testQuantitative)
+target_link_libraries(
+    testQuantitative PUBLIC
     ${TORCH_LIBRARIES}
 )
 

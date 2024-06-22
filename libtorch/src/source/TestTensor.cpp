@@ -51,6 +51,7 @@ int main() {
     // std::cout << torch::cat({a, b}, 1).sizes() << "\n";
     
     // auto t = torch::tensor({{1, 2, 3}, {4, 5, 6}});
+    // std::cout << t << "\n";
     // std::cout << t.sum() << "\n";
     // std::cout << t.sum(0, true) << "\n";
     // std::cout << t.sum(1, true) << "\n";
@@ -75,9 +76,44 @@ int main() {
     // std::cout << t.flatten() << "\n";
     // std::cout << t.flatten(1) << "\n";
 
-    auto t = torch::tensor({{1, 2, 3}, {4, 5, 6}});
-    std::cout << t.argmax()  << "\n";
-    std::cout << t.argmax(1) << "\n";
-    // t.grad().data().zero_();
+    // auto t = torch::tensor({{1, 2, 3}, {4, 5, 6}});
+    // std::cout << t.argmax()  << "\n";
+    // std::cout << t.argmax(1) << "\n";
+    // // t.grad().data().zero_();
+
+    // auto a = torch::arange(25).reshape({5, 5});
+    // auto b = torch::einsum("ii", a);
+    // std::cout << a << "\n";
+    // std::cout << b << "\n";
+    // std::cout << torch::max(a) << '\n';
+    // std::cout << torch::argmax(a) << '\n';
+    // std::cout << torch::argmax(a, 1) << '\n';
+
+    // auto a = torch::arange(100).reshape({5, 4, 5});
+    // std::cout << a << "\n";
+    // std::cout << torch::max(a) << '\n';
+    // std::cout << torch::argmax(a) << '\n';
+    // std::cout << torch::argmax(a, 0) << '\n';
+    // std::cout << torch::argmax(a, 1) << '\n';
+    // std::cout << torch::argmax(a, 2) << '\n';
+    // std::cout << torch::nonzero(a) << '\n';
+
+    // auto a = torch::randn({10, 2});
+    // std::cout << a << "\n";
+    // std::cout << a * 10 << "\n";
+    // std::cout << torch::rand({4, 3, 2}) << "\n";
+    // std::cout << torch::randint(1, 10, {2, 2}, torch::kFloat16) << "\n";
+
+    auto a = torch::randn({10, 2});
+    auto b = torch::randn({10, 2});
+    std::cout << a << '\n';
+    std::cout << b << '\n';
+    std::cout << torch::cat({a, b}, 0) << '\n';
+    std::cout << torch::cat({a, b}, 1) << '\n';
+    auto c = torch::empty({10, 1}).fill_(1);
+    std::cout << c << '\n';
+    std::cout << torch::randn({10, 2}) + 100 << '\n';
+    std::cout << torch::randint(0, 10, {10, 10}, torch::kFloat) << '\n';
+    std::cout << torch::randint(0, 10, {10, 10}, torch::kFloat) / 10 << '\n';
     return 0;
 }

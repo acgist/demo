@@ -29,6 +29,8 @@ MLPImpl::MLPImpl() {
     torch::nn::Sequential mlp;
     mlp->push_back(torch::nn::Linear(2, 2));
     mlp->push_back(torch::nn::ReLU());
+    // mlp->push_back(torch::nn::ReLU(torch::nn::ReLUOptions(true)));
+    // mlp->push_back(torch::nn::Dropout());
     mlp->push_back(torch::nn::Linear(2, 1));
     this->mlp = register_module("mlp", mlp);
 }
@@ -38,10 +40,10 @@ MLPImpl::~MLPImpl() {
 
 int main() {
     // const float lr = 0.001F;
-    const float lr = 0.002F;
+    // const float lr = 0.002F;
     // const float lr = 0.003F;
     // const float lr = 0.004F;
-    // const float lr = 0.005F;
+    const float lr = 0.005F;
     const int batch_size  = 10;
     // const int epoch_count = 8;
     const int epoch_count = 128;
@@ -69,6 +71,10 @@ int main() {
             ttLoss += tLoss.item<float>();
         }
         printf("all epoch : %d | loss : %f\n", epoch, ttLoss * 10 / 1000);
+        if(ttLoss <= 0.000001F) {
+            // 满足损失退出训练
+            break;
+        }
     }
     std::cout << "pred : " << mlp->forward(torch::tensor({1, 1}, torch::kFloat32)) << "\n";
     auto nameds = mlp->named_parameters();
