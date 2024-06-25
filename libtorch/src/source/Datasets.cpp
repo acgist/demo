@@ -14,13 +14,13 @@ lifuren::datasets::FileDataset::FileDataset(
         printf("目录无效：%s", path.data());
         return;
     }
-    auto iterator = std::filesystem::directory_iterator(std::filesystem::u8path(path));
+    auto iterator = std::filesystem::directory_iterator(std::filesystem::path(path));
     for(const auto& entry : iterator) {
-        std::string filepath = entry.path().u8string();
+        std::string filepath = entry.path().string();
         if(entry.is_directory()) {
-            std::string filename = entry.path().filename().u8string();
+            std::string filename = entry.path().filename().string();
             const uint64_t oldSize = this->paths.size();
-            lifuren::files::listFiles(this->paths, entry.path().u8string(), exts);
+            lifuren::files::listFiles(this->paths, entry.path().string(), exts);
             const uint64_t newSize = this->paths.size();
             for(uint64_t index = oldSize; index < newSize; ++index) {
                 this->labels.push_back(mapping.at(filename));
@@ -37,16 +37,16 @@ torch::optional<size_t> lifuren::datasets::FileDataset::size() const {
 
 torch::data::Example<> lifuren::datasets::FileDataset::get(size_t index) {
     const std::string& path   = this->paths.at(index);
-    torch::Tensor data_tensor = this->fileTransform(path);
+    torch::Tensor data = this->fileTransform(path);
     const int label = this->labels.at(index);
-    torch::Tensor label_tensor = torch::full({1}, label);
+    torch::Tensor target = torch::full({1}, label);
     return { 
-        data_tensor.clone(),
-        label_tensor.clone()
+        data,
+        target
     };
 }
 
-lifuren::datasets::TensorDataset::TensorDataset(torch::Tensor& features, torch::Tensor& labels) : features(features), labels(labels) {
+lifuren::datasets::TensorDataset::TensorDataset(torch::Tensor& features, const torch::Tensor& labels) : features(features), labels(labels) {
 }
 
 torch::optional<size_t> lifuren::datasets::TensorDataset::size() const {

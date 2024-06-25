@@ -43,11 +43,11 @@ extern void listFiles(std::vector<std::string>& vector, const std::string& path,
         printf("目录无效：%s", path.data());
         return;
     }
-    auto iterator = std::filesystem::directory_iterator(std::filesystem::u8path(path));
+    auto iterator = std::filesystem::directory_iterator(std::filesystem::path(path));
     for(const auto& entry : iterator) {
-        std::string filepath = entry.path().u8string();
+        std::string filepath = entry.path().string();
         if(entry.is_regular_file()) {
-            std::string filename = entry.path().filename().u8string();
+            std::string filename = entry.path().filename().string();
             if(predicate(filename)) {
                 vector.push_back(filepath);
             } else {

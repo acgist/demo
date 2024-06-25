@@ -6,7 +6,7 @@
 #include "torch/torch.h"
 #include "torch/script.h"
 
-static torch::Tensor model(torch::Tensor& x, torch::Tensor& w, torch::Tensor& b) {
+static torch::Tensor model(const torch::Tensor& x, const torch::Tensor& w, const torch::Tensor& b) {
     // std::cout << "x = " << x.sizes() << "\n";
     // std::cout << "w = " << w.sizes() << "\n";
     // std::cout << "b = " << b.sizes() << "\n";
@@ -14,7 +14,7 @@ static torch::Tensor model(torch::Tensor& x, torch::Tensor& w, torch::Tensor& b)
     // return torch::matmul(x, w) + b;
 }
 
-static torch::Tensor loss(torch::Tensor& p, torch::Tensor& y) {
+static torch::Tensor loss(const torch::Tensor& p, const torch::Tensor& y) {
     // std::cout << "p = " << p << "\n";
     // std::cout << "y = " << y << "\n";
     // std::cout << "p = " << p.sizes() << "\n";

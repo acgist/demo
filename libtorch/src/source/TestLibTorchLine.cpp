@@ -1,5 +1,6 @@
 #include <random>
 #include <vector>
+#include <format>
 #include <iostream>
 
 #include "../header/Datasets.hpp"
@@ -71,7 +72,8 @@ int main() {
                 // printf("per epoch : %d | loss : %f\n", epoch, tLoss.item<float>());
                 ttLoss += tLoss.item<float>();
             }
-            printf("all epoch : %d | loss : %f\n", epoch, ttLoss * 10 / 1000);
+            std::cout << std::format("all epoch : {} | loss : {:8.6f}\n", epoch, ttLoss * 10 / 1000);
+            // printf("all epoch : %d | loss : %f\n", epoch, ttLoss * 10 / 1000);
         }
         std::cout << "pred : " << linear->forward(torch::tensor({1, 1}, torch::kFloat32)) << "\n";
         auto params = linear->parameters();

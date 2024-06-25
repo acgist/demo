@@ -104,7 +104,7 @@ inline auto loadImageFileDataset(
     return loader;
 }
 
-using ImageFileDataset = std::result_of<decltype(&lifuren::datasets::loadImageFileDataset)(
+using ImageFileDataset = std::invoke_result<decltype(lifuren::datasets::loadImageFileDataset),
     const int,
     const int,
     const size_t,
@@ -112,7 +112,7 @@ using ImageFileDataset = std::result_of<decltype(&lifuren::datasets::loadImageFi
     const std::string&,
     const std::map<std::string, int>&,
     const std::function<void(const cv::Mat&)>
-)>::type;
+>::type;
 
 class TensorDataset : public torch::data::Dataset<TensorDataset> {
 
@@ -121,7 +121,7 @@ public:
     torch::Tensor labels;
 
 public:
-    TensorDataset(torch::Tensor& features, torch::Tensor& lables);
+    TensorDataset(torch::Tensor& features, const torch::Tensor& labels);
 
 public:
     torch::optional<size_t> size() const override;

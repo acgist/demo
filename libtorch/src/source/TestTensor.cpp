@@ -115,5 +115,7 @@ int main() {
     std::cout << torch::randn({10, 2}) + 100 << '\n';
     std::cout << torch::randint(0, 10, {10, 10}, torch::kFloat) << '\n';
     std::cout << torch::randint(0, 10, {10, 10}, torch::kFloat) / 10 << '\n';
+    std::cout << a.numel() << "\n";
+    std::cout << a.sizes() << "\n";
     return 0;
 }
