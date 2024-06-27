@@ -104,7 +104,9 @@ inline auto loadImageFileDataset(
     return loader;
 }
 
-using ImageFileDataset = std::invoke_result<decltype(lifuren::datasets::loadImageFileDataset),
+using ImageFileDataset = std::invoke_result<
+    // decltype(lifuren::datasets::loadImageFileDataset),
+    decltype(&lifuren::datasets::loadImageFileDataset),
     const int,
     const int,
     const size_t,

@@ -3,14 +3,15 @@
 
 #pragma warning(disable:1234)
 
-void fun() {
-    // static_assert(1 == 1);
-    // static_assert(1 == 0);
+void fun(int age) {
+    // [[notthrow]]
+    // static_assert(1 == 1, "message");
+    // static_assert(1 == 0, "message");
     assert(1 == 1);
     assert(1 == 0);
 }
 
 int main() {
-    fun();
+    fun(1);
     return 0;
 }

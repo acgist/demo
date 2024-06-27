@@ -34,6 +34,7 @@ elseif(CMAKE_HOST_WIN32)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c17 /std:c++20 /wd4804 /wd4819")
         # add_compile_options("/J")
         add_compile_options("/utf-8")
+        # add_compile_options("/Zc:char8_t")
         add_compile_options("/Zc:__cplusplus")
     else()
         message(WARNING "需要安装MSVC")
@@ -61,22 +62,25 @@ if(CMAKE_HOST_WIN32)
         CMAKE_PREFIX_PATH
         ${CMAKE_PREFIX_PATH}
         deps/opencv
+        deps/matplotplusplus
     )
 
     include_directories(
         deps/opencv/include
+        deps/matplotplusplus/include
     )
 
+    file(GLOB TORCH_DLLS  "deps/libtorch/lib/*.dll")
     file(GLOB OPENCV_DLLS "deps/opencv/x64/vc16/bin/opencv_videoio_ffmpeg480_64.dll"
                           "deps/opencv/x64/vc16/bin/opencv_videoio_msmf480_64d.dll"
                           "deps/opencv/x64/vc16/bin/opencv_world480d.dll"
     )
-    file(GLOB TORCH_DLLS "deps/libtorch/lib/*.dll")
 endif()
 
-find_package(Torch  REQUIRED)
-find_package(OpenCV REQUIRED)
-    
+find_package(Torch     REQUIRED)
+find_package(OpenCV    REQUIRED)
+find_package(Matplot++ REQUIRED)
+
 add_executable(${PROJECT_NAME} src/source/Main.cpp)
 
 add_executable(testCV src/source/TestCV.cpp)
@@ -98,6 +102,13 @@ add_test(NAME testLine COMMAND testLine)
 target_link_libraries(
     testLine PUBLIC
     ${TORCH_LIBRARIES}
+)
+
+add_executable(testMlatplot src/source/TestMatplot.cpp)
+add_test(NAME testMlatplot COMMAND testMlatplot)
+target_link_libraries(
+    testMlatplot PUBLIC
+    Matplot++::cimg Matplot++::matplot
 )
 
 add_executable(testTensor src/source/TestTensor.cpp)
