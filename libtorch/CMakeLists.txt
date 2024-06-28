@@ -108,7 +108,7 @@ add_executable(testMlatplot src/source/TestMatplot.cpp)
 add_test(NAME testMlatplot COMMAND testMlatplot)
 target_link_libraries(
     testMlatplot PUBLIC
-    Matplot++::cimg Matplot++::matplot
+    Matplot++::matplot
 )
 
 add_executable(testTensor src/source/TestTensor.cpp)
@@ -146,10 +146,27 @@ target_link_libraries(
     ${TORCH_LIBRARIES}
 )
 
+add_executable(testMultiLineX src/source/Files.cpp src/source/Datasets.cpp src/source/TestMultiLineX.cpp)
+add_test(NAME testMultiLineX COMMAND testMultiLineX)
+target_link_libraries(
+    testMultiLineX PUBLIC
+    Matplot++::matplot
+    ${TORCH_LIBRARIES}
+)
+
+add_executable(testLinear src/source/Files.cpp src/source/Datasets.cpp src/source/TestLinear.cpp)
+add_test(NAME testLinear COMMAND testLinear)
+target_link_libraries(
+    testLinear PUBLIC
+    Matplot++::matplot
+    ${TORCH_LIBRARIES}
+)
+
 add_executable(testLibTorchLine src/source/Files.cpp src/source/Datasets.cpp src/source/TestLibTorchLine.cpp)
 add_test(NAME testLibTorchLine COMMAND testLibTorchLine)
 target_link_libraries(
     testLibTorchLine PUBLIC
+    Matplot++::matplot
     ${TORCH_LIBRARIES}
 )
 

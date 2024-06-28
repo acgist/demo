@@ -10,6 +10,7 @@ static torch::Tensor model(const torch::Tensor& x, const torch::Tensor& w, const
     // std::cout << "x = " << x.sizes() << "\n";
     // std::cout << "w = " << w.sizes() << "\n";
     // std::cout << "b = " << b.sizes() << "\n";
+    // return x @ w + b;
     return torch::mm(x, w) + b;
     // return torch::matmul(x, w) + b;
 }
