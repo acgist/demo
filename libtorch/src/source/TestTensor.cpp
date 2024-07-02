@@ -3,6 +3,10 @@
 #include "torch/torch.h"
 #include "torch/script.h"
 
+#include "opencv2/highgui.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/imgcodecs.hpp"
+
 int main() {
     // long long ai[] { 1, 2, 3 };
     // auto a = torch::from_blob(ai, {3, 1}, torch::kLong);
@@ -104,18 +108,51 @@ int main() {
     // std::cout << torch::rand({4, 3, 2}) << "\n";
     // std::cout << torch::randint(1, 10, {2, 2}, torch::kFloat16) << "\n";
 
-    auto a = torch::randn({10, 2});
-    auto b = torch::randn({10, 2});
+    // auto a = torch::randn({10, 2});
+    // auto b = torch::randn({10, 2});
+    // std::cout << a << '\n';
+    // std::cout << b << '\n';
+    // std::cout << torch::cat({a, b}, 0) << '\n';
+    // std::cout << torch::cat({a, b}, 1) << '\n';
+    // auto c = torch::empty({10, 1}).fill_(1);
+    // std::cout << c << '\n';
+    // std::cout << torch::randn({10, 2}) + 100 << '\n';
+    // std::cout << torch::randint(0, 10, {10, 10}, torch::kFloat) << '\n';
+    // std::cout << torch::randint(0, 10, {10, 10}, torch::kFloat) / 10 << '\n';
+    // std::cout << a.numel() << "\n";
+    // std::cout << a.sizes() << "\n";
+
+    // std::cout << "1=" << torch::tensor({1.0F, 2.0F, 3.0F}, torch::kFloat32) << '\n';
+    // std::cout << "2=" << torch::tensor({1.0F, 2.0F, 3.0F}, torch::kFloat32).sizes() << '\n';
+    // std::cout << "3=" << torch::tensor({1.0F, 2.0F, 3.0F}, torch::kFloat32).unsqueeze(0) << '\n';
+    // std::cout << "4=" << torch::tensor({1.0F, 2.0F, 3.0F}, torch::kFloat32).unsqueeze(1) << '\n';
+
+    // auto a = torch::randn({3, 4});
+    // std::cout << a << '\n';
+    // auto mask = a < 0.5F;
+    // std::cout << mask << '\n';
+    // std::cout << (mask * a) << '\n';
+
+    // auto image = cv::imread("D:/tmp/bike.jpg");
+    // torch::Tensor a = torch::from_blob(image.data, { image.rows, image.cols, 3 }, torch::kByte);
+    // // torch::Tensor a = torch::from_blob(image.data, { image.rows, image.cols, 3 }, torch::kByte).permute({ 2, 0, 1 });
+    // std::cout << a.sizes() << '\n';
+
+    torch::TensorOptions options;
+    options = options.requires_grad(true);
+    auto a = torch::randn({4}, options);
+    auto b = a * 2;
+    auto d = b.mean();
+    // auto c = b * b * 4;
+    // auto d = c.mean();
     std::cout << a << '\n';
     std::cout << b << '\n';
-    std::cout << torch::cat({a, b}, 0) << '\n';
-    std::cout << torch::cat({a, b}, 1) << '\n';
-    auto c = torch::empty({10, 1}).fill_(1);
-    std::cout << c << '\n';
-    std::cout << torch::randn({10, 2}) + 100 << '\n';
-    std::cout << torch::randint(0, 10, {10, 10}, torch::kFloat) << '\n';
-    std::cout << torch::randint(0, 10, {10, 10}, torch::kFloat) / 10 << '\n';
-    std::cout << a.numel() << "\n";
-    std::cout << a.sizes() << "\n";
+    // std::cout << c << '\n';
+    std::cout << d << '\n';
+    d.backward();
+    std::cout << "a.grad = " << a.grad() << '\n';
+    // std::cout << "b.grad = " << b.grad() << '\n';
+    // std::cout << "c.grad = " << c.grad() << '\n';
+    // std::cout << "d.grad = " << d.grad() << '\n';
     return 0;
 }

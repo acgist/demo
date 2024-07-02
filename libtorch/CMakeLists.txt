@@ -115,6 +115,7 @@ add_executable(testTensor src/source/TestTensor.cpp)
 add_test(NAME testTensor COMMAND testTensor)
 target_link_libraries(
     testTensor PUBLIC
+    ${OpenCV_LIBS}
     ${TORCH_LIBRARIES}
 )
 
