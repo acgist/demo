@@ -1,4 +1,4 @@
-package com.acgist.report.word.module;
+package com.xyh.pemc.southbound.report.word.module;
 
 import java.io.IOException;
 import java.util.Map;
@@ -23,9 +23,11 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTBarChart;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTBarSer;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTDLbls;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTDPt;
+import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STHexColorRGB;
 
-import com.acgist.data.report.entity.ReportModelInstance;
-import com.acgist.report.word.WordModule;
+import com.xyh.pemc.southbound.data.report.entity.ReportModelInstance;
+import com.xyh.pemc.southbound.report.word.WordModule;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +53,9 @@ public class BarWordModule extends WordModule {
             // 创建图表
             final XWPFRun run = this.content.createRun();
             final XWPFChart chart = this.document.createChart(run, XDDFChart.DEFAULT_WIDTH * 11, XDDFChart.DEFAULT_HEIGHT * 6);
-            chart.setTitleText(this.instance.getModelName());
+            if(this.title != null) {
+                chart.setTitleText(this.title.getText());
+            }
             chart.setTitleOverlay(false);
             // 图例
             final XDDFChartLegend legend = chart.getOrAddLegend();
@@ -66,6 +70,8 @@ public class BarWordModule extends WordModule {
             barChart.addSeries(category, values);
             barChart.setVaryColors(true);
             barChart.setBarDirection(BarDirection.COL);
+            // 画图
+            chart.plot(barChart);
             // 样式
             final CTBarChart[] barCharts = chart.getCTChart().getPlotArea().getBarChartArray();
             for (CTBarChart ctBarChart : barCharts) {
@@ -78,9 +84,16 @@ public class BarWordModule extends WordModule {
                     ctdLbls.addNewShowPercent().setVal(false);
                     ctdLbls.addNewShowLegendKey().setVal(false);
                     ctdLbls.addNewShowLeaderLines().setVal(false);
+                    // 颜色
+                    for (int index = 0; index < this.data.size(); index++) {
+                        final CTDPt ctdPt = ctPieSer.addNewDPt();
+                        ctdPt.addNewIdx().setVal(index);
+                        final STHexColorRGB color = STHexColorRGB.Factory.newInstance();
+                        color.setStringValue(COLORS[index % COLORS.length]);
+                        ctdPt.addNewSpPr().addNewSolidFill().addNewSrgbClr().xsetVal(color);
+                    }
                 }
             }
-            chart.plot(barChart);
         } catch (InvalidFormatException | IOException e) {
             log.error("创建柱状图异常", e);
         }

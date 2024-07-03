@@ -1,4 +1,4 @@
-package com.acgist.report.word.module;
+package com.xyh.pemc.southbound.report.word.module;
 
 import java.io.IOException;
 import java.util.Map;
@@ -20,11 +20,13 @@ import org.apache.poi.xwpf.usermodel.XWPFChart;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTDLbls;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTDPt;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTPieChart;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTPieSer;
+import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STHexColorRGB;
 
-import com.acgist.data.report.entity.ReportModelInstance;
-import com.acgist.report.word.WordModule;
+import com.xyh.pemc.southbound.data.report.entity.ReportModelInstance;
+import com.xyh.pemc.southbound.report.word.WordModule;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +52,9 @@ public class PieWordModule extends WordModule {
             // 创建图表
             final XWPFRun run = this.content.createRun();
             final XWPFChart chart = this.document.createChart(run, XDDFChart.DEFAULT_WIDTH * 11, XDDFChart.DEFAULT_HEIGHT * 8);
-            chart.setTitleText(this.instance.getModelName());
+            if(this.title != null) {
+                chart.setTitleText(this.title.getText());
+            }
             chart.setTitleOverlay(false);
             // 图例
             final XDDFChartLegend legend = chart.getOrAddLegend();
@@ -64,6 +68,8 @@ public class PieWordModule extends WordModule {
             final XDDFNumericalDataSource<Integer> values = XDDFDataSourcesFactory.fromArray(this.data.values().toArray(Integer[]::new));
             pieChart.addSeries(category, values);
             pieChart.setVaryColors(true);
+            // 画图
+            chart.plot(pieChart);
             // 样式
             final CTPieChart[] ctPieCharts = chart.getCTChart().getPlotArea().getPieChartArray();
             for (CTPieChart ctPieChart : ctPieCharts) {
@@ -76,9 +82,16 @@ public class PieWordModule extends WordModule {
                     ctdLbls.addNewShowPercent().setVal(true);
                     ctdLbls.addNewShowLegendKey().setVal(false);
                     ctdLbls.addNewShowLeaderLines().setVal(false);
+                    // 颜色
+                    for (int index = 0; index < this.data.size(); index++) {
+                        final CTDPt ctdPt = ctPieSer.addNewDPt();
+                        ctdPt.addNewIdx().setVal(index);
+                        final STHexColorRGB color = STHexColorRGB.Factory.newInstance();
+                        color.setStringValue(COLORS[index % COLORS.length]);
+                        ctdPt.addNewSpPr().addNewSolidFill().addNewSrgbClr().xsetVal(color);
+                    }
                 }
             }
-            chart.plot(pieChart);
         } catch (InvalidFormatException | IOException e) {
             log.error("创建柱状图异常", e);
         }
