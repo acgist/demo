@@ -104,6 +104,27 @@ target_link_libraries(
     ${TORCH_LIBRARIES}
 )
 
+add_executable(testLayer src/source/TestLayer.cpp)
+add_test(NAME testLayer COMMAND testLayer)
+target_link_libraries(
+    testLayer PUBLIC
+    ${TORCH_LIBRARIES}
+)
+
+add_executable(testHouse src/source/Files.cpp src/source/Datasets.cpp src/source/TestHouse.cpp)
+add_test(NAME testHouse COMMAND testHouse)
+target_link_libraries(
+    testHouse PUBLIC
+    ${TORCH_LIBRARIES}
+)
+
+add_executable(testDataset src/source/Files.cpp src/source/Datasets.cpp src/source/TestDataset.cpp)
+add_test(NAME testDataset COMMAND testDataset)
+target_link_libraries(
+    testDataset PUBLIC
+    ${TORCH_LIBRARIES}
+)
+
 add_executable(testMlatplot src/source/TestMatplot.cpp)
 add_test(NAME testMlatplot COMMAND testMlatplot)
 target_link_libraries(

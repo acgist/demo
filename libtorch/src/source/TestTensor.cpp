@@ -138,21 +138,55 @@ int main() {
     // // torch::Tensor a = torch::from_blob(image.data, { image.rows, image.cols, 3 }, torch::kByte).permute({ 2, 0, 1 });
     // std::cout << a.sizes() << '\n';
 
-    torch::TensorOptions options;
-    options = options.requires_grad(true);
-    auto a = torch::randn({4}, options);
-    auto b = a * 2;
-    auto d = b.mean();
-    // auto c = b * b * 4;
-    // auto d = c.mean();
-    std::cout << a << '\n';
-    std::cout << b << '\n';
-    // std::cout << c << '\n';
-    std::cout << d << '\n';
-    d.backward();
-    std::cout << "a.grad = " << a.grad() << '\n';
-    // std::cout << "b.grad = " << b.grad() << '\n';
-    // std::cout << "c.grad = " << c.grad() << '\n';
-    // std::cout << "d.grad = " << d.grad() << '\n';
+    // torch::TensorOptions options;
+    // options = options.requires_grad(true);
+    // auto a = torch::randn({4}, options);
+    // auto b = a * 2;
+    // auto d = b.mean();
+    // // auto c = b * b * 4;
+    // // auto d = c.mean();
+    // std::cout << a << '\n';
+    // std::cout << b << '\n';
+    // // std::cout << c << '\n';
+    // std::cout << d << '\n';
+    // d.backward();
+    // std::cout << "a.grad = " << a.grad() << '\n';
+    // // std::cout << "b.grad = " << b.grad() << '\n';
+    // // std::cout << "c.grad = " << c.grad() << '\n';
+    // // std::cout << "d.grad = " << d.grad() << '\n';
+
+    // torch::Tensor input = torch::tensor({
+    //     {1, 2, 3, 4},
+    //     {2, 2, 4, 4},
+    //     {6, 2, 1, 4}
+    // }, torch::kFloat);
+    // // torch::Tensor input = torch::ones({2, 10});
+    // // torch::Tensor input = torch::randn({2, 10});
+    // std::cout << input << '\n';
+    // // torch::nn::functional::normalize();
+    // // float epsilon = 1e-5;
+    // // torch::nn::BatchNormFuncOptions().momentum(0.1).eps(epsilon);
+    // // torch::nn::functional::batch_norm();
+    // // torch::nn::functional::normalize(input, torch::nn::BatchNormOptions{}.momentum(0.1).eps(1e-8));
+    // // auto output = torch::nn::functional::normalize(input, torch::nn::functional::NormalizeFuncOptions{});
+    // auto output = torch::nn::functional::normalize(input, torch::nn::functional::NormalizeFuncOptions{}.dim(0).eps(1e-8));
+    // // std::cout << input.narrow_copy(0, 0, 1) << '\n';
+    // // std::cout << input.narrow_copy(0, 0, 2) << '\n';
+    // // std::cout << input.narrow_copy(0, 1, 1) << '\n';
+    // // std::cout << input.narrow_copy(0, 1, 2) << '\n';
+    // // std::cout << input.narrow_copy(1, 0, 1) << '\n';
+    // // std::cout << input.narrow_copy(1, 0, 2) << '\n';
+    // // std::cout << input.narrow_copy(1, 1, 1) << '\n';
+    // // std::cout << input.narrow_copy(1, 1, 2) << '\n';
+    // std::cout << input[0] << '\n';
+    // std::cout << output << '\n';
+    // std::cout << output.sizes() << '\n';
+
+    torch::Tensor tensor = torch::randn({4, 3});
+    std::cout << tensor << '\n';
+    std::cout << tensor.norm() << '\n';
+    torch::nn::init::normal_(tensor, 0, 0.1);
+    std::cout << tensor << '\n';
+    std::cout << tensor.norm() << '\n';
     return 0;
 }

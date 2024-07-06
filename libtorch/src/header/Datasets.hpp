@@ -131,6 +131,35 @@ public:
 
 };
 
+/**
+ * @param path CSV路径
+ * 
+ * @return 数据
+ */
+std::vector<std::vector<std::string>> loadCSV(const std::string& path);
+
+/**
+ * @param data            CSV数据
+ * @param rows            行数
+ * @param cols            列数
+ * @param ignoreUnknown   是否忽略未知离散值
+ * @param standardization 是否标准化
+ * @param rowStartPos     行开始偏移
+ * @param colStartPos     列开始偏移
+ * @param colEndPos       列结束偏移
+ * 
+ * @return 数据
+ */
+std::vector<float> mark(
+    std::vector<std::vector<std::string>>& data,
+    int& rows, int& cols,
+    const bool ignoreUnknown   = false,
+    const bool standardization = true,
+    const int rowStartPos = 1,
+    const int colStartPos = 1,
+    const int colEndPos   = 1
+);
+
 }
 }
 
