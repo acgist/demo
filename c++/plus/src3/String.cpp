@@ -13,5 +13,9 @@ int main() {
     std::vector d {"1", "2", "3"};
     std::vector e {"1"s, "2"s, "3"s};
     std::string f = "1234"s;
+    using namespace std::string_view_literals;
+    auto g = "1234"sv;
+    std::cout << R"(1234
+    1234)" << '\n';
     return 0;
 }
