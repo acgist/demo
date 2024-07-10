@@ -182,11 +182,44 @@ int main() {
     // std::cout << output << '\n';
     // std::cout << output.sizes() << '\n';
 
-    torch::Tensor tensor = torch::randn({4, 3});
-    std::cout << tensor << '\n';
-    std::cout << tensor.norm() << '\n';
-    torch::nn::init::normal_(tensor, 0, 0.1);
-    std::cout << tensor << '\n';
-    std::cout << tensor.norm() << '\n';
+    // torch::Tensor tensor = torch::randn({4, 3});
+    // std::cout << tensor << '\n';
+    // std::cout << tensor.norm() << '\n';
+    // torch::nn::init::normal_(tensor, 0, 0.1);
+    // std::cout << tensor << '\n';
+    // std::cout << tensor.norm() << '\n';
+    // auto b = torch::randn({3, 4});
+    // std::cout << b << '\n';
+    // torch::nn::init::constant_(b, 0);
+    // std::cout << b << '\n';
+    // torch::nn::init::uniform_(b, -10.0F, 10.0F);
+    // std::cout << b << '\n';
+    // torch::nn::init::normal_(b, 1.0F, 5.0F);
+    // std::cout << b << '\n';
+
+    // auto a = torch::randn({3, 4});
+    // std::cout << a << '\n';
+    // std::cout << (a - a.mean()) << '\n';
+    // std::cout << std::fixed << std::setprecision(6) << (a - a.mean()).sum().item<float>() << '\n';
+    // std::cout << std::fixed << std::setprecision(6) << (a - a.mean()).mean().item<float>() << '\n';
+    // // const float ret = (a - a.mean()).mean().item<float>();
+    // // std::cout << std::fixed << std::setprecision(6) << ret << '\n';
+
+    // torch::nn::ParameterDict
+    // torch::nn::ParameterList
+    // torch::nn::ParameterList list;
+    // list->append()
+    // torch::nn::ParameterDict dict;
+    // dict->insert()
+
+    auto a = torch::randn({3, 4});
+    // auto a = torch::tensor({3, 4});
+    torch::save(a, "D:/tmp/tensor.pt");
+    torch::Tensor b;
+    torch::load(b, "D:/tmp/tensor.pt");
+    std::cout << a << '\n';
+    std::cout << b << '\n';
+    std::cout << (a == b) << "\n";
+    // torch::arange(25).reshape({5, 5});
     return 0;
 }

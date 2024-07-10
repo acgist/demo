@@ -104,6 +104,20 @@ target_link_libraries(
     ${TORCH_LIBRARIES}
 )
 
+add_executable(testConv2d src/source/TestConv2d.cpp)
+add_test(NAME testConv2d COMMAND testConv2d)
+target_link_libraries(
+    testConv2d PUBLIC
+    ${TORCH_LIBRARIES}
+)
+
+add_executable(testGPU src/source/TestGPU.cpp)
+add_test(NAME testGPU COMMAND testGPU)
+target_link_libraries(
+    testGPU PUBLIC
+    ${TORCH_LIBRARIES}
+)
+
 add_executable(testLayer src/source/TestLayer.cpp)
 add_test(NAME testLayer COMMAND testLayer)
 target_link_libraries(
@@ -204,6 +218,41 @@ add_test(NAME testGenderHandler COMMAND testGenderHandler)
 target_link_libraries(
   testGenderHandler PUBLIC
     ${OpenCV_LIBS}
+    ${TORCH_LIBRARIES}
+)
+
+add_executable(testFace src/opencv/TestFace.cpp)
+add_test(NAME testFace COMMAND testFace)
+target_link_libraries(
+    testFace PUBLIC
+    ${OpenCV_LIBS}
+)
+
+add_executable(testColor src/opencv/TestColor.cpp)
+add_test(NAME testColor COMMAND testColor)
+target_link_libraries(
+    testColor PUBLIC
+    ${OpenCV_LIBS}
+)
+
+add_executable(testResize src/opencv/TestResize.cpp)
+add_test(NAME testResize COMMAND testResize)
+target_link_libraries(
+    testResize PUBLIC
+    ${OpenCV_LIBS}
+)
+
+add_executable(testModel src/libtorch/TestModel.cpp)
+add_test(NAME testModel COMMAND testModel)
+target_link_libraries(
+    testModel PUBLIC
+    ${TORCH_LIBRARIES}
+)
+
+add_executable(testLibTorchTensor src/libtorch/TestTensor.cpp)
+add_test(NAME testLibTorchTensor COMMAND testLibTorchTensor)
+target_link_libraries(
+    testLibTorchTensor PUBLIC
     ${TORCH_LIBRARIES}
 )
 

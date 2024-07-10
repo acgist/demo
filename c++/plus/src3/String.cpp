@@ -17,5 +17,11 @@ int main() {
     auto g = "1234"sv;
     std::cout << R"(1234
     1234)" << '\n';
+    std::string size1 = "1234";
+    std::string size2 = "1234测试";
+    std::cout << size1.size() << '\n';
+    std::cout << size1.length() << '\n';
+    std::cout << size2.size() << '\n';
+    std::cout << size2.length() << '\n';
     return 0;
 }

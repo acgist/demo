@@ -120,6 +120,7 @@ std::vector<std::vector<std::string>> lifuren::datasets::loadCSV(const std::stri
     std::ifstream stream;
     stream.open(path);
     if(!stream.is_open()) {
+        stream.close();
         return {};
     }
     std::string line;
