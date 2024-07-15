@@ -8,10 +8,6 @@ if(NOT CMAKE_BUILD_TYPE)
     # SET(CMAKE_BUILD_TYPE Release)
 endif()
 
-if(CMAKE_BUILD_TYPE MATCHES "Debug")
-    add_definitions(-D__DEBUG__=DEBUG)
-endif()
-
 # https://cmake.org/cmake/help/latest/prop_tgt/C_STANDARD.html
 # https://cmake.org/cmake/help/latest/prop_tgt/CXX_STANDARD.html
 set(CMAKE_C_STANDARD   17)
@@ -122,6 +118,13 @@ add_executable(testLayer src/source/TestLayer.cpp)
 add_test(NAME testLayer COMMAND testLayer)
 target_link_libraries(
     testLayer PUBLIC
+    ${TORCH_LIBRARIES}
+)
+
+add_executable(testMemory src/source/TestMemory.cpp)
+add_test(NAME testMemory COMMAND testMemory)
+target_link_libraries(
+    testMemory PUBLIC
     ${TORCH_LIBRARIES}
 )
 
@@ -253,6 +256,7 @@ add_executable(testLibTorchTensor src/libtorch/TestTensor.cpp)
 add_test(NAME testLibTorchTensor COMMAND testLibTorchTensor)
 target_link_libraries(
     testLibTorchTensor PUBLIC
+    ${OpenCV_LIBS}
     ${TORCH_LIBRARIES}
 )
 

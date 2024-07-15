@@ -207,6 +207,7 @@ std::vector<float> lifuren::datasets::mark(
                 const int size   = colMapping.size();
                 if(size > 1) {
                     // 离散值标准化
+                    // one-hot
                     std::for_each(table.begin(), table.end(), [&colIndex, &size](auto& tableRow) {
                         auto  index  = static_cast<int>(tableRow[colIndex]);
                         auto* array  = new float[size] { 0.0F };
