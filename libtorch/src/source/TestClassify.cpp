@@ -121,16 +121,19 @@ int main() {
     torch::Tensor testA = torch::randint(typeA - 20, typeA, {600, 2}) / typeA;
     torch::Tensor testB = torch::randint(typeC - 20, typeC, {600, 2}) / typeB;
     torch::Tensor testC = torch::randint(typeC - 20, typeC, {600, 2}) / typeC;
+    auto trainTensor = torch::cat({featuresA, featuresB, featuresC}, 0);
+    auto testTensor  = torch::cat({testA, testB, testC}, 0);
+    auto labelTensor = torch::cat({labelA, labelB, labelC}, 0);
     auto trainData = lifuren::datasets::TensorDataset(
-        torch::cat({featuresA, featuresB, featuresC}, 0),
-        torch::cat({labelA, labelB, labelC}, 0)
+        trainTensor,
+        labelTensor
     ).map(torch::data::transforms::Stack<>());
     auto testData = lifuren::datasets::TensorDataset(
-        torch::cat({testA, testB, testC}, 0),
-        torch::cat({labelA, labelB, labelC}, 0)
+        testTensor,
+        labelTensor
     ).map(torch::data::transforms::Stack<>());
-    std::cout << "train data size : " << torch::cat({featuresA, featuresB, featuresC}, 0).sizes() << '\n';
-    std::cout << "test data size : " << torch::cat({testA, testB, testC}, 0).sizes() << '\n';
+    std::cout << "train data size : " << trainTensor.sizes() << '\n';
+    std::cout << "test data size : "  << testTensor.sizes() << '\n';
     Classify classify;
     try {
         train(classify, trainData, lr, batch_size, epoch_count);
