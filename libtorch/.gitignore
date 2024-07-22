@@ -5,3 +5,5 @@ deps/matplotplusplus/
 build/
 
 a.exe
+
+.vscode

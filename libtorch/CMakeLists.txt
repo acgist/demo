@@ -67,9 +67,9 @@ if(CMAKE_HOST_WIN32)
     )
 
     file(GLOB TORCH_DLLS  "deps/libtorch/lib/*.dll")
-    file(GLOB OPENCV_DLLS "deps/opencv/x64/vc16/bin/opencv_videoio_ffmpeg480_64.dll"
-                          "deps/opencv/x64/vc16/bin/opencv_videoio_msmf480_64d.dll"
-                          "deps/opencv/x64/vc16/bin/opencv_world480d.dll"
+    file(GLOB OPENCV_DLLS "deps/opencv/x64/vc16/bin/opencv_videoio_ffmpeg4100_64.dll"
+                          "deps/opencv/x64/vc16/bin/opencv_videoio_msmf4100_64d.dll"
+                          "deps/opencv/x64/vc16/bin/opencv_world4100d.dll"
     )
 endif()
 
@@ -259,6 +259,8 @@ target_link_libraries(
     ${OpenCV_LIBS}
     ${TORCH_LIBRARIES}
 )
+
+add_subdirectory(src/opencv)
 
 add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
