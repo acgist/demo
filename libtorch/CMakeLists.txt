@@ -128,10 +128,11 @@ target_link_libraries(
     ${TORCH_LIBRARIES}
 )
 
-add_executable(testHouse src/source/Files.cpp src/source/Datasets.cpp src/source/TestHouse.cpp)
+add_executable(testHouse src/matplot/Matplot.cpp src/source/Files.cpp src/source/Datasets.cpp src/source/TestHouse.cpp)
 add_test(NAME testHouse COMMAND testHouse)
 target_link_libraries(
     testHouse PUBLIC
+    Matplot++::matplot
     ${TORCH_LIBRARIES}
 )
 

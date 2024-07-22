@@ -216,9 +216,9 @@ void GenderHandler::trian(
     for (auto& batch : *dataset) {
         auto data   = batch.data.to(this->device).to(torch::kF32).div(255.0);
         auto target = batch.target.to(this->device).squeeze().to(torch::kInt64);
-        optimizer.zero_grad();
         torch::Tensor prediction = this->model->forward(data);
         torch::Tensor loss = torch::nll_loss(prediction, target);
+        optimizer.zero_grad();
         loss.backward();
         optimizer.step();
         auto acc = prediction.argmax(1).eq(target).sum();

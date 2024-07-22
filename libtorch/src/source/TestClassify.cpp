@@ -61,10 +61,10 @@ void train(Classify& classify, DatasetType& dataset, const float& lr, const size
         float  ttLoss = 0.0F;
         for(auto& data : *loader) {
             ++index;
-            optimizer.zero_grad();
             auto output = classify->forward(data.data);
             auto tAcc   = output.argmax(1).eq(data.target).sum();
             auto tLoss  = loss(output, data.target);
+            optimizer.zero_grad();
             tLoss.backward();
             optimizer.step();
             ttAcc  += tAcc.template item<int>();

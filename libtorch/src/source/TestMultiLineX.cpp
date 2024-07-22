@@ -85,9 +85,9 @@ int main() {
     for(size_t epoch = 0; epoch < epoch_count; ++epoch) {
         float ttLoss = 0.0F;
         for(auto& data : *loader) {
-            optimizer.zero_grad();
             auto output = line->forward(data.data);
             auto tLoss  = loss(output, data.target);
+            optimizer.zero_grad();
             tLoss.backward();
             optimizer.step();
             ttLoss += tLoss.item<float>();

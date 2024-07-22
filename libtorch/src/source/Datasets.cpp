@@ -12,13 +12,15 @@
  */
 struct StandardizationInfo {
 
-    float min   = 0.0F; // 最小值
-    float max   = 0.0F; // 最大值
-    float std   = 0.0F; // 标准差
-    float mean  = 0.0F; // 均值
-    float range = 0.0F; // 极差
-    double var  = 0.0; // 方差
-    double sum  = 0.0;  // 和
+    float  min   = 0.0F; // 最小值
+    float  max   = 0.0F; // 最大值
+    float  std   = 0.0F; // 标准差
+    float  mean  = 0.0F; // 均值
+    float  range = 0.0F; // 极差
+    double var   = 0.0;  // 方差
+    double sum   = 0.0;  // 和
+    size_t size  = 0;    // 总量
+    size_t noneZeroSize = 0; // 非零总量
 
 };
 
@@ -38,13 +40,18 @@ static void standardizationInfo(StandardizationInfo& info, std::vector<float>& v
     // 和
     // info.sum = std::reduce(vector.begin(), vector.end());
     info.sum = std::accumulate(vector.begin(), vector.end(), 0.0);
+    // 总数
+    info.size = vector.size();
+    info.noneZeroSize = std::count_if(vector.begin(), vector.end(), [](auto& v) {
+        return v != 0.0F;
+    });
     // 均值
-    info.mean = info.sum / vector.size();
+    info.mean = info.sum / info.noneZeroSize;
     // 方差
     std::for_each(vector.begin(), vector.end(), [&info](auto& value) {
         info.var += std::pow(value - info.mean, 2);
     });
-    info.var /= vector.size();
+    info.var /= info.noneZeroSize;
     // 标准差
     info.std = std::sqrt(info.var);
 }
@@ -238,6 +245,9 @@ std::vector<float> lifuren::datasets::mark(
             // 标准化
             // 1. (x - mean(x)) / std(x)
             std::for_each(table.begin(), table.end(), [&info, &colIndex](auto& tableRow) {
+                if(tableRow[colIndex] == 0.0F) {
+                    return;
+                }
                 tableRow[colIndex] = (tableRow[colIndex] - info.min) / info.range;
                 // tableRow[colIndex] = (tableRow[colIndex] - info.mean) / info.range;
                 // tableRow[colIndex] = (tableRow[colIndex] - info.mean) / info.std;

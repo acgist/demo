@@ -60,7 +60,6 @@ int main() {
         for(int epoch = 0; epoch < epoch_count; ++epoch) {
             float ttLoss = 0.0F;
             for(auto& x : *loader) {
-                optimizer.zero_grad();
                 // std::cout << "data   = " << x.data   << "\n";
                 // std::cout << "target = " << x.target << "\n";
                 // std::cout << "data   = " << x.data.sizes()   << "\n";
@@ -70,6 +69,7 @@ int main() {
                 // auto tLoss = torch::mse_loss(output, x.target);
                 // auto tLoss = loss->forward(output, x.target);
                 // 梯度清零
+                optimizer.zero_grad();
                 tLoss.backward();
                 optimizer.step();
                 // printf("per epoch : %d | loss : %f\n", epoch, tLoss.item<float>());

@@ -34,10 +34,13 @@ int main() {
     // auto y = matplot::transform(x, [](auto v) { return v * 5; });
     // matplot::plot(x, y);
     // ----
-    auto z = matplot::linspace(0., 4. * matplot::pi, 250);
-    auto x = matplot::transform(z, [](double z) { return 2 * cos(z) + matplot::rand(0, 1); });
-    auto y = matplot::transform(z, [](double z) { return 2 * sin(z) + matplot::rand(0, 1); });
-    matplot::scatter3(x, y, z);
+    // auto z = matplot::linspace(0., 4. * matplot::pi, 250);
+    // auto x = matplot::transform(z, [](double z) { return 2 * cos(z) + matplot::rand(0, 1); });
+    // auto y = matplot::transform(z, [](double z) { return 2 * sin(z) + matplot::rand(0, 1); });
+    // matplot::scatter3(x, y, z);
+    // ----
+    std::vector<double> vector { 1.0, 2.0, 1.0, 4.0 };
+    matplot::hist(vector);
     matplot::show(plot);
     return 0;
 }
