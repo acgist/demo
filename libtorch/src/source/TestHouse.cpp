@@ -22,10 +22,10 @@ ModelImpl::ModelImpl() {
     torch::nn::Sequential net{};
     // 单层
     auto linear = torch::nn::Linear{304, 1};
-    // torch::nn::init::normal_(linear->weight, 0, 0.01);
-    // if(linear->options.bias()) {
-    //     torch::nn::init::normal_(linear->bias, 0, 0.01);
-    // }
+    torch::nn::init::normal_(linear->weight, 0, 0.01);
+    if(linear->options.bias()) {
+        torch::nn::init::normal_(linear->bias, 0, 0.01);
+    }
     net->push_back(linear);
     // 多层
     // net->push_back(torch::nn::Linear{304, 128});
@@ -75,21 +75,23 @@ int main() {
     std::cout << labels.sizes() << '\n';
     // 训练
     // float lr = 0.1F;
-    float lr = 0.01F;
+    // float lr = 0.01F;
     // float lr = 0.001F;
     // float lr = 0.002F;
-    // float lr = 0.0001F;
+    float lr = 0.0001F;
+    // float lr = 0.00001F;
     size_t batch_size = 100;
     // size_t epoch_count = 16;
     // size_t epoch_count = 64;
     // size_t epoch_count = 128;
-    size_t epoch_count = 256;
+    // size_t epoch_count = 256;
     // size_t epoch_count = 512;
+    size_t epoch_count = 1024 * 4;
     Model model{};
     // torch::nn::init::normal_(model->parameters(), 0, 0.01);
     torch::optim::SGDOptions options{ lr };
-    // options.momentum(0.9);
-    // options.weight_decay(0.001);
+    options.momentum(0.9);
+    options.weight_decay(0.001);
     torch::optim::SGD optimizer{model->parameters(), options};
     // torch::optim::Adam optimizer{model->parameters(), lr};
     // torch::nn::L1Loss loss{};
