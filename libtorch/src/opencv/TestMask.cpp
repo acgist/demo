@@ -18,8 +18,9 @@ int main() {
     double z = cv::getTickCount();
     std::cout << ((z - a) / cv::getTickFrequency()) << '\n';
     // cv::Mat dst;
-    cv::filter2D(img, img, img.depth(), kernel);
-    cv::imshow("image", img);
+    cv::Mat dst;
+    cv::filter2D(img, dst, img.depth(), kernel);
+    cv::imshow("image", dst);
     cv::waitKey();
     return 0;
 }
