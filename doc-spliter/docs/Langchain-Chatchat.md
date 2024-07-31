@@ -1,4 +1,4 @@
-# Langchain-Chatchat
+# RAG
 
 https://github.com/QuivrHQ/quivr
 https://github.com/langgenius/dify
@@ -135,6 +135,8 @@ conda deactivate
 ## GraphRAG
 
 https://github.com/microsoft/graphrag
+https://github.com/severian42/GraphRAG-Local-UI
+https://github.com/TheAiSingularity/graphrag-local-ollama
 https://microsoft.github.io/graphrag/posts/config/overview/
 
 ```
@@ -154,7 +156,7 @@ embeddings:
   llm:
     api_key: ollama
     model: quentinz/bge-large-zh-v1.5:latest
-    api_base: http://localhost:11434/api
+    api_base: http://localhost:11434/v1
 ---
 python -m graphrag.index --root /data/GraphRAG
 conda deactivate
@@ -169,4 +171,16 @@ cd dify/docker
 cp .env.example .env
 sudo apt install docker docker.io docker-compose
 docker-compose up -d
+```
+
+## GraphRAG-Local-UI
+
+```
+mkdir -p /data/GraphRAG/ui
+git clone https://github.com/severian42/GraphRAG-Local-UI.git
+pip install -r requirements.txt
+python api.py --host 0.0.0.0 --port 8012 --reload
+python embedding_proxy.py --port 11435 --host http://localhost:11434
+gradio index_app.py
+gradio app.py
 ```
