@@ -1,5 +1,14 @@
 # Langchain-Chatchat
 
+https://github.com/QuivrHQ/quivr
+https://github.com/langgenius/dify
+https://github.com/microsoft/graphrag
+https://github.com/run-llama/llama_index
+
+https://segmentfault.com/a/1190000044689598
+https://developer.volcengine.com/articles/7384648720845504566
+https://soulteary.com/2024/07/28/build-llama-3-1-model-service-from-scratch-using-ollama-dify-and-docker.html
+
 ## 环境
 
 ```
@@ -121,4 +130,43 @@ chatchat init
 chatchat kb -r
 chatchat start -a
 conda deactivate
+```
+
+## GraphRAG
+
+https://github.com/microsoft/graphrag
+https://microsoft.github.io/graphrag/posts/config/overview/
+
+```
+mkdir -p /data/GraphRAG
+conda create --name GraphRAG python=3.11
+conda activate GraphRAG
+pip install graphrag
+python -m graphrag.index --init --root /data/GraphRAG
+vim settings.yml
+---
+llm:
+  api_key: ollama
+  model: glm4:latest
+  api_base: http://localhost:11434/v1
+embeddings:
+  async_mode: threaded
+  llm:
+    api_key: ollama
+    model: quentinz/bge-large-zh-v1.5:latest
+    api_base: http://localhost:11434/api
+---
+python -m graphrag.index --root /data/GraphRAG
+conda deactivate
+```
+
+## dify
+
+```
+mkdir -p /data/dify
+git clone https://github.com/langgenius/dify.git
+cd dify/docker
+cp .env.example .env
+sudo apt install docker docker.io docker-compose
+docker-compose up -d
 ```
