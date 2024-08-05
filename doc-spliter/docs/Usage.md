@@ -64,7 +64,6 @@ conda install xxxx
 
 ## 创建虚拟环境
 conda create --name 环境名称 python=3.11
-conda create --name 环境名称 python=3.11
 ## 激活某个环境
 conda activate 环境名称
 ## 退出当前环境
