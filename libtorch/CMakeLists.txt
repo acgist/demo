@@ -79,6 +79,20 @@ find_package(Matplot++ REQUIRED)
 
 add_executable(${PROJECT_NAME} src/source/Main.cpp)
 
+add_executable(testPoetry src/nlp/TestPoetry.cpp)
+add_test(NAME testPoetry COMMAND testPoetry)
+target_link_libraries(
+    testPoetry PUBLIC
+    ${TORCH_LIBRARIES}
+)
+
+add_executable(testEmbedding src/nlp/TestEmbedding.cpp)
+add_test(NAME testEmbedding COMMAND testEmbedding)
+target_link_libraries(
+    testEmbedding PUBLIC
+    ${TORCH_LIBRARIES}
+)
+
 add_executable(testCV src/source/TestCV.cpp)
 add_test(NAME testCV COMMAND testCV)
 target_link_libraries(
