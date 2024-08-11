@@ -12,6 +12,7 @@ void ex() {
 int main() {
     std::set_terminate([]() {
         std::cout << "t\n";
+        std::exit(-1);
     });
     try {
         ex();
