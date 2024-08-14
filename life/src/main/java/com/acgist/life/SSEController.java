@@ -29,7 +29,8 @@ public class SSEController {
                 } catch (InterruptedException e) {
                 }
                 try {
-                    sse.send(System.currentTimeMillis());
+                    sse.send("{\"name\":\"acgist\"}");
+//                  sse.send(SseEmitter.event().id("1").name("acgist").data("1234"));
                 } catch (Exception e) {
                 }
             }
