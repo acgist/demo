@@ -12,8 +12,9 @@ int main() {
     std::string result;
     char chars[16];
     // r w r+ w+ rt+ wt+ rb+ wb+
+    FILE* pipe = popen("ls", "r");
     // FILE* pipe = popen("dir", "r");
-    FILE* pipe = popen("ping www.acgist.com", "r");
+    // FILE* pipe = popen("ping www.acgist.com", "r");
     // FILE* pipe = popen("tasklist", "r");
     // FILE* pipe = popen("netstat -ano", "r");
     if(!pipe) {
@@ -26,8 +27,8 @@ int main() {
     }
     int code = pclose(pipe);
     std::cout << "========================================" << std::endl;
-    std::cout << code << '\n';
+    std::cout << "code = " << code << '\n';
     std::cout << "========================================" << std::endl;
-    std::cout << result << '\n';
+    std::cout << "result = " << result << '\n';
     return 0;
 }
