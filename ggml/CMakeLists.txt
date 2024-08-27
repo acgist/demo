@@ -46,11 +46,13 @@ if(CMAKE_HOST_WIN32)
     set(
         CMAKE_PREFIX_PATH
         ${CMAKE_PREFIX_PATH}
+        deps/ggml
         deps/opencv
         deps/matplotplusplus
     )
 
     include_directories(
+        deps/ggml/include
         deps/opencv/include
         deps/matplotplusplus/include
     )
@@ -71,4 +73,11 @@ add_executable(${PROJECT_NAME} src/source/Main.cpp)
 add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OPENCV_DLLS} $<TARGET_FILE_DIR:${PROJECT_NAME}>
+)
+
+add_executable(testLine src/source/TestLine.cpp)
+add_test(NAME testLine COMMAND testLine)
+target_link_libraries(
+    testLine PUBLIC
+    ggml
 )
