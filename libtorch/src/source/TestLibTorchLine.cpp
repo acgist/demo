@@ -1,3 +1,8 @@
+/**
+ * https://github.com/ggerganov/ggml/blob/master/examples/mnist/mnist-common.h
+ * https://github.com/ggerganov/ggml/blob/master/examples/mnist/mnist-common.cpp
+ * https://github.com/ggerganov/ggml/blob/master/examples/mnist/mnist-train.cpp
+ */
 #include <random>
 #include <vector>
 #include <format>
