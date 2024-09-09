@@ -12,16 +12,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.acgist.android.boot.ui.theme.AndroidbootTheme
+import org.springframework.boot.SpringApplication
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        Boot.boot();
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             AndroidbootTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Android",
+                        name = "Android Boot",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -42,6 +44,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     AndroidbootTheme {
-        Greeting("Android")
+        Greeting("Android Boot")
     }
 }
