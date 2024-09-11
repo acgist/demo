@@ -4,7 +4,7 @@
 
 int main() {
     std::vector<int> v{ 1, 2, 3, 4 };
-    auto c{
+    auto c {
         v |
         std::ranges::views::filter([](const auto& i) { return i % 2 == 0; }) |
         std::ranges::views::reverse |
