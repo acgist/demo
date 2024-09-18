@@ -7,5 +7,6 @@ int main() {
     bs.flip(0);
     std::cout << bs << '\n';
     std::cout << bs.to_ulong() << '\n';
+    std::cout << bs.count() << '\n';
     return 0;
 }
