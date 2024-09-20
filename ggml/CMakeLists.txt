@@ -78,9 +78,6 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OPENCV_DLLS} $<TARGET_FILE_DIR:${PROJECT_NAME}>
 )
 
-add_executable(testLine src/source/TestLine.cpp)
-add_test(NAME testLine COMMAND testLine)
-target_link_libraries(
-    testLine PUBLIC
-    ggml
-)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+add_subdirectory(src/test1)
