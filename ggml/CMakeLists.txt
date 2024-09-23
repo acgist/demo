@@ -71,6 +71,12 @@ add_subdirectory(deps/ggml)
 find_package(OpenCV    REQUIRED)
 find_package(Matplot++ REQUIRED)
 
+set_target_properties(
+    ggml
+    PROPERTIES
+    FOLDER "deps"
+)
+
 add_executable(${PROJECT_NAME} src/source/Main.cpp)
 
 add_custom_command(
