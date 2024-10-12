@@ -290,7 +290,20 @@ static void testGrad() {
     }
 }
 
+static void testCrossEntropyLoss() {
+    torch::Tensor a = torch::ones({20, 1});
+    std::cout << a.sizes();
+    std::cout << torch::cross_entropy_loss(a, a);
+    torch::Tensor b = torch::ones({1, 20});
+    std::cout << b.sizes();
+    std::cout << torch::cross_entropy_loss(b, b);
+    torch::Tensor c = torch::ones({20, 20});
+    std::cout << c.sizes();
+    std::cout << torch::cross_entropy_loss(c, c);
+}
+
 int main(const int argc, const char * const argv[]) {
-    lifuren::testTensor();
+    // lifuren::testTensor();
+    testCrossEntropyLoss();
     return 0;
 }
