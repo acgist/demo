@@ -260,6 +260,13 @@ target_link_libraries(
     ${OpenCV_LIBS}
 )
 
+add_executable(testLibtorchLoss src/libtorch/TestLoss.cpp)
+add_test(NAME testLibtorchLoss COMMAND testLibtorchLoss)
+target_link_libraries(
+    testLibtorchLoss PUBLIC
+    ${TORCH_LIBRARIES}
+)
+
 add_executable(testModel src/libtorch/TestModel.cpp)
 add_test(NAME testModel COMMAND testModel)
 target_link_libraries(
