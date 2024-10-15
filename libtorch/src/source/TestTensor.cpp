@@ -212,14 +212,21 @@ int main() {
     // torch::nn::ParameterDict dict;
     // dict->insert()
 
-    auto a = torch::randn({3, 4});
-    // auto a = torch::tensor({3, 4});
-    torch::save(a, "D:/tmp/tensor.pt");
-    torch::Tensor b;
-    torch::load(b, "D:/tmp/tensor.pt");
-    std::cout << a << '\n';
-    std::cout << b << '\n';
-    std::cout << (a == b) << "\n";
-    // torch::arange(25).reshape({5, 5});
+    // auto a = torch::randn({3, 4});
+    // // auto a = torch::tensor({3, 4});
+    // torch::save(a, "D:/tmp/tensor.pt");
+    // torch::Tensor b;
+    // torch::load(b, "D:/tmp/tensor.pt");
+    // std::cout << a << '\n';
+    // std::cout << b << '\n';
+    // std::cout << (a == b) << "\n";
+    // // torch::arange(25).reshape({5, 5});
+
+    auto a = torch::randn({2, 2});
+    std::cout << "* = " << (a * a);
+    std::cout <<  "mul = " << (a.mul(a));
+    std::cout <<  "mm = " << (a.mm(a));
+    std::cout <<  "matmul = " << (a.matmul(a));
+    std::cout <<  "dot = " << (a.dot(a));
     return 0;
 }
