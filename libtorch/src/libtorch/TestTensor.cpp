@@ -1,5 +1,7 @@
 #include "../header/LibTorch.hpp"
 
+#include <fstream>
+
 #include "torch/torch.h"
 #include "torch/script.h"
 
@@ -302,8 +304,44 @@ static void testCrossEntropyLoss() {
     std::cout << torch::cross_entropy_loss(c, c);
 }
 
+static void testGGMLDiff() {
+    const int size = 24;
+    // const int size = 120;
+    int array[size] { 0 };
+    std::for_each(array, array + size, [i = 0](auto& v) mutable {
+        v = i++;
+    });
+    // const torch::Tensor a = torch::from_blob(array, { 24 }, torch::kInt);
+    const torch::Tensor a = torch::from_blob(array, { 2, 3 }, torch::kInt);
+    // const torch::Tensor a = torch::from_blob(array, { 4, 6 }, torch::kInt);
+    // const torch::Tensor a = torch::from_blob(array, { 4, 2, 3 }, torch::kInt);
+    // const torch::Tensor a = torch::from_blob(array, { 2, 3, 4, 5 }, torch::kInt);
+    std::cout << a << "\n";
+    // std::cout << a.flatten() << '\n';
+    // std::cout << a.flatten(2);
+    // std::cout << a.reshape({4, 6});
+    // std::cout << a.permute({1, 0, 2, 3});
+    std::cout << a.permute({1, 0}) << '\n';
+    std::cout << a.permute({1, 0}).flatten() << '\n';
+    // std::cout << torch::permute(a, {1, 0, 2, 3});
+    // cv::Mat image = cv::imread("D:\\tmp\\girl.png");
+    // torch::Tensor tensor = torch::from_blob(image.data, { image.rows, image.cols, 3 }, torch::kByte);
+    // std::ofstream out;
+    // out.open("D:/tmp/tensor.data");
+    // out << tensor;
+    // out << "\n";
+    // out << tensor.sizes();
+    // out << "\n";
+    // out << tensor.permute({ 2, 0, 1 });
+    // out << "\n";
+    // out << tensor.permute({ 2, 0, 1 }).sizes();
+    // out << "\n";
+    // out.close();
+}
+
 int main(const int argc, const char * const argv[]) {
     // lifuren::testTensor();
-    testCrossEntropyLoss();
+    // testCrossEntropyLoss();
+    testGGMLDiff();
     return 0;
 }
