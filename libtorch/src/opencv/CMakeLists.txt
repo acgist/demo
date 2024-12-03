@@ -13,3 +13,11 @@ target_link_libraries(
     ${OpenCV_LIBS}
 )
 SET_TARGET_PROPERTIES(testImagePool PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+
+add_executable(testAudio TestAudio.cpp)
+add_test(NAME testAudio COMMAND testAudio)
+target_link_libraries(
+    testAudio PUBLIC
+    ${OpenCV_LIBS}
+)
+SET_TARGET_PROPERTIES(testAudio PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
