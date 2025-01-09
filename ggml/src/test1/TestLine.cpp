@@ -1,4 +1,5 @@
 #include "ggml.h"
+#include "ggml-opt.h"
 
 #include <iomanip>
 #include <iostream>
