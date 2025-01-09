@@ -223,10 +223,13 @@ int main() {
     // // torch::arange(25).reshape({5, 5});
 
     auto a = torch::randn({2, 2});
-    std::cout << "* = " << (a * a);
-    std::cout <<  "mul = " << (a.mul(a));
-    std::cout <<  "mm = " << (a.mm(a));
-    std::cout <<  "matmul = " << (a.matmul(a));
-    std::cout <<  "dot = " << (a.dot(a));
+    // std::cout << "* = " << (a * a);
+    // std::cout <<  "mul = " << (a.mul(a));
+    // std::cout <<  "mm = " << (a.mm(a));
+    // std::cout <<  "matmul = " << (a.matmul(a));
+    // std::cout <<  "dot = " << (a.dot(a));
+    std::cout << a << '\n';
+    std::cout << a.numel() << '\n';
+    std::cout << a.element_size() << '\n';
     return 0;
 }
