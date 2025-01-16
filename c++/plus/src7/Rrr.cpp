@@ -14,6 +14,7 @@ public:
         std::cout << "T(T&)\n";
     }
     T(T&& t) {
+        this->name.swap(t.name);
         std::cout << "T(T&&)\n";
     }
     T& operator= (const T& t) {
@@ -27,19 +28,26 @@ public:
 
 };
 
-// T getT() {
-//     return T{};
-// }
+class P {
 
-T getT() {
+public:
     T t;
-    return t;
-    // return std::move(t);
+
+};
+
+P getP() {
+    T t;
+    t.name = "name";
+    P p {
+        t
+        // std::move(t)
+    };
+    std::cout << "====" << t.name << '\n';
+    std::cout << "====" << p.t.name << '\n';
+    return p;
 }
 
 int main() {
-    // -fno-elide-constructors
-    T t = getT();
-    // T t = std::move(getT());
+    P p = getP();
     return 0;
 }
