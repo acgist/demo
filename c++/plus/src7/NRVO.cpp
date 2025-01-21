@@ -29,19 +29,23 @@ public:
 
 };
 
-// T getT() {
-//     return T{};
-// }
+bool get() {
+    return false;
+}
 
 T getT() {
-    T t;
-    return t;
-    // return std::move(t);
+    T t1;
+    T t2;
+    if(get()) {
+        return t1;
+    } else {
+        return t2;
+    }
+    // return get() ? t1 : t2;
+    // return get() ? std::move(t1) : std::move(t2);
 }
 
 int main() {
-    // -fno-elide-constructors
     T t = getT();
-    // T t = std::move(getT());
     return 0;
 }
