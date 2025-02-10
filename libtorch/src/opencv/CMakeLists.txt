@@ -1,3 +1,19 @@
+add_executable(testCVT TestCVT.cpp)
+add_test(NAME testCVT COMMAND testCVT)
+target_link_libraries(
+    testCVT PUBLIC
+    ${OpenCV_LIBS}
+)
+SET_TARGET_PROPERTIES(testCVT PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+
+add_executable(testOPT TestOPT.cpp)
+add_test(NAME testOPT COMMAND testOPT)
+target_link_libraries(
+    testOPT PUBLIC
+    ${OpenCV_LIBS}
+)
+SET_TARGET_PROPERTIES(testOPT PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+
 add_executable(testMask TestMask.cpp)
 add_test(NAME testMask COMMAND testMask)
 target_link_libraries(
