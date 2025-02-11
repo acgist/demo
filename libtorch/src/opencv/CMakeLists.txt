@@ -14,6 +14,30 @@ target_link_libraries(
 )
 SET_TARGET_PROPERTIES(testOPT PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 
+add_executable(testDraw TestDraw.cpp)
+add_test(NAME testDraw COMMAND testDraw)
+target_link_libraries(
+    testDraw PUBLIC
+    ${OpenCV_LIBS}
+)
+SET_TARGET_PROPERTIES(testDraw PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+
+add_executable(testHIST TestHIST.cpp)
+add_test(NAME testHIST COMMAND testHIST)
+target_link_libraries(
+    testHIST PUBLIC
+    ${OpenCV_LIBS}
+)
+SET_TARGET_PROPERTIES(testHIST PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+
+add_executable(testWarp TestWarp.cpp)
+add_test(NAME testWarp COMMAND testWarp)
+target_link_libraries(
+    testWarp PUBLIC
+    ${OpenCV_LIBS}
+)
+SET_TARGET_PROPERTIES(testWarp PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+
 add_executable(testMask TestMask.cpp)
 add_test(NAME testMask COMMAND testMask)
 target_link_libraries(
@@ -21,6 +45,14 @@ target_link_libraries(
     ${OpenCV_LIBS}
 )
 SET_TARGET_PROPERTIES(testMask PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+
+add_executable(testBackProject TestBackProject.cpp)
+add_test(NAME testBackProject COMMAND testBackProject)
+target_link_libraries(
+    testBackProject PUBLIC
+    ${OpenCV_LIBS}
+)
+SET_TARGET_PROPERTIES(testBackProject PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 
 add_executable(testImagePool TestImagePool.cpp)
 add_test(NAME testImagePool COMMAND testImagePool)
