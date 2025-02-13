@@ -7,12 +7,12 @@ int main() {
     auto image = cv::imread("D:/tmp/lena.png", cv::IMREAD_GRAYSCALE);
     // auto image = cv::imread("D:/tmp/ycx.jpg");
     // auto image = cv::imread("D:/tmp/ycx.jpg", cv::IMREAD_GRAYSCALE);
+    cv::Mat i_1, i_2, i_3, i_xy, i_yx;
     cv::Mat k_1  = (cv::Mat_<float>(1, 2) << 1, -1);
     cv::Mat k_2  = (cv::Mat_<float>(1, 3) << 1, 0, -1);
     cv::Mat k_3  = (cv::Mat_<float>(3, 1) << 1, 0, -1);
     cv::Mat k_xy = (cv::Mat_<float>(2, 2) << 1, 0, 0, -1);
     cv::Mat k_yx = (cv::Mat_<float>(2, 2) << 0, -1, 1, 0);
-    cv::Mat i_1, i_2, i_3, i_xy, i_yx;
     cv::filter2D(image, i_1,  CV_16S, k_1);
     cv::filter2D(image, i_2,  CV_16S, k_2);
     cv::filter2D(image, i_3,  CV_16S, k_3);
@@ -49,8 +49,8 @@ int main() {
     cv::imshow("i_2",  i_2);
     cv::waitKey();
     cv::destroyAllWindows();
-    cv::Canny(image, k_1, 100, 200, 3);
-    cv::Canny(image, k_2, 20, 40, 3);
+    cv::Canny(image, i_1, 100, 200, 3);
+    cv::Canny(image, i_2, 20, 40, 3);
     cv::imshow("image", image);
     cv::imshow("i_1",  i_1);
     cv::imshow("i_2",  i_2);
