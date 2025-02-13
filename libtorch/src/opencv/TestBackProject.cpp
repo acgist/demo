@@ -22,6 +22,7 @@ int main() {
     cv::minMaxLoc(m_ret, &min, &max, &min_point, &max_point);
     cv::rectangle(apple, cv::Rect(min_point.x, min_point.y, apple_pi.cols, apple_pi.rows), cv::Scalar(  0, 0,   0), 2);
     cv::rectangle(apple, cv::Rect(max_point.x, max_point.y, apple_pi.cols, apple_pi.rows), cv::Scalar(255, 0, 255), 2);
+    cv::imshow("mret", m_ret);
     cv::imshow("a_pi", apple_pi);
     cv::imshow("rect", apple);
     cv::waitKey();
