@@ -283,6 +283,7 @@ target_link_libraries(
 )
 
 add_subdirectory(src/opencv)
+add_subdirectory(src/libtorch)
 
 add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
