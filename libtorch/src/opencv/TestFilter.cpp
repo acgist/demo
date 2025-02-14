@@ -1,9 +1,11 @@
 #include "opencv2/opencv.hpp"
 
+#include <iostream>
+
 int main() {
-    /**
-     * 低通滤波去掉噪声
-     */
+    // /**
+    //  * 低通滤波去掉噪声
+    //  */
     auto image = cv::imread("D:/tmp/lena.png");
     cv::imshow("image", image);
     cv::Mat target_3;
@@ -58,5 +60,22 @@ int main() {
     cv::imshow("target_3", target_3);
     cv::imshow("target_9", target_9);
     cv::waitKey();
+    cv::Mat dst;
+    cv::Mat src = (cv::Mat_<float>(4, 4) <<
+        0, 2, 1, 3,
+        2, 4, 0, 0,
+        2, 3, 2, 0,
+        2, 1, 0, 3
+    );
+    cv::Mat mask = (cv::Mat_<float>(3, 3) <<
+        1, 2, 3,
+        4, 5, 6,
+        7, 8, 9
+    );
+    // cv::filter2D(src, dst, -1, mask, cv::Point(-1, -1), 0, cv::BORDER_REFLECT);
+    // cv::filter2D(src, dst, -1, mask, cv::Point(-1, -1), 0, cv::BORDER_DEFAULT);
+    cv::filter2D(src, dst, -1, mask, cv::Point(-1, -1), 0, cv::BORDER_CONSTANT);
+    // cv::filter2D(src, dst, -1, mask, cv::Point(-1, -1), 0, cv::BORDER_REPLICATE);
+    std::cout << dst << '\n';
     return 0;
 }

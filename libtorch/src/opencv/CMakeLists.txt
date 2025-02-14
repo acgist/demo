@@ -1,3 +1,11 @@
+add_executable(testXT TestXT.cpp)
+add_test(NAME testXT COMMAND testXT)
+target_link_libraries(
+    testXT PUBLIC
+    ${OpenCV_LIBS}
+)
+SET_TARGET_PROPERTIES(testXT PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+
 add_executable(testCVT TestCVT.cpp)
 add_test(NAME testCVT COMMAND testCVT)
 target_link_libraries(
