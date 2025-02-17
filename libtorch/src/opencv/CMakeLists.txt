@@ -70,6 +70,30 @@ target_link_libraries(
 )
 SET_TARGET_PROPERTIES(testFilter PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 
+add_executable(testImageInpaint TestImageInpaint.cpp)
+add_test(NAME testImageInpaint COMMAND testImageInpaint)
+target_link_libraries(
+    testImageInpaint PUBLIC
+    ${OpenCV_LIBS}
+)
+SET_TARGET_PROPERTIES(testImageInpaint PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+
+add_executable(testImageSplit TestImageSplit.cpp)
+add_test(NAME testImageSplit COMMAND testImageSplit)
+target_link_libraries(
+    testImageSplit PUBLIC
+    ${OpenCV_LIBS}
+)
+SET_TARGET_PROPERTIES(testImageSplit PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+
+add_executable(testHoughLines TestHoughLines.cpp)
+add_test(NAME testHoughLines COMMAND testHoughLines)
+target_link_libraries(
+    testHoughLines PUBLIC
+    ${OpenCV_LIBS}
+)
+SET_TARGET_PROPERTIES(testHoughLines PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+
 add_executable(testConv2dEx TestConv2d.cpp)
 add_test(NAME testConv2dEx COMMAND testConv2dEx)
 target_link_libraries(
