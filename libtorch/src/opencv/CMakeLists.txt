@@ -70,6 +70,22 @@ target_link_libraries(
 )
 SET_TARGET_PROPERTIES(testFilter PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 
+add_executable(testPoints TestPoints.cpp)
+add_test(NAME testPoints COMMAND testPoints)
+target_link_libraries(
+    testPoints PUBLIC
+    ${OpenCV_LIBS}
+)
+SET_TARGET_PROPERTIES(testPoints PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+
+add_executable(testEye TestEye.cpp)
+add_test(NAME testEye COMMAND testEye)
+target_link_libraries(
+    testEye PUBLIC
+    ${OpenCV_LIBS}
+)
+SET_TARGET_PROPERTIES(testEye PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+
 add_executable(testImageInpaint TestImageInpaint.cpp)
 add_test(NAME testImageInpaint COMMAND testImageInpaint)
 target_link_libraries(
