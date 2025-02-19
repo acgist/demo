@@ -78,6 +78,22 @@ target_link_libraries(
 )
 SET_TARGET_PROPERTIES(testPoints PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 
+add_executable(testDiff TestDiff.cpp)
+add_test(NAME testDiff COMMAND testDiff)
+target_link_libraries(
+    testDiff PUBLIC
+    ${OpenCV_LIBS}
+)
+SET_TARGET_PROPERTIES(testDiff PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+
+add_executable(testTrack TestTrack.cpp)
+add_test(NAME testTrack COMMAND testTrack)
+target_link_libraries(
+    testTrack PUBLIC
+    ${OpenCV_LIBS}
+)
+SET_TARGET_PROPERTIES(testTrack PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+
 add_executable(testEye TestEye.cpp)
 add_test(NAME testEye COMMAND testEye)
 target_link_libraries(
