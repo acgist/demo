@@ -1,5 +1,8 @@
-add_subdirectory(json)
+if(POLICY CMP0077)
+    cmake_policy(SET CMP0077 NEW)
+endif()
 
-set(BUILD_EXAMPLES OFF)
-add_subdirectory(minidocx)
-unset(BUILD_EXAMPLES)
+if(NOT TARGET json)
+    set(JSON_BuildTests OFF)
+    add_subdirectory(json)
+endif()

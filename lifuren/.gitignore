@@ -1,23 +1,20 @@
 *.a
 *.so
-*.exe
 *.dll
+*.exe
 *.lib
 *.out
 *.log
 
 .vscode
 
-logs
 build
-target
 
 deps/fltk
-deps/json
+deps/faiss
+deps/ffmpeg
 deps/opencv
-deps/podofo
 deps/spdlog
-deps/minidocx
 deps/libtorch
 deps/yaml-cpp
 deps/cpp-httplib

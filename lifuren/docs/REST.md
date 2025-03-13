@@ -1,5 +1,7 @@
 # REST API
 
-## 训练
+`REST`接口只提供推理功能
 
-## 预测
+## REST Client
+
+[REST Client](./rest/)

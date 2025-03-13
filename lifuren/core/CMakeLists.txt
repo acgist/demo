@@ -1,24 +1,19 @@
 project(lifurencore VERSION 1.0.0 LANGUAGES C CXX)
 
 add_library(
-    ${PROJECT_NAME} STATIC
-    src/source/Dates.cpp
-    src/source/Files.cpp
-    src/source/Jsons.cpp
-    src/source/Yamls.cpp
-    src/source/Logger.cpp
-    src/source/Strings.cpp
-    src/source/Lifuren.cpp
-    src/source/Exception.cpp
-    src/source/Collections.cpp
-    src/source/config/Config.cpp
-    src/source/config/Label.cpp
-    src/source/config/LabelFile.cpp
-    src/source/config/LabelText.cpp
-    src/source/config/Mark.cpp
-    src/source/config/MarkFile.cpp
-    src/source/config/MarkText.cpp
+    ${PROJECT_NAME}
+    src/Date.cpp
+    src/File.cpp
+    src/Yaml.cpp
+    src/Config.cpp
+    src/Logger.cpp
+    src/Rhythm.cpp
+    src/String.cpp
+    src/Thread.cpp
+    src/Message.cpp
 )
+
+set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "module")
 
 if(CMAKE_HOST_WIN32)
     target_link_libraries(
@@ -37,19 +32,23 @@ else()
     )
 endif()
 
-target_include_directories(
-    ${PROJECT_NAME}
-    PUBLIC ${HEADER_DIR}
-)
+target_include_directories(${PROJECT_NAME} PUBLIC ${HEADER_DIR})
 
-file(COPY src/config/ DESTINATION ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/config)
+if(CMAKE_HOST_WIN32)
+    set(CONFIG_FILES "config/config-win.yml" "config/rhythm.yml")
+else()
+    set(CONFIG_FILES "config/config.yml" "config/rhythm.yml")
+endif()
+
+install(FILES ${CONFIG_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/config)
+
+file(COPY ${CONFIG_FILES} DESTINATION ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/config)
 
 install(
     TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}-targets
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
     ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/
+    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${PROJECT_NAME}
 )
-install(DIRECTORY ${HEADER_DIR} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${PROJECT_NAME})
-install(DIRECTORY src/config/   DESTINATION ${CMAKE_INSTALL_PREFIX}/config)
+install(DIRECTORY ${HEADER_DIR} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/)

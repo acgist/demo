@@ -1,41 +1,33 @@
 project(lifurennlp VERSION 1.0.0 LANGUAGES C CXX)
 
 add_library(
-    ${PROJECT_NAME} STATIC
-    src/source/NLP.cpp
-    src/source/reader/DocumentReader.cpp
-    src/source/reader/PDFReader.cpp
-    src/source/reader/TextReader.cpp
-    src/source/reader/WordReader.cpp
-    src/source/reader/TextReader.cpp
-    src/source/reader/MarkdownReader.cpp
-    src/source/chunk/ChunkService.cpp
-    src/source/chunk/ChunkStrategy.cpp
-    src/source/chunk/LineChunkStrategy.cpp
-    src/source/rag/RAGClient.cpp
-    src/source/rag/RAGService.cpp
-    src/source/rag/RAGTaskRunner.cpp
-    src/source/rag/ElasticSearchRAGClient.cpp
+    ${PROJECT_NAME}
+    src/RAGClient.cpp
+    src/EmbeddingClient.cpp
+    src/rag/FaissRAGClient.cpp
+    src/rag/ElasticSearchRAGClient.cpp
+    src/poetry/PoetryClient.cpp
+    src/poetry/PoetryDataset.cpp
+    src/embedding/OllamaEmbeddingClient.cpp
+    src/embedding/PepperEmbeddingClient.cpp
 )
+
+set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "module")
 
 target_link_libraries(
     ${PROJECT_NAME}
-    minidocx
-    $<IF:$<TARGET_EXISTS:podofo_shared>,podofo_shared,podofo_static>
+    faiss
     lifurenmodel
     lifurenclient
 )
 
-target_include_directories(
-    ${PROJECT_NAME}
-    PUBLIC ${HEADER_DIR}
-)
+target_include_directories(${PROJECT_NAME} PUBLIC ${HEADER_DIR})
 
 install(
     TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}-targets
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
     ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/
+    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${PROJECT_NAME}
 )
-install(DIRECTORY ${HEADER_DIR} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${PROJECT_NAME})
+install(DIRECTORY ${HEADER_DIR} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/)

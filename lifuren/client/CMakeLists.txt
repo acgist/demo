@@ -1,34 +1,33 @@
 project(lifurenclient VERSION 1.0.0 LANGUAGES C CXX)
 
 add_library(
-    ${PROJECT_NAME} STATIC
-    src/source/Client.cpp
-    src/source/RestClient.cpp
-    src/source/chat/ChatClient.cpp
-    src/source/chat/OllamaChatClient.cpp
-    src/source/chat/OpenAIChatClient.cpp
-    src/source/paint/PaintClient.cpp
-    src/source/paint/StableDiffusionCPPPaintClient.cpp
-    src/source/embedding/EmbeddingClient.cpp
-    src/source/embedding/CWVEmbeddingClient.cpp
-    src/source/embedding/OllamaEmbeddingClient.cpp
+    ${PROJECT_NAME}
+    src/RestClient.cpp
 )
 
-target_link_libraries(
-    ${PROJECT_NAME}
-    lifurencore
-)
+set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "module")
 
-target_include_directories(
-    ${PROJECT_NAME}
-    PUBLIC ${HEADER_DIR}
-)
+if(CMAKE_HOST_WIN32)
+    target_link_libraries(
+        ${PROJECT_NAME}
+        lifurencore
+        httplib::httplib
+    )
+else()
+    target_link_libraries(
+        ${PROJECT_NAME}
+        lifurencore
+        $<IF:$<TARGET_EXISTS:cpp-httplib>,cpp-httplib,httplib::httplib>
+    )
+endif()
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${HEADER_DIR})
 
 install(
     TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}-targets
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
     ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/
+    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${PROJECT_NAME}
 )
-install(DIRECTORY ${HEADER_DIR} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${PROJECT_NAME})
+install(DIRECTORY ${HEADER_DIR} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/)
