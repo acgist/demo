@@ -15,5 +15,12 @@ int main() {
     for(const auto& x : v) {
         std::cout << x << '\n';
     }
+    std::vector<int> size(10);
+    size.push_back(1);
+    std::cout << size.size() << '\n';
+    size.reserve(100);
+    std::cout << size.size() << '\n';
+    size.resize(20);
+    std::cout << size.size() << '\n';
     return 0;
 }
