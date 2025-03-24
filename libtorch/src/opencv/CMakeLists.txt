@@ -94,6 +94,14 @@ target_link_libraries(
 )
 SET_TARGET_PROPERTIES(testTrack PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 
+add_executable(testStaff TestStaff.cpp)
+add_test(NAME testStaff COMMAND testStaff)
+target_link_libraries(
+    testStaff PUBLIC
+    ${OpenCV_LIBS}
+)
+SET_TARGET_PROPERTIES(testStaff PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+
 add_executable(testEye TestEye.cpp)
 add_test(NAME testEye COMMAND testEye)
 target_link_libraries(
