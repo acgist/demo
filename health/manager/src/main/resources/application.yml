@@ -1,0 +1,140 @@
+spring:
+  application:
+    name: 容灾系统
+  mail:
+    host: smtp.exmail.qq.com
+    port: 465
+    protocol: smtp
+    username: admin@acgist.com
+    password: 
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+health:
+  # 是否启用
+  enabled: true
+  # 安全验证：空表示不验证
+  security: 
+monitor:
+  # 监控类型
+  monitors:
+    # CPU监控
+    - name: CPU
+      type: cpu
+      threshold: 8
+    # 硬盘监控
+    - name: 硬盘
+      type: disk
+      threshold: 0.96
+      disk:
+        - /
+        - /data
+        - C:\
+        - D:\
+    # 内存监控
+    - name: 内存
+      type: memory
+      threshold: 0.96
+    # 异常监控
+    - name: 异常
+      type: exception
+      # 触发异常次数
+      exception-time: 6
+      # 触发异常来源
+      exception-from:
+        - o.s.boot.SpringApplication
+      # 触发异常名称
+      exception-name:
+        - com.alibaba.nacos.api.exception.runtime.NacosDeserializationException
+      # 触发异常信息
+      exception-message:
+        - "*.媒体服务连接失败.*"
+        - "*.信令服务连接失败.*"
+      # 触发异常持续时间
+      exception-duration: 600000
+manager:
+  stun:
+    - stun1.l.google.com:19302
+    - stun2.l.google.com:19302
+    - stun3.l.google.com:19302
+    - stun4.l.google.com:19302
+  # 服务监控列表
+  monitors:
+    - name: 监控系统
+      retry: 3
+      notify: mail
+      timeout: 5000
+      protocol: http
+      # DNS配置
+      dns: 
+        # aliyun | huawei | tencent
+        type: aliyun
+        access-id: 
+        access-secret: 
+        endpoint: alidns.cn-hangzhou.aliyuncs.com
+        domain: www.acgist.com
+        domain-rr: www
+        domain-ttl: 600
+        domain-type: A
+      # 通知
+      mail:
+        to: admin@acgist.com
+        subject: 容灾系统异常通知
+        # 通知限制
+        send-limit: 600000
+      # 服务列表
+      servers:
+        - host: 127.0.0.1
+          port: 8080
+          main: true
+          weight: 1
+        - host: 127.0.0.1
+          port: 8080
+          main: false
+          weight: 2
+      # 服务监控类型
+      remote-monitors:
+        - name: CPU
+          type: cpu
+          enabled: true
+          path: /monitor/cpu
+          # 是否发送通知
+          notify: true
+          # 是否判断健康
+          health: false
+        - name: 磁盘
+          type: disk
+          enabled: true
+          path: /monitor/disk
+          notify: true
+          health: false
+        - name: 内存
+          type: memory
+          enabled: true
+          path: /monitor/memory
+          notify: true
+          health: false
+        - name: 网络
+          type: rest
+          enabled: true
+          path: /monitor/rest
+          notify: true
+          health: true
+        - name: 网络
+          type: socket
+          enabled: true
+          notify: true
+          health: true
+        - name: 异常
+          type: exception
+          enabled: true
+          path: /monitor/exception
+          notify: true
+          health: true
