@@ -9,6 +9,7 @@
 ## 依赖
 
 |名称|版本|官网|
+|:--|:--|:--|
 |jspdf|3.0.0|https://github.com/MrRio/jsPDF|
 |svg2pdf.js|2.5.0|https://github.com/yWorks/svg2pdf.js|
 |opensheetmusicdisplay|1.8.9|https://github.com/opensheetmusicdisplay/opensheetmusicdisplay|
