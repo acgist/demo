@@ -56,11 +56,12 @@ class Player {
     if(!this.audio_ctx) {
       this.audio_ctx = new AudioContext();
     }
-    const rawData  = atob(audio);
-    const rawArray = new Uint8Array(rawData.length);
-    for (let i = 0; i < rawData.length; ++i) {
-      rawArray[i] = rawData.charCodeAt(i);
-    }
+    // const rawData  = atob(audio);
+    // const rawArray = new Uint8Array(rawData.length);
+    // for (let i = 0; i < rawData.length; ++i) {
+    //   rawArray[i] = rawData.charCodeAt(i);
+    // }
+    const rawArray = new Uint8Array(audio);
     let audio_source = this.audio_source.get(type);
     if(!audio_source) {
       audio_source = new Map();
