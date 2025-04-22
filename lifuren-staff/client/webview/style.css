@@ -1,0 +1,158 @@
+::selection{background:#C00;color:#FFF}
+@media screen and (min-width:800px) {html{font-size:16px}}
+@media screen and (min-width:1200px){html{font-size:18px}}
+@media screen and (min-width:1600px){html{font-size:20px}}
+@font-face{font-family:'icomoon';src:url('font/icomoon.eot?bk83mb');src:url('font/icomoon.eot?bk83mb#iefix') format('embedded-opentype'),url('font/icomoon.ttf?bk83mb') format('truetype'),url('font/icomoon.woff?bk83mb') format('woff'),url('font/icomoon.svg?bk83mb#icomoon') format('svg');font-weight:normal;font-style:normal;font-display:block}
+[class^="icon-"],[class*=" icon-"]{font-family:'icomoon' !important;font-style:normal;font-weight:normal;font-variant:normal;text-transform:none;line-height:1}
+.icon-piano:before           {content:"\e900"}
+.icon-music:before           {content:"\e900"}
+.icon-image:before           {content:"\e90d"}
+.icon-images:before          {content:"\e90e"}
+.icon-camera:before          {content:"\e90f"}
+.icon-mic:before             {content:"\e91e"}
+.icon-file-empty:before      {content:"\e924"}
+.icon-files-empty:before     {content:"\e925"}
+.icon-file-text2:before      {content:"\e926"}
+.icon-file-picture:before    {content:"\e927"}
+.icon-folder:before          {content:"\e92f"}
+.icon-folder-open:before     {content:"\e930"}
+.icon-folder-plus:before     {content:"\e931"}
+.icon-folder-minus:before    {content:"\e932"}
+.icon-folder-download:before {content:"\e933"}
+.icon-folder-upload:before   {content:"\e934"}
+.icon-price-tag:before       {content:"\e935"}
+.icon-price-tags:before      {content:"\e936"}
+.icon-qrcode:before          {content:"\e938"}
+.icon-spinner11:before       {content:"\e984"}
+.icon-search:before          {content:"\e986"}
+.icon-zoom-in:before         {content:"\e987"}
+.icon-zoom-out:before        {content:"\e988"}
+.icon-enlarge:before         {content:"\e989"}
+.icon-shrink:before          {content:"\e98a"}
+.icon-enlarge2:before        {content:"\e98b"}
+.icon-shrink2:before         {content:"\e98c"}
+.icon-lock:before            {content:"\e98f"}
+.icon-unlocked:before        {content:"\e990"}
+.icon-equalizer:before       {content:"\e992"}
+.icon-equalizer2:before      {content:"\e993"}
+.icon-cog:before             {content:"\e994"}
+.icon-cogs:before            {content:"\e995"}
+.icon-bin:before             {content:"\e9ac"}
+.icon-bin2:before            {content:"\e9ad"}
+.icon-switch:before          {content:"\e9b6"}
+.icon-list-numbered:before   {content:"\e9b9"}
+.icon-list:before            {content:"\e9ba"}
+.icon-list2:before           {content:"\e9bb"}
+.icon-cloud:before           {content:"\e9c1"}
+.icon-cloud-download:before  {content:"\e9c2"}
+.icon-cloud-upload:before    {content:"\e9c3"}
+.icon-cloud-check:before     {content:"\e9c4"}
+.icon-download2:before       {content:"\e9c5"}
+.icon-upload2:before         {content:"\e9c6"}
+.icon-download3:before       {content:"\e9c7"}
+.icon-upload3:before         {content:"\e9c8"}
+.icon-sphere:before          {content:"\e9c9"}
+.icon-earth:before           {content:"\e9ca"}
+.icon-bookmark:before        {content:"\e9d2"}
+.icon-bookmarks:before       {content:"\e9d3"}
+.icon-notification:before    {content:"\ea08"}
+.icon-question:before        {content:"\ea09"}
+.icon-plus:before            {content:"\ea0a"}
+.icon-minus:before           {content:"\ea0b"}
+.icon-info:before            {content:"\ea0c"}
+.icon-cancel-circle:before   {content:"\ea0d"}
+.icon-blocked:before         {content:"\ea0e"}
+.icon-enter:before           {content:"\ea13"}
+.icon-exit:before            {content:"\ea14"}
+.icon-play2:before           {content:"\ea15"}
+.icon-pause:before           {content:"\ea16"}
+.icon-stop:before            {content:"\ea17"}
+.icon-previous:before        {content:"\ea18"}
+.icon-next:before            {content:"\ea19"}
+.icon-backward:before        {content:"\ea1a"}
+.icon-forward2:before        {content:"\ea1b"}
+.icon-play3:before           {content:"\ea1c"}
+.icon-pause2:before          {content:"\ea1d"}
+.icon-stop2:before           {content:"\ea1e"}
+.icon-backward2:before       {content:"\ea1f"}
+.icon-forward3:before        {content:"\ea20"}
+.icon-first:before           {content:"\ea21"}
+.icon-last:before            {content:"\ea22"}
+.icon-previous2:before       {content:"\ea23"}
+.icon-next2:before           {content:"\ea24"}
+.icon-volume-high:before     {content:"\ea26"}
+.icon-volume-medium:before   {content:"\ea27"}
+.icon-volume-low:before      {content:"\ea28"}
+.icon-volume-mute:before     {content:"\ea29"}
+.icon-volume-mute2:before    {content:"\ea2a"}
+.icon-volume-increase:before {content:"\ea2b"}
+.icon-volume-decrease:before {content:"\ea2c"}
+.icon-loop:before            {content:"\ea2d"}
+.icon-loop2:before           {content:"\ea2e"}
+.icon-arrow-up-left:before   {content:"\ea31"}
+.icon-arrow-up:before        {content:"\ea32"}
+.icon-arrow-up-right:before  {content:"\ea33"}
+.icon-arrow-right:before     {content:"\ea34"}
+.icon-arrow-down-right:before{content:"\ea35"}
+.icon-arrow-down:before      {content:"\ea36"}
+.icon-arrow-down-left:before {content:"\ea37"}
+.icon-arrow-left:before      {content:"\ea38"}
+*{margin:0;padding:0;border:none;outline:none;box-sizing:content-box}
+.container{width:1080px;margin:auto;}
+.action{position:fixed;top:2rem;right:2rem;overflow:hidden;z-index:9999}
+.action a{margin:0.2rem;display:none;width:2rem;height:2rem;border-radius:100%;font-size:0.8rem;line-height:2rem;text-align:center;cursor:pointer}
+.action a:first-child{display:block}
+.action:hover a{display:block}
+.action_bt{vertical-align:middle;transform:translateZ(0);box-shadow:0 0 1px rgba(0,0,0,0.5);backface-visibility:hidden;position:relative;overflow:hidden;background:#C00;transition-property:color,font-size;transition-duration:0.5s}
+.action_bt:before{content:"";position:absolute;z-index:-1;top:0;left:0;right:0;bottom:0;background:#F0F0F0;border-radius:100%;transform:scale(2);transition-property:transform;transition-duration:0.5s;transition-timing-function:ease-out}
+.action_bt:hover,.action_bt:focus,.action_bt:active{color:#FFF;font-size:1rem}
+.action_bt:hover:before,.action_bt:focus:before,.action_bt:active:before{transform:scale(0)}
+.padding{height:14rem;}
+.player {display:none;}
+.piano  {position:fixed;left:0;width:100%;height:14rem;bottom:4rem;background:#FFF;overflow:hidden;font-size:0.8rem;user-select:none;display:none;z-index:9999}
+.piano .key{cursor:pointer}
+.piano .wkeys{display:flex;flex-wrap:nowrap;flex-direction:row;width:100%;height:100%;padding:0 0.6%}
+.piano .wkeys .wkey{width:1.9%;margin:0;background:linear-gradient(-30deg,#F5F5F5,#FFF);box-shadow:inset 0 1px 0 #EEE,inset 0 -1px 0 #666,inset 1px 0 0 #FFF,inset -1px 0 0 #CCC,0 1px 1px rgba(0,0,0,.4);position:relative;border-radius:0 0 5px 5px}
+.piano .wkeys .wkey:hover {box-shadow:#FFA500 0px 0px 5px 0px inset}
+.piano .wkeys .wkey.active{box-shadow:#FFA500 0px 0px 5px 0px inset;background:linear-gradient(-20deg,#FFA500,#FFF)}
+.piano .wkeys .wkey:first-child{border-left:1px solid #BBB}
+.piano .wkeys .wkey a{width:80%;height:1.2rem;bottom:0;margin:0 10%;color:#373737;text-align:center;line-height:1.2rem;font-weight:600;position:absolute;bottom:5%}
+.piano .wkeys .wkey a:nth-child(2){bottom:15%}
+.piano .wkeys .wkey a:last-child{bottom:15%;display:none}
+.piano .wkeys .wkey:nth-child(n+1):nth-child(-n+2)   a:nth-child(2){background:#DBE2EF}
+.piano .wkeys .wkey:nth-child(n+3):nth-child(-n+9)   a:nth-child(2){background:#DCEDC1}
+.piano .wkeys .wkey:nth-child(n+10):nth-child(-n+16) a:nth-child(2){background:#A8E6CF}
+.piano .wkeys .wkey:nth-child(n+17):nth-child(-n+23) a:nth-child(2){background:#61C0BF}
+.piano .wkeys .wkey:nth-child(n+24):nth-child(-n+30) a:nth-child(2){background:#FAE3D9}
+.piano .wkeys .wkey:nth-child(n+31):nth-child(-n+37) a:nth-child(2){background:#FFAAA5}
+.piano .wkeys .wkey:nth-child(n+38):nth-child(-n+44) a:nth-child(2){background:#F07B3F}
+.piano .wkeys .wkey:nth-child(n+45):nth-child(-n+51) a:nth-child(2){background:#F85F73}
+.piano .wkeys .wkey:nth-child(n+52)                  a:nth-child(2){background:#B83B5E}
+.piano .wkeys .wkey:nth-child(n+1):nth-child(-n+2)   a:last-child{background:#DBE2EF}
+.piano .wkeys .wkey:nth-child(n+3):nth-child(-n+9)   a:last-child{background:#DCEDC1}
+.piano .wkeys .wkey:nth-child(n+10):nth-child(-n+16) a:last-child{background:#A8E6CF}
+.piano .wkeys .wkey:nth-child(n+17):nth-child(-n+23) a:last-child{background:#61C0BF}
+.piano .wkeys .wkey:nth-child(n+24):nth-child(-n+30) a:last-child{background:#FAE3D9}
+.piano .wkeys .wkey:nth-child(n+31):nth-child(-n+37) a:last-child{background:#FFAAA5}
+.piano .wkeys .wkey:nth-child(n+38):nth-child(-n+44) a:last-child{background:#F07B3F}
+.piano .wkeys .wkey:nth-child(n+45):nth-child(-n+51) a:last-child{background:#F85F73}
+.piano .wkeys .wkey:nth-child(n+52)                  a:last-child{background:#B83B5E}
+.piano .bkeys{width:100%}
+.piano .bkeys .keys{position:absolute;width:13.3%;padding-bottom:10%;top:0}
+.piano .bkeys .keys a{display:none}
+.piano .bkeys .keys:nth-child(1){left:0.6% }
+.piano .bkeys .keys:nth-child(2){left:4.4% }
+.piano .bkeys .keys:nth-child(3){left:17.7%}
+.piano .bkeys .keys:nth-child(4){left:31.0%}
+.piano .bkeys .keys:nth-child(5){left:44.3%}
+.piano .bkeys .keys:nth-child(6){left:57.6%}
+.piano .bkeys .keys:nth-child(7){left:70.9%}
+.piano .bkeys .keys:nth-child(8){left:84.2%}
+.piano .bkeys .keys .bkey{width:10%;height:100%;position:absolute;top:0;background:linear-gradient(-20deg,#333,#000,#333);border-color:#666 #222 #111 #555;border-style:solid;border-width:1px 2px 7px;border-radius:0 0 2px 2px;box-shadow:inset 0 -1px 2px hsla(0,0%,100%,.4),0 2px 3px rgba(0,0,0,.4)}
+.piano .bkeys .keys .bkey:hover {box-shadow:rgb(135,206,250) 0px 0px 7px 0px inset}
+.piano .bkeys .keys .bkey.active{background:linear-gradient(-20deg,rgb(135,206,250),#000);border-color:rgb(135,206,250);border-style:solid;border-width:1px 2px 7px;border-radius:0 0 2px 2px;box-shadow:inset 0 -1px 2px hsla(0,0%,100%,.4),0 2px 3px rgba(0,0,0,.4)}
+.piano .bkeys .keys .bkey:first-child{left:8%}
+.piano .bkeys .keys .bkey:nth-child(2){left:24%}
+.piano .bkeys .keys .bkey:nth-child(3){left:50%}
+.piano .bkeys .keys .bkey:nth-child(4){left:66%}
+.piano .bkeys .keys .bkey:nth-child(5){left:82%}
