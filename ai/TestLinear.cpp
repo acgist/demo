@@ -21,7 +21,7 @@ public:
 };
 
 LinearNetImpl::LinearNetImpl() {
-    this->linear = register_module("ln", torch::nn::Linear(1, 1));
+    this->linear = this->register_module("ln", torch::nn::Linear(1, 1));
 }
 
 torch::Tensor LinearNetImpl::forward(torch::Tensor x) {
@@ -69,7 +69,7 @@ int main() {
     // 训练
     for(int epoch = 0; epoch < epoch_count; ++epoch) {
         float ttLoss = 0.0F;
-        for(auto& x : *loader) {
+        for(const auto& x : *loader) {
             auto output = linear->forward(x.data);
             auto tLoss  = loss(output, x.target);
             optimizer.zero_grad(); // 梯度清零

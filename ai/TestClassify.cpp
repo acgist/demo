@@ -84,7 +84,7 @@ int main() {
         size_t accu_val = 0;
         size_t data_val = 0;
         auto confusion_matrix = torch::zeros({ 4, 4 }, torch::kInt).requires_grad_(false);
-        for(auto& x : *loader) {
+        for(const auto& x : *loader) {
             auto output = classify->forward(x.data);
             auto tLoss  = loss(output, x.target);
             optimizer.zero_grad();
@@ -94,8 +94,8 @@ int main() {
             // 计算混淆矩阵（无关训练）
             {
                 torch::NoGradGuard no_grad_guard;
-                auto target_index = x.target.argmax(1).to(torch::kCPU);
-                auto pred_index   = torch::log_softmax(output, 1).argmax(1).to(torch::kCPU);
+                auto target_index = x.target.argmax(1);
+                auto pred_index   = torch::softmax(output, 1).argmax(1);
                 auto batch_size   = pred_index.numel();
                 auto accu = pred_index.eq(target_index).sum();
                 accu_val += accu.template item<int>();
@@ -119,7 +119,7 @@ int main() {
         30.0F, 33.0F,
         90.0F, 99.0F,
     };
-    auto pred = torch::log_softmax(classify->forward(torch::from_blob(data.data(), { static_cast<int>(data.size()) / 2, 2 }, torch::kFloat32)), 1);
+    auto pred = torch::softmax(classify->forward(torch::from_blob(data.data(), { static_cast<int>(data.size()) / 2, 2 }, torch::kFloat32)), 1);
     std::cout << "预测结果\n" << pred << std::endl;
     std::cout << "预测类别\n" << pred.argmax(1) << std::endl;
     // 绘图
@@ -144,7 +144,7 @@ int main() {
     std::vector<double> y4;
     for(int i = 0; i < 100; i += 2) {
     for(int j = 0; j < 100; j += 2) {
-        pred = torch::log_softmax(classify->forward(torch::tensor({i, j}, torch::kFloat32).reshape({1, 2})), 1);
+        pred = torch::softmax(classify->forward(torch::tensor({i, j}, torch::kFloat32).reshape({1, 2})), 1);
         int value = pred.argmax(1).item<int>();
         switch(value) {
             case 1:
