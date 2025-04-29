@@ -124,6 +124,10 @@ https://zh.d2l.ai/chapter_deep-learning-computation/model-construction.html
 #### 超参数（hyperparameter）
 #### 过拟合（overfitting）
 #### 欠拟合（underfitting）
+#### 数据集
+###### 训练集
+###### 验证集
+###### 测试集
 #### 计算图
 #### 预训练
 #### 网络压缩

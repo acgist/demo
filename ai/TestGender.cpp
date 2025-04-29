@@ -54,8 +54,12 @@ public:
 
 TORCH_MODULE(GenderModule);
 
-inline torch::Tensor read_image(const std::string& path, const int width = 60, const int height = 80) {
+inline torch::Tensor read_image(const std::string& path, const bool show = false, const int width = 60, const int height = 80) {
     cv::Mat image = cv::imread(path);
+    if(show) {
+        cv::imshow("image", image);
+        cv::waitKey();
+    }
     const int cols = image.cols;
     const int rows = image.rows;
     const double ws = 1.0 * cols / width;
@@ -66,14 +70,12 @@ inline torch::Tensor read_image(const std::string& path, const int width = 60, c
     cv::Mat result = cv::Mat::zeros(h, w, CV_8UC3);
     image.copyTo(result(cv::Rect(0, 0, cols, rows)));
     cv::resize(result, image, cv::Size(width, height));
-    // cv::imshow("image", image);
-    // cv::waitKey();
     return torch::from_blob(image.data, { image.rows, image.cols, 3 }, torch::kByte).permute({2, 0, 1}).to(torch::kFloat32).div(255.0).clone();
 }
 
 int main() {
-    try {
-    const float lr        = 0.01F;
+    cv::utils::logging::setLogLevel(::cv::utils::logging::LOG_LEVEL_ERROR);
+    const float lr        = 0.001F;
     const int batch_size  = 100;
     const int epoch_count = 32;
     // 数据
@@ -155,35 +157,23 @@ int main() {
     }
     // 预测
     gender->eval();
-    torch::Tensor tensor = read_image("D:/tmp/lcw.png").unsqueeze(0);
-    #ifdef LOSS_NLL
-    auto pred = gender->forward(tensor);
-    #else
-    auto pred = torch::softmax(gender->forward(tensor), 1);
-    #endif
-    std::cout << "预测结果\n" << pred << std::endl;
-    std::cout << "预测类别\n" << pred.argmax(1) << std::endl;
-    std::cout << "预测类别\n" << ((pred.argmax(1).item<int>() == 0) ? "女" : "男") << std::endl;
-    tensor = read_image("D:/tmp/lyf.png").unsqueeze(0);
-    #ifdef LOSS_NLL
-    pred = gender->forward(tensor);
-    #else
-    pred = torch::softmax(gender->forward(tensor), 1);
-    #endif
-    std::cout << "预测结果\n" << pred << std::endl;
-    std::cout << "预测类别\n" << pred.argmax(1) << std::endl;
-    std::cout << "预测类别\n" << ((pred.argmax(1).item<int>() == 0) ? "女" : "男") << std::endl;
-    tensor = read_image("D:/tmp/mm.png").unsqueeze(0);
-    #ifdef LOSS_NLL
-    pred = gender->forward(tensor);
-    #else
-    pred = torch::softmax(gender->forward(tensor), 1);
-    #endif
-    std::cout << "预测结果\n" << pred << std::endl;
-    std::cout << "预测类别\n" << pred.argmax(1) << std::endl;
-    std::cout << "预测类别\n" << ((pred.argmax(1).item<int>() == 0) ? "女" : "男") << std::endl;
-    } catch(const std::exception& e) {
-        std::cerr << e.what() << '\n';
+    for(const auto& file : {
+        "D:/tmp/lcw.png",
+        "D:/tmp/sts.png",
+        "D:/tmp/lyf.png",
+        "D:/tmp/tl.png",
+        "D:/tmp/nam.png",
+        "D:/tmp/sjl.png"
+    }) {
+        torch::Tensor tensor = read_image(file, true).unsqueeze(0);
+        #ifdef LOSS_NLL
+        auto pred = gender->forward(tensor);
+        #else
+        auto pred = torch::softmax(gender->forward(tensor), 1);
+        #endif
+        std::cout << "预测结果\n" << pred << std::endl;
+        std::cout << "预测类别\n" << pred.argmax(1) << std::endl;
+        std::cout << "预测性别\n" << ((pred.argmax(1).item<int>() == 0) ? "女" : "男") << std::endl;
     }
     return 0;
 }
