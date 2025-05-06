@@ -201,6 +201,7 @@ https://zh.d2l.ai/chapter_deep-learning-computation/model-construction.html
 ## 分类
 ## 性别
 ## Yolo训练
+## Yolo识别
 
 ## 学习资料
 
