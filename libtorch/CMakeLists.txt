@@ -67,14 +67,11 @@ if(CMAKE_HOST_WIN32)
     )
 
     file(GLOB TORCH_DLLS  "deps/libtorch/lib/*.dll")
-    file(GLOB OPENCV_DLLS "deps/opencv/x64/vc16/bin/opencv_videoio_ffmpeg4100_64.dll"
-                          "deps/opencv/x64/vc16/bin/opencv_videoio_msmf4100_64d.dll"
-                          "deps/opencv/x64/vc16/bin/opencv_world4100d.dll"
-    )
+    file(GLOB OPENCV_DLLS "deps/opencv/bin/*.dll")
 endif()
 
-find_package(Torch     REQUIRED)
 find_package(OpenCV    REQUIRED)
+find_package(Torch     REQUIRED)
 find_package(Matplot++ REQUIRED)
 
 add_executable(${PROJECT_NAME} src/source/Main.cpp)
