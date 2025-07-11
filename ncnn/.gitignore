@@ -1,0 +1,6 @@
+deps/ncnn/
+deps/opencv/
+
+build/
+
+.vscode
