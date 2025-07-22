@@ -1,0 +1,15 @@
+*.a
+*.so
+*.out
+
+*.lib
+*.dll
+*.exe
+
+*.log
+
+.vs
+.out
+.vscode
+
+build
