@@ -95,7 +95,6 @@ void jshare::Udp::recv() {
         while(this->running) {
             const int recv_length = recvfrom(this->bcst_socket, buffer.data(), buffer_length, 0, (sockaddr*) &recv_addr, &addr_length);
             if(recv_length < HEADER_SIZE) {
-                this->retry();
                 continue;
             }
             uint8_t  version     = buffer[0];
@@ -123,7 +122,6 @@ void jshare::Udp::recv() {
                 this->callback(type, buffer.data() + HEADER_SIZE, recv_length - HEADER_SIZE, recv_addr);
                 continue;
             }
-            bool loss = true;
             if(this->callback) {
                 if(data_id == this->recv_data_id) {
                     this->callback(type, buffer.data() + HEADER_SIZE, recv_length - HEADER_SIZE, recv_addr);
@@ -143,16 +141,12 @@ void jshare::Udp::recv() {
                     if(iter == this->recv_data.end()) {
                         break;
                     }
-                    loss = false;
                     this->callback(iter->second.type, iter->second.data.data() + HEADER_SIZE, iter->second.size - HEADER_SIZE, iter->second.addr);
                     iter = this->recv_data.erase(iter);
                     ++this->recv_data_id;
                 }
             }
             this->ack(this->recv_data_id - 1, recv_addr);
-            if(loss) {
-                this->retry();
-            }
         }
     });
 }
@@ -169,7 +163,6 @@ void jshare::Udp::ack(uint16_t data_id, sockaddr_in addr) {
 }
 
 void jshare::Udp::retry() {
-    std::shared_lock<std::shared_mutex> lock(this->send_mutex);
     auto time = ::time();
     for(auto iter = this->send_data.begin(); iter != this->send_data.end(); ++iter) {
         auto& packet = iter->second;
@@ -194,6 +187,7 @@ bool jshare::Udp::send(std::vector<char>& data, const sockaddr_in& addr, bool ne
     if(need_ack) {
         bool success = false;
         uint16_t data_id = 0;
+        std::map<uint16_t, jshare::Packet>::iterator x;
         {
             std::unique_lock<std::shared_mutex> lock(this->send_mutex);
             data_id = ++this->send_data_id;
@@ -207,13 +201,16 @@ bool jshare::Udp::send(std::vector<char>& data, const sockaddr_in& addr, bool ne
                 .data = std::move(data),
                 .size = data_length
             });
-            success = sendto(this->bcst_socket, iter->second.data.data(), iter->second.data.size(), 0, (sockaddr*) &addr, sizeof(addr)) >= 0;
+            x = iter;
         }
+        success = sendto(this->bcst_socket, x->second.data.data(), x->second.data.size(), 0, (sockaddr*) &addr, sizeof(addr)) >= 0;
         do {
             {
                 std::shared_lock<std::shared_mutex> lock(this->send_mutex);
                 if(this->send_data.size() < 50) {
                     break;
+                } else {
+                    this->retry();
                 }
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(1));

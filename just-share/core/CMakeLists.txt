@@ -7,6 +7,7 @@ add_library(
     src/cli.cpp
     src/gui.cpp
     src/udp.cpp
+    src/tcp.cpp
     src/jshare.cpp
 )
 

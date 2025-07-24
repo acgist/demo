@@ -5,3 +5,11 @@ target_link_libraries(
     test_udp
     jsharecore
 )
+
+add_executable(test_tcp TestTcp.cpp)
+add_test(NAME test_tcp COMMAND test_tcp)
+set_target_properties(test_tcp PROPERTIES FOLDER "test")
+target_link_libraries(
+    test_tcp
+    jsharecore
+)
