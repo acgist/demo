@@ -5,18 +5,18 @@ import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.acgist.mcp.server.service.article.ArticleService;
-import com.acgist.mcp.server.service.weather.WeatherService;
+import com.acgist.mcp.server.tool.article.ArticleTool;
+import com.acgist.mcp.server.tool.weather.WeatherTool;
 
 @Configuration
 public class McpAutoConfiguration {
 
     @Bean
     public ToolCallbackProvider weatherTools(
-        ArticleService articleService,
-        WeatherService weatherService
+        ArticleTool articleTool,
+        WeatherTool weatherTool
     ) {
-        return MethodToolCallbackProvider.builder().toolObjects(articleService, weatherService).build();
+        return MethodToolCallbackProvider.builder().toolObjects(articleTool, weatherTool).build();
     }
     
 }

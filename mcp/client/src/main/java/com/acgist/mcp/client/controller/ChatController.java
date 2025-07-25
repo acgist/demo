@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import reactor.core.publisher.Flux;
+
 @RestController
 public class ChatController {
 
@@ -14,11 +16,19 @@ public class ChatController {
 
     @RequestMapping("/chat")
     public String chat(@RequestParam(value = "message", defaultValue = "北京天气如何") String message) {
-        final String response = this.chatClient.prompt()
+        return this.chatClient.prompt()
             .user(message)
             .call()
             .content();
-        return response;
+    }
+    
+    @RequestMapping("/chat/stream")
+    public Flux<String> chatStream(@RequestParam(value = "message", defaultValue = "北京天气如何") String message) {
+        // 注意：这里存在BUG不会自动处理tool
+        return this.chatClient.prompt()
+            .user(message)
+            .stream()
+            .content();
     }
 
 }

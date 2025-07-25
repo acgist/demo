@@ -12,9 +12,14 @@ spring:
               url: http://localhost:8080
             mcp-server-2:
               url: http://localhost:8080
+    model:
+      embedding: ollama
     ollama:
       base-url: http://192.168.8.228:11434
       chat:
         options:
           # 需要支持tools的模型
           model: llama3.1
+      embedding:
+        options:
+          model: quentinz/bge-small-zh-v1.5

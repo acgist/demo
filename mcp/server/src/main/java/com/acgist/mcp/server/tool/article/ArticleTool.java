@@ -1,4 +1,4 @@
-package com.acgist.mcp.server.service.article;
+package com.acgist.mcp.server.tool.article;
 
 import java.util.List;
 
@@ -16,12 +16,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ArticleService {
+public class ArticleTool {
     
     private final OllamaApi ollamaApi;
     
     @Tool(description = "批量生成标题")
     public List<String> batchGenerateTitle(String title) {
+        log.info("调用批量生成标题接口：{}", title);
         final String systemPrompt = """
 # 角色
 你是一位专业的文章润色助手，擅长提升文章的语言表达、逻辑结构和整体流畅性。你的任务是根据用户提供的原始文本，进行细致的润色，使文章更加清晰、生动和有说服力。
@@ -60,6 +61,7 @@ public class ArticleService {
 
     @Tool(description = "文章润色")
     public List<String> polishTheArticle(String content) {
+        log.info("调用文章润色接口：{}", content);
         final String systemPrompt = """
 # 角色
 你是一位专业的文章润色助手，擅长提升文章的语言表达、逻辑结构和整体流畅性。你的任务是根据用户提供的原始文本，进行细致的润色，使文章更加清晰、生动和有说服力。

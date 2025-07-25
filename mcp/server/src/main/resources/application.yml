@@ -5,10 +5,8 @@ spring:
     mcp:
       server:
         name: mcp-server
-        version: 1.0.0
-        type: SYNC
-        instructions: "mcp-server"
-        sse-message-endpoint: /mcp/messages
+        instructions: 这是一个通过SpringAI实现的MCP服务端
+        sse-message-endpoint: /mcp/message
         capabilities:
           tool: true
           prompt: true
