@@ -1,0 +1,40 @@
+#配置中心统一配置
+#server:
+#  port: 8081
+dubbo:
+  scan:
+    base-packages: com.acgist.service
+  protocols:
+    dubbo:
+      name: dubbo
+      port: -1
+  reference:
+    check: false
+  cloud:
+    subscribed-services: service
+spring:
+  cloud:
+    sentinel:
+      eager: true
+      transport:
+        port: 8719
+        dashboard: localhost:8080
+      datasource:
+        flow:
+          nacos:
+            data-id: ${spring.application.name}-flow-rules
+            group-id: SENTINEL_GROUP
+            rule-type: flow
+            data-type: json
+            username: ${spring.cloud.nacos.username}
+            password: ${spring.cloud.nacos.password}
+            server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        degrade:
+          nacos:
+            data-id: ${spring.application.name}-degrade-rules
+            group-id: SENTINEL_GROUP
+            rule-type: degrade
+            data-type: json
+            username: ${spring.cloud.nacos.username}
+            password: ${spring.cloud.nacos.password}
+            server-addr: ${spring.cloud.nacos.discovery.server-addr}

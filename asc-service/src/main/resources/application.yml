@@ -1,0 +1,43 @@
+dubbo:
+# 等于：@DubboComponentScan
+  scan:
+    base-packages: com.acgist.service
+  provider:
+    retries: 1
+    timeout: 10000
+  protocols:
+    dubbo:
+      name: dubbo
+      port: -1
+  reference:
+    check: false
+  cloud:
+    subscribed-services:
+#  可以不用配置
+#  registry.address: spring-cloud://localhost
+spring:
+  cloud:
+    sentinel:
+      eager: true
+      transport:
+        port: 8719
+        dashboard: localhost:8080
+      datasource:
+        flow:
+          nacos:
+            data-id: ${spring.application.name}-flow-rules
+            group-id: SENTINEL_GROUP
+            rule-type: flow
+            data-type: json
+            username: ${spring.cloud.nacos.username}
+            password: ${spring.cloud.nacos.password}
+            server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        degrade:
+          nacos:
+            data-id: ${spring.application.name}-degrade-rules
+            group-id: SENTINEL_GROUP
+            rule-type: degrade
+            data-type: json
+            username: ${spring.cloud.nacos.username}
+            password: ${spring.cloud.nacos.password}
+            server-addr: ${spring.cloud.nacos.discovery.server-addr}

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="false" scanPeriod="60 seconds" debug="false">
+
+	<contextName>${system.name}</contextName>
+
+	<springProperty scope="context" name="system.name" source="spring.application.name" />
+	<springProperty scope="context" name="rabbitmq.host" source="spring.rabbitmq.host" />
+	<springProperty scope="context" name="rabbitmq.port" source="spring.rabbitmq.port" />
+	<springProperty scope="context" name="rabbitmq.username" source="spring.rabbitmq.username" />
+	<springProperty scope="context" name="rabbitmq.password" source="spring.rabbitmq.password" />
+	<springProperty scope="context" name="system.message.logs" source="system.message.logs" />
+
+	<!-- 按天生成日志 -->
+	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/${system.name}.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<maxHistory>30</maxHistory>
+			<fileNamePattern>logs/${system.name}.log-%d{yyyy-MM-dd}</fileNamePattern>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>[${system.name}] %d{YYYY-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</layout>
+	</appender>
+	
+	<!-- 输出到控制台 -->
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+		<encoder>
+			<pattern>[${system.name}] %d{YYYY-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+<!--
+logstash.conf配置：
+input {
+	rabbitmq {
+		host => "127.0.0.1"
+		port => 5672
+		user => "guest"
+		password => "guest"
+		durable => true
+		exchange_type => "direct"
+		exchange => "api.message.logs"
+		queue => "api-logs"
+		key => "logstash"
+		threads => 4
+		prefetch_count => 128
+	}
+}
+-->
+<!--
+	日志放入消息队列（rabbit）
+	<appender name="rabbit" class="org.springframework.amqp.rabbit.logback.AmqpAppender">
+		<layout>
+			<pattern>
+				<![CDATA[[${system.name}] %d{YYYY-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n]]>
+			</pattern>
+		</layout>
+		<host>${rabbitmq.host}</host>
+		<port>${rabbitmq.port}</port>
+		<username>${rabbitmq.username}</username>
+		<password>${rabbitmq.password}</password>
+		<routingKeyPattern>logstash</routingKeyPattern>
+		<declareExchange>true</declareExchange>
+		<exchangeType>direct</exchangeType>
+		<exchangeName>${system.message.logs}</exchangeName>
+		<durable>true</durable>
+		<charset>UTF-8</charset>
+		<deliveryMode>PERSISTENT</deliveryMode>
+	</appender>
+-->
+	
+	<root level="INFO">
+		<appender-ref ref="file" />
+		<appender-ref ref="console" />
+<!--
+		<appender-ref ref="rabbit" />
+-->
+	</root>
+	
+</configuration>

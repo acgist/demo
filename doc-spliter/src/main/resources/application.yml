@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: doc-spliter
+doc:
+  spliter:
+    output:
+      path: D:/tmp/doc-spliter
+    

@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: dd
+  # 连接池
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://192.168.8.135:3306/mcp?serverTimezone=Asia/Shanghai&useSSL=false&useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&remarks=true&useInformationSchema=true
+    username: mcp
+    password: 12345678
+    hikari:
+      minimum-idle: 2
+      max-lifetime: 600000
+      maximum-pool-size: 4
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      connection-test-query: SELECT 1 FROM dual
+acgist:
+  dynamic:
+    datasource:
+      mcp-1:
+        jdbc-url: jdbc:mysql://192.168.8.135:3306/mcp-1?serverTimezone=Asia/Shanghai&useSSL=false&useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&remarks=true&useInformationSchema=true
+      mcp-2:
+        jdbc-url: jdbc:mysql://192.168.8.135:3306/mcp-2?serverTimezone=Asia/Shanghai&useSSL=false&useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&remarks=true&useInformationSchema=true
+        

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule">
+	<!-- packages配置drl包路径 -->
+	<kbase name="PersonRuleKBase" packages="com.rules">
+		<ksession name="personRuleKSession" />
+	</kbase>
+</kmodule>

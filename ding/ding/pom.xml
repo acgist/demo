@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>com.acgist</groupId>
+	<artifactId>ding</artifactId>
+	<version>1.0.3</version>
+	<packaging>jar</packaging>
+	
+	<properties>
+		<!-- 作者 -->
+		<vendor>acgist.com</vendor>
+		<!-- 编码 -->
+		<encoding>UTF-8</encoding>
+		<!-- Java版本 -->
+		<java.version>17</java.version>
+		<!-- 文件编码 -->
+		<project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcpkix-jdk15on</artifactId>
+			<version>1.69</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>javase</artifactId>
+			<version>3.4.1</version>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<!-- Maven插件 -->
+		<plugins>
+			<!--
+			复制依赖：mvn dependency:copy-dependencies
+			-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.2.0</version>
+				<configuration>
+					<stripVersion>false</stripVersion>
+					<includeScope>compile</includeScope>
+					<outputDirectory>lib</outputDirectory>
+					<excludeTransitive>false</excludeTransitive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

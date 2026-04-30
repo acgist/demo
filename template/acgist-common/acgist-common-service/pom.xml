@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>acgist-common-service</artifactId>
+	<packaging>jar</packaging>
+
+	<name>acgist-common-service</name>
+	<description>通用模块-服务模块</description>
+
+	<parent>
+		<groupId>com.acgist</groupId>
+		<artifactId>acgist-common-parent</artifactId>
+		<version>${acgist.version}</version>
+		<relativePath>../</relativePath>
+	</parent>
+
+	<dependencies>
+		<!-- 必要 -->
+		<dependency>
+			<groupId>com.acgist</groupId>
+			<artifactId>acgist-common-data</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.dubbo</groupId>
+			<artifactId>dubbo-spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.dubbo</groupId>
+			<artifactId>dubbo-dependencies-zookeeper</artifactId>
+			<type>pom</type>
+		</dependency>
+		<!-- 可选 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+
+</project>

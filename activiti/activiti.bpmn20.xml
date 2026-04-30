@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
+  <process id="请假" name="请假" isExecutable="true">
+    <documentation>请假流程</documentation>
+    <startEvent id="发起请假" name="发起请假" activiti:initiator="${user}">
+      <documentation>发起请假</documentation>
+    </startEvent>
+    <userTask id="经理审批" name="经理审批" activiti:assignee="${manager}">
+      <documentation>经理审批</documentation>
+      <extensionElements>
+        <modeler:initiator-can-complete xmlns:modeler="http://activiti.com/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-2F7DFBFE-0382-455A-87D8-F172ADED8A7E" sourceRef="发起请假" targetRef="经理审批"></sequenceFlow>
+    <userTask id="人事审批" name="人事审批" activiti:assignee="${personnel}">
+      <documentation>人事审批</documentation>
+      <extensionElements>
+        <modeler:initiator-can-complete xmlns:modeler="http://activiti.com/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-A5D0DA98-821A-4C79-9524-20AA608EE0FC" sourceRef="经理审批" targetRef="人事审批"></sequenceFlow>
+    <exclusiveGateway id="审批" name="审批">
+      <documentation>审批</documentation>
+    </exclusiveGateway>
+    <intermediateThrowEvent id="完成" name="完成">
+      <documentation>完成</documentation>
+    </intermediateThrowEvent>
+    <sequenceFlow id="sid-AE93C0D8-F281-448C-AE13-28C5B7BB490A" sourceRef="人事审批" targetRef="审批"></sequenceFlow>
+    <sequenceFlow id="sid-D84FF40B-896F-42FC-AED6-C9814F8CACBA" name="否定" sourceRef="审批" targetRef="经理审批">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${value == false}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-5EC819F4-22AA-4906-913B-E3756C63BAC4" name="通过" sourceRef="审批" targetRef="完成">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${value == true}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_请假">
+    <bpmndi:BPMNPlane bpmnElement="请假" id="BPMNPlane_请假">
+      <bpmndi:BPMNShape bpmnElement="发起请假" id="BPMNShape_发起请假">
+        <omgdc:Bounds height="30.0" width="30.0" x="31.5" y="70.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="经理审批" id="BPMNShape_经理审批">
+        <omgdc:Bounds height="80.0" width="100.0" x="105.0" y="45.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="人事审批" id="BPMNShape_人事审批">
+        <omgdc:Bounds height="80.0" width="100.0" x="251.5" y="45.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="审批" id="BPMNShape_审批">
+        <omgdc:Bounds height="40.0" width="40.0" x="135.0" y="240.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="完成" id="BPMNShape_完成">
+        <omgdc:Bounds height="30.0" width="30.0" x="140.0" y="330.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-AE93C0D8-F281-448C-AE13-28C5B7BB490A" id="BPMNEdge_sid-AE93C0D8-F281-448C-AE13-28C5B7BB490A">
+        <omgdi:waypoint x="301.5" y="125.0"></omgdi:waypoint>
+        <omgdi:waypoint x="301.5" y="260.5"></omgdi:waypoint>
+        <omgdi:waypoint x="174.5" y="260.5"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-5EC819F4-22AA-4906-913B-E3756C63BAC4" id="BPMNEdge_sid-5EC819F4-22AA-4906-913B-E3756C63BAC4">
+        <omgdi:waypoint x="155.38690476190476" y="279.61309523809524"></omgdi:waypoint>
+        <omgdi:waypoint x="155.08875584266892" y="330.000262588952"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-2F7DFBFE-0382-455A-87D8-F172ADED8A7E" id="BPMNEdge_sid-2F7DFBFE-0382-455A-87D8-F172ADED8A7E">
+        <omgdi:waypoint x="61.5" y="85.0"></omgdi:waypoint>
+        <omgdi:waypoint x="105.0" y="85.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-D84FF40B-896F-42FC-AED6-C9814F8CACBA" id="BPMNEdge_sid-D84FF40B-896F-42FC-AED6-C9814F8CACBA">
+        <omgdi:waypoint x="155.0" y="240.0"></omgdi:waypoint>
+        <omgdi:waypoint x="155.0" y="125.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-A5D0DA98-821A-4C79-9524-20AA608EE0FC" id="BPMNEdge_sid-A5D0DA98-821A-4C79-9524-20AA608EE0FC">
+        <omgdi:waypoint x="205.0" y="85.0"></omgdi:waypoint>
+        <omgdi:waypoint x="251.5" y="85.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

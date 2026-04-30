@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>api-service-baize</artifactId>
+	<packaging>jar</packaging>
+
+	<name>api-service-baize</name>
+	<description>服务-白泽</description>
+
+	<parent>
+		<groupId>com.acgist</groupId>
+		<artifactId>api-service-parent</artifactId>
+		<version>${api.version}</version>
+		<relativePath>../</relativePath>
+	</parent>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.acgist</groupId>
+			<artifactId>api-common-baize</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.flink</groupId>
+		    <artifactId>flink-ml_${scala.version}</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.flink</groupId>
+		    <artifactId>flink-clients_${scala.version}</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>

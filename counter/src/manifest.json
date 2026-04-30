@@ -1,0 +1,35 @@
+{
+	"name" : "计数君", // 扩展名称
+	"version" : "1.0.0", // 扩展版本
+	"description" : "计数君是一个Chrome浏览器插件，主要用来给弹幕网站计数君计数使用。", // 扩展描述信息
+	"homepage_url" : "https://gitee.com/acgist/counter", // 官网
+	"manifest_version" : 2, // Chrome扩展版本，默认：2
+	"icons" : { // 图标
+		"16" : "icon_16.png",
+		"48" : "icon_32.png",
+		"128" : "icon_32.png"
+	},
+	"background" : {
+		"scripts" : [ "background.js" ]
+	},
+	"permissions" : [ "tabs", "storage", "notifications", "contextMenus", "http://*/*", "https://*/*" ], // 权限
+	"background" : {
+		"scripts" : [ "background.js" ] 
+	},
+	"browser_action" : { // 图标配置
+		"default_icon": {
+			"19" : "icon_16.png",
+			"38" : "icon_32.png"
+		},
+		"default_title" : "计数君",
+		"default_popup" : "popup.html"
+	},
+	"content_scripts" : [ // 注入JS
+		{
+			// "matches" : [ "http://*/*", "https://*/*", "*://*/*.png" ],
+			"matches": ["<all_urls>"],
+			"js" : [ "counter.js" ],
+			"run_at": "document_end" // 注入时间：document_start、document_end、document_idle
+		}
+	]
+}

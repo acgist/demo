@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description name="Ding" url="https://gitee.com/acgist/ding">
+      Eclipse开发工作常用功能插件
+   </description>
+   <feature url="features/com.acgist.ding_1.0.3.jar" id="com.acgist.ding" version="1.0.3" nl="zh_CN,zh_TW,en_GB,en_US">
+      <category name="com.acgist.ding"/>
+   </feature>
+   <category-def name="com.acgist.ding" label="Ding">
+      <description>
+         https://gitee.com/acgist/ding
+      </description>
+   </category-def>
+</site>

@@ -1,0 +1,24 @@
+spring:
+  application.name: duckdb
+  datasource:
+    url: jdbc:duckdb:./data.duckdb
+    driver-class-name: org.duckdb.DuckDBDriver
+    username: ''
+    password: ''
+#    url: jdbc:duckdb:./data.duckdb
+#    type: com.zaxxer.hikari.HikariDataSource
+#    username: ''
+#    password: ''
+#    hikari:
+#      minimum-idle: 2
+#      max-lifetime: 600000
+#      maximum-pool-size: 4
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      connection-test-query: SELECT 1 FROM dual
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations:
+    - classpath*:/mybatis/mapper/*.xml
+    - classpath*:/mybatis/mapper/**/*.xml
+    

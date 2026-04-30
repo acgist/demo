@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>计数君</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="keywords" content="计数君" />
+		<meta name="description" content="计数君" />
+		
+		<link href="popup.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+	<header class="header">
+		<h1>计数君配置</h1>
+	</header>
+	<main class="main">
+		<ul>
+			<li>
+				<span>计数键值</span>
+				<input id="countKeyCode" type="text" placeholder="请按键选择" />
+			</li>
+			<li>
+				<span>清除键值</span>
+				<input id="cleanKeyCode" type="text" placeholder="请按键选择" />
+			</li>
+			<li>
+				<span>弹幕模板</span>
+				<input id="danmukuTemplate" type="text" placeholder="${counter.count}为当前数值" />
+			</li>
+			<li>
+				<span>弹幕输入框样式</span>
+				<input id="danmukuInputClass" type="text" placeholder="bilibili-player-video-danmaku-input" />
+			</li>
+		</ul>
+	</main>
+	<script type="text/javascript" src="popup.js"></script>
+	</body>
+</html>

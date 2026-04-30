@@ -1,0 +1,12 @@
+*.exe
+*.gch
+
+.vscode
+.project
+.cproject
+.settings
+.classpath
+
+logs
+build
+target

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	
+	<extension
+		point="org.eclipse.ui.views">
+		<category
+			id="com.acgist.ding.view"
+			name="Ding">
+		</category>
+		<view
+			id="com.acgist.ding.view.json"
+			name="%com.acgist.ding.view.json.name"
+			icon="icons/json.png"
+			class="com.acgist.ding.view.json.JsonView"
+			category="com.acgist.ding.view">
+		</view>
+		<view
+			id="com.acgist.ding.view.http"
+			name="%com.acgist.ding.view.http.name"
+			icon="icons/http.png"
+			class="com.acgist.ding.view.http.HttpView"
+			category="com.acgist.ding.view">
+		</view>
+		<view
+			id="com.acgist.ding.view.codec"
+			name="%com.acgist.ding.view.codec.name"
+			icon="icons/codec.png"
+			class="com.acgist.ding.view.codec.CodecView"
+			category="com.acgist.ding.view">
+		</view>
+		<view
+			id="com.acgist.ding.view.crypt"
+			name="%com.acgist.ding.view.crypt.name"
+			icon="icons/crypt.png"
+			class="com.acgist.ding.view.crypt.CryptView"
+			category="com.acgist.ding.view">
+		</view>
+		<view
+			id="com.acgist.ding.view.image"
+			name="%com.acgist.ding.view.image.name"
+			icon="icons/image.png"
+			class="com.acgist.ding.view.image.ImageView"
+			category="com.acgist.ding.view">
+		</view>
+		<view
+			id="com.acgist.ding.view.common"
+			name="%com.acgist.ding.view.common.name"
+			icon="icons/common.png"
+			class="com.acgist.ding.view.common.CommonView"
+			category="com.acgist.ding.view">
+		</view>
+	</extension>
+
+	<extension
+		point="org.eclipse.ui.popupMenus">
+		<objectContribution
+			id="com.acgist.ding.popup"
+			adaptable="true"
+			objectClass="org.eclipse.wst.server.core.IServer">
+			<menu
+				id="com.acgist.ding.menu.server"
+				path="additions"
+				icon="icons/ding.png"
+				label="Ding">
+				<separator name="Ding"></separator>
+			</menu>
+			<action
+				id="com.acgist.ding.action.server.source"
+				icon="icons/source.png"
+				label="%com.acgist.ding.action.server.source.name"
+				class="com.acgist.ding.action.server.ServerAction"
+				enablesFor="+"
+				menubarPath="com.acgist.ding.menu.server/Ding">
+			</action>
+			<action
+				id="com.acgist.ding.action.server.deploy"
+				icon="icons/deploy.png"
+				label="%com.acgist.ding.action.server.deploy.name"
+				class="com.acgist.ding.action.server.ServerAction"
+				enablesFor="+"
+				menubarPath="com.acgist.ding.menu.server/Ding">
+			</action>
+		</objectContribution>
+	</extension>
+
+</plugin>

@@ -1,0 +1,29 @@
+{
+	"name": "蜗牛下载",
+	"version": "1.0.0",
+	"description": "蜗牛下载Chrome应用",
+	"manifest_version": 2,
+	"icons": {
+		"16": "icon_16.png",
+		"32": "icon_32.png",
+		"64": "icon_64.png",
+		"128": "icon_128.png",
+		"256": "icon_256.png"
+	},
+	"app": {
+		"background": {
+			"scripts": [
+				"background.js"
+			]
+		}
+	},
+	"sockets": {
+		"tcp": {
+			"connect": "127.0.0.1:16688"
+		}
+	},
+	"permissions": [
+		"storage",
+		"notifications"
+	]
+}

@@ -1,0 +1,39 @@
+#pragma code_page(65001)
+
+#include <verrsrc.h>
+
+IDI_ICON1 ICON DISCARDABLE "logo.ico"
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION     1,0,0,0
+PRODUCTVERSION  1,0,0,0
+FILEFLAGSMASK   VS_FFI_FILEFLAGSMASK
+#ifndef _DEBUG
+FILEFLAGS       VS_FF_DEBUG
+#else
+FILEFLAGS       VS_FF_PRERELEASE
+#endif
+FILEOS          VOS_NT_WINDOWS32
+FILETYPE        VFT_APP
+FILESUBTYPE     VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "CompanyName",      "cert"
+            VALUE "FileDescription",  "证书安装"
+            VALUE "FileVersion",      "1.0.0.0"
+            VALUE "InternalName",     "证书安装"
+            VALUE "LegalCopyright",   "Copyright © 2013-2025 acgist.com. All Rights Reserved."
+            VALUE "LegalTrademarks",  "cert"
+            VALUE "OriginalFilename", "cert.exe"
+            VALUE "ProductName",      "证书安装"
+            VALUE "ProductVersion",   "1.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 1252
+    END
+END

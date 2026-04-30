@@ -1,0 +1,8 @@
+deps/opencv/
+deps/matplotplusplus/
+
+build/
+
+a.exe
+
+.vscode

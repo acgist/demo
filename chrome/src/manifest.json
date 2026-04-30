@@ -1,0 +1,50 @@
+{
+	"name": "ACGIST",
+	"version": "1.1.0",
+	"description": "ACGIST Chrome插件",
+	"homepage_url": "https://gitee.com/acgist/chrome",
+	"manifest_version": 2,
+	"icons": {
+		"16": "icon_16.png",
+		"32": "icon_32.png",
+		"64": "icon_64.png",
+		"128": "icon_128.png"
+	},
+	"background": {
+		"scripts": [
+			"background.js"
+		]
+	},
+	"permissions": [
+		"tabs",
+		"storage",
+		"contextMenus",
+		"notifications",
+		"http://*/*",
+		"https://*/*"
+	],
+	"browser_action": {
+		"default_icon": {
+			"16": "icon_16.png",
+			"32": "icon_32.png",
+			"64": "icon_64.png",
+			"128": "icon_128.png"
+		},
+		"default_title": "ACGIST",
+		"default_popup": "popup.html"
+	},
+	"content_scripts": [
+		{
+			"js": [
+				"acgist.js"
+			],
+			"css": [
+				"acgist.css"
+			],
+			"run_at": "document_start",
+			"matches": [
+				"<all_urls>"
+			]
+		}
+	]
+}

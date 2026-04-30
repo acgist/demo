@@ -1,0 +1,16 @@
+server:
+  port: 8080
+spring:
+  ai:
+    mcp:
+      server:
+        name: mcp-server
+        instructions: 这是一个通过SpringAI实现的MCP服务端
+        sse-message-endpoint: /mcp/message
+        capabilities:
+          tool: true
+          prompt: true
+          resource: true
+          completion: true
+    ollama:
+      base-url: http://192.168.8.228:11434

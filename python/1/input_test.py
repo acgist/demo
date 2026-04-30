@@ -1,0 +1,11 @@
+int("123")
+float("123.1")
+print(0b1)
+print(1)
+print(0o17)
+print(0xF)
+message = input("输入消息")
+print(message)
+while message != "exit":
+    message = input("输入消息")
+    print(message)
